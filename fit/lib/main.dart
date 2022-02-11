@@ -113,38 +113,42 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            MaterialButton(
+            Container(margin: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+            child:MaterialButton(
               minWidth: double.infinity,
               height:60,
               onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
-            },
-          color: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40)
-          ),
-
-          child: Text("Login", style: Theme.of(context).textTheme.subtitle1,
-            // style: TextStyle(
-              // fontWeight: FontWeight.w600,fontSize: 16,color:
-
-          ),),
-            // ),
-
-            SizedBox(height: 30, ),
-            MaterialButton(
-              minWidth: double.infinity,
-              height:60,
-              onPressed: (){
-
               },
-              color: Colors.redAccent,
+              color: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40)
               ),
-              child: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1,
 
-              ),),
+              child: Text("Login", style: Theme.of(context).textTheme.subtitle1,
+                // style: TextStyle(
+                // fontWeight: FontWeight.w600,fontSize: 16,color:
+
+              ),) ),
+
+            // ),
+
+            SizedBox(height: 30, ),
+            Container(margin: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height:60,
+                  onPressed: (){
+
+                  },
+                  color: Colors.redAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)
+                  ),
+                  child: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1,
+
+                  ),)
+            ),
 
           ],
         ),

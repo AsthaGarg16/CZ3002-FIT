@@ -25,13 +25,13 @@ class Login extends StatelessWidget {
                   children: [
 
                     Text("Welcome back!",style: Theme.of(context).textTheme.subtitle2,),
-                    SizedBox(height: 15,),
+                    const SizedBox(height: 15,),
                     Text("Login with your credentials",style: Theme.of(context).textTheme.bodyText1,),
-                    SizedBox(height: 35,),
+                    const SizedBox(height: 35,),
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: 40
                   ),
                   child: Column(
@@ -41,10 +41,8 @@ class Login extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    padding: EdgeInsets.only(top: 3,left: 3),
+                Container(
+                    margin: const EdgeInsets.fromLTRB(100, 0, 100, 0),
 
                     child: MaterialButton(
                       minWidth: double.infinity,
@@ -56,15 +54,15 @@ class Login extends StatelessWidget {
                       ),
                       child: Text("Login",style: Theme.of(context).textTheme.subtitle1,),
                     ),
-                  ),
+
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text("Dont have an account?"),
-                    SizedBox(width:10,),
+                    const Text("Don't have an account?"),
+                    const SizedBox(width:10,),
                     Text("Sign Up",style: Theme.of(context).textTheme.labelMedium,),
                   ],
                 )
