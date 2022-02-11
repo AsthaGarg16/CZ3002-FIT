@@ -113,6 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height/4,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/images/food.png')),
+              ),
+            ),
+            SizedBox(height:50,),
+
             Container(margin: const EdgeInsets.fromLTRB(40, 0, 40, 0),
             child:MaterialButton(
               minWidth: double.infinity,
