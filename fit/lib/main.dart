@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './CreateAccount.dart';
+import 'Login.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,9 +27,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
         primaryColor: Colors.teal[800],
         textTheme: const TextTheme(
-          headline1: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
-          subtitle1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
-          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+          headline1: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2.0),
+          headline2: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.black87, letterSpacing: 2.0),
+          subtitle1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5),
+          subtitle2: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black87, letterSpacing: 1.5),
+          labelMedium: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black54, letterSpacing: 1.5),
+          bodyText1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Colors.black54),
+          bodyText2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
         ),
         fontFamily: "mw",
       ),
@@ -85,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title, style:Theme.of(context).textTheme.subtitle1),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -112,12 +117,13 @@ class _MyHomePageState extends State<MyHomePage> {
               minWidth: double.infinity,
               height:60,
               onPressed: (){
-
-          },
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
+            },
           color: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40)
           ),
+
           child: Text("Login", style: Theme.of(context).textTheme.subtitle1,
             // style: TextStyle(
               // fontWeight: FontWeight.w600,fontSize: 16,color:
