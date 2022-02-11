@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
+        scaffoldBackgroundColor: const Color.fromRGBO(255, 255, 255, 1.0),
         primarySwatch: Colors.teal,
         primaryColor: Colors.teal[800],
         textTheme: const TextTheme(
