@@ -3,6 +3,22 @@ import 'package:flutter/services.dart';
 
 import './Login.dart';
 
+class PreferencePage extends StatefulWidget{
+  @override
+  State<PreferencePage> createState() => _PreferencePageState();
+}
+
+class _PreferencePageState extends State<PreferencePage>{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Preferences"),
+      )
+    );
+  }
+}
+
 class SignupPage extends StatelessWidget {
 
   @override
@@ -46,8 +62,8 @@ class SignupPage extends StatelessWidget {
                       child: Column(
                         children: [
                           makeInput(label: "Email:"),
-                          makeInput(label: "Password:",obsureText: true),
-                          makeInput(label: "Confirm Pasword:",obsureText: true)
+                          makeInput(label: "Password:",obscureText: true),
+                          makeInput(label: "Confirm Pasword:",obscureText: true)
                         ],
                       ),
                     ),
@@ -60,10 +76,16 @@ class SignupPage extends StatelessWidget {
                         child: MaterialButton(
                           minWidth: double.infinity,
                           height:60,
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => PreferencePage()
+                                )
+                            );
+                          },
                           color: Colors.redAccent,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                          child: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1,),
+                          child: Text("Next", style: Theme.of(context).textTheme.subtitle1,),
                         ),
                       ),
                     ),

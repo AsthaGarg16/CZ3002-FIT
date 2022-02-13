@@ -37,7 +37,7 @@ class Login extends StatelessWidget {
                   child: Column(
                     children: [
                       makeInput(label: "Email :"),
-                      makeInput(label: "Password :",obsureText: true),
+                      makeInput(label: "Password :",obscureText: true),
                     ],
                   ),
                 ),
@@ -76,7 +76,7 @@ class Login extends StatelessWidget {
   }
 }
 
-Widget makeInput({label,obsureText = false}){
+Widget makeInput({label,obscureText = false}){
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -87,7 +87,7 @@ Widget makeInput({label,obsureText = false}){
       ),),
       SizedBox(height: 5,),
       TextField(
-        obscureText: obsureText,
+        obscureText: obscureText,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
           enabledBorder: OutlineInputBorder(
