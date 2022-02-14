@@ -36,39 +36,46 @@ class CustomPageRoute extends PageRouteBuilder {
     }
 }
 
+//Using preference page as a separate class instead of inlcuding it in the sign up page class in
+//case we want to use this page in the app settings later
 class PreferencePage extends StatefulWidget{
   @override
   State<PreferencePage> createState() => _PreferencePageState();
 }
 
 class _PreferencePageState extends State<PreferencePage>{
+  String numCompartments = 'One';
+
   Widget _buildPreferenceList(){
     return ListView(
+      physics: NeverScrollableScrollPhysics(),
       children: [
         ListTile(
-          title: Text(
-            "Random tile",
-            style: TextStyle(fontSize:18.0, color: Colors.black),
-          ),
+          title: Text('Compartments',  style: Theme.of(context).textTheme.bodyText1),
+          trailing: DropdownButton<String>(
+            value: numCompartments,
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                numCompartments = newValue!;
+              });
+            },
+            items: <String>['One', 'Two', 'Free', 'Four']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          )
         ),
-
         Divider(),
-
-        ListTile(
-          title: Text(
-            "Random tile",
-            style: TextStyle(fontSize:18.0, color: Colors.black),
-          ),
-        ),
-
-        Divider(),
-
-        ListTile(
-          title: Text(
-            "Random tile",
-            style: TextStyle(fontSize:18.0, color: Colors.black),
-          ),
-        )
       ]
     );
   }
@@ -108,7 +115,7 @@ class _PreferencePageState extends State<PreferencePage>{
 
                 SizedBox(
                   child:_buildPreferenceList(),
-                  height: 200,
+                  height: 400,
                 ),
 
                 const SizedBox(height: 20,),
