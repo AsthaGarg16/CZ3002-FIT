@@ -3,17 +3,134 @@ import 'package:flutter/services.dart';
 
 import './Login.dart';
 
+class CustomPageRoute extends PageRouteBuilder {
+  final Widget newScreen;
+  final Widget oldScreen;
+
+  CustomPageRoute({required this.oldScreen, required this.newScreen}) : super(pageBuilder: (context, animation, secondaryAnimation) => newScreen,);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+      return Stack(
+          children: <Widget>[
+            //slide new screen in
+            SlideTransition(
+              position: Tween<Offset>(
+                begin: Offset(1, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+
+            //slide old screen out
+            SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset.zero,
+                  end: Offset(-1, 0),
+                ).animate(animation),
+                child: oldScreen
+            )
+          ]
+      );
+    }
+}
+
 class PreferencePage extends StatefulWidget{
   @override
   State<PreferencePage> createState() => _PreferencePageState();
 }
 
 class _PreferencePageState extends State<PreferencePage>{
+  Widget _buildPreferenceList(){
+    return ListView(
+      children: [
+        ListTile(
+          title: Text(
+            "Random tile",
+            style: TextStyle(fontSize:18.0, color: Colors.black),
+          ),
+        ),
+
+        Divider(),
+
+        ListTile(
+          title: Text(
+            "Random tile",
+            style: TextStyle(fontSize:18.0, color: Colors.black),
+          ),
+        ),
+
+        Divider(),
+
+        ListTile(
+          title: Text(
+            "Random tile",
+            style: TextStyle(fontSize:18.0, color: Colors.black),
+          ),
+        )
+      ]
+    );
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Preferences"),
+      appBar: PreferredSize(
+        //hero widget to preserve app bar between the two sign up pages. Make sure tag of old page and new page within the hero constructor is the same
+          child: Hero(
+            tag: "SignUpAppBar",
+            child: AppBar(
+                title: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1),
+                systemOverlayStyle: SystemUiOverlayStyle.light,
+                titleSpacing: 0,
+                leading: IconButton(
+                    onPressed: (){Navigator.pop(context);},
+                    icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white
+                    )
+                )
+            ),
+          ),
+          preferredSize: new AppBar().preferredSize,
+      ),
+
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text("Select your preferences", style: Theme.of(context).textTheme.bodyText1,),
+
+                const SizedBox(height: 20,),
+
+                SizedBox(
+                  child:_buildPreferenceList(),
+                  height: 200,
+                ),
+
+                const SizedBox(height: 20,),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 3,left: 3),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),),
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height:60,
+                      onPressed: (){
+                      },
+                      color: Colors.redAccent,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                      child: Text("Create Account", style: Theme.of(context).textTheme.subtitle1,),
+                    ),
+                  ),
+                ),
+              ]
+          )
       )
     );
   }
@@ -26,16 +143,23 @@ class SignupPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1),
-        //Not sure if background of app bar should match sign up button
-        // backgroundColor: Colors.redAccent,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        titleSpacing: 0,
-        leading: IconButton(
-            onPressed: () {Navigator.pop(context);},
-            icon:Icon(Icons.arrow_back_ios,size: 20,color: Colors.white,)
+      appBar: PreferredSize(
+        child: Hero(
+          tag: "SignUpAppBar",
+          child: AppBar(
+              title: Text("Sign Up", style: Theme.of(context).textTheme.subtitle1),
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              titleSpacing: 0,
+              leading: IconButton(
+                  onPressed: (){Navigator.pop(context);},
+                  icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white
+                  )
+              )
+          ),
         ),
+        preferredSize: new AppBar().preferredSize,
       ),
 
       body: SafeArea(
@@ -78,8 +202,10 @@ class SignupPage extends StatelessWidget {
                           height:60,
                           onPressed: (){
                             Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) => PreferencePage()
+                              //To make sliding transision we use custom page route which extends material page route
+                                CustomPageRoute(
+                                  oldScreen: this,
+                                  newScreen: PreferencePage(),
                                 )
                             );
                           },
@@ -90,7 +216,7 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
