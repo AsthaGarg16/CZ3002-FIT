@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:developer' as developer;
 
 import './Login.dart';
 
@@ -44,38 +45,146 @@ class PreferencePage extends StatefulWidget{
 }
 
 class _PreferencePageState extends State<PreferencePage>{
-  String numCompartments = 'One';
+  String _numCompartments = 'One';
+  bool _dairyFree = false;
+  bool _glutenFree = false;
+  bool _vegan = false;
+  bool _vegetarian = false;
+
+  void _setVegan(bool value){
+    _vegan = value;
+    if(_vegan){
+      _dairyFree = true;
+      _setVegetarian(!_vegan);
+    }
+  }
+
+  void _setVegetarian(bool value){
+    _vegetarian = value;
+    if(_vegetarian){
+      _setVegan(!_vegetarian);
+    }
+  }
+
+  Widget _fridgePreferenceList(){
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: Text("Fridge", style: Theme.of(context).textTheme.headline3),
+        ),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     //todo: how to dynamically set padding ?
+        //       padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
+        //       child: Text("Fridge", style: Theme.of(context).textTheme.headline3)
+        //   ),
+        // ),
+
+        ListTile(
+            title: Text('Compartments',  style: Theme.of(context).textTheme.bodyText1),
+            trailing: DropdownButton<String>(
+              value: _numCompartments,
+              elevation: 16,
+              style: Theme.of(context).textTheme.labelMedium,
+              underline: Container(
+                height: 2,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _numCompartments = newValue!;
+                });
+              },
+              items: <String>['One', 'Two', 'Free', 'Four']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            )
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+      ],
+    );
+  }
+
+  Widget _dietPreferenceList(){
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: Text("Diet", style: Theme.of(context).textTheme.headline3),
+        ),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     //todo: how to dynamically set padding ?
+        //       padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
+        //       child: Text("Fridge", style: Theme.of(context).textTheme.headline3)
+        //   ),
+        // ),
+
+        CheckboxListTile(
+          title: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
+          value: _glutenFree,
+          onChanged: (bool? value) {
+            setState(() {
+              _glutenFree = !_glutenFree;
+              // developer.log(_glutenFree.toString());
+            });
+          },
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+        CheckboxListTile(
+          title: Text('Dairy Free', style: Theme.of(context).textTheme.bodyText1),
+          value: _dairyFree,
+          onChanged: (bool? value) {
+            setState(() {
+              _dairyFree = !_dairyFree;
+              // developer.log(_glutenFree.toString());
+            });
+          },
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+        CheckboxListTile(
+          title: Text('Vegetarian', style: Theme.of(context).textTheme.bodyText1),
+          value: _vegetarian,
+          onChanged: (bool? value) {
+            setState(() {
+              _setVegetarian(!_vegetarian);
+              // developer.log(_glutenFree.toString());
+            });
+          },
+        ),
+
+        CheckboxListTile(
+          title: Text('Vegan', style: Theme.of(context).textTheme.bodyText1),
+          value: _vegan,
+          onChanged: (bool? value) {
+            setState(() {
+              _setVegan(!_vegan);
+              // developer.log(_glutenFree.toString());
+            });
+          },
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+      ],
+    );
+  }
 
   Widget _buildPreferenceList(){
     return ListView(
       physics: NeverScrollableScrollPhysics(),
       children: [
-        ListTile(
-          title: Text('Compartments',  style: Theme.of(context).textTheme.bodyText1),
-          trailing: DropdownButton<String>(
-            value: numCompartments,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: Colors.deepPurple),
-            underline: Container(
-              height: 2,
-              color: Colors.deepPurpleAccent,
-            ),
-            onChanged: (String? newValue) {
-              setState(() {
-                numCompartments = newValue!;
-              });
-            },
-            items: <String>['One', 'Two', 'Free', 'Four']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          )
-        ),
-        Divider(),
+        _fridgePreferenceList(),
+        SizedBox(height: 20.0),
+        _dietPreferenceList(),
       ]
     );
   }
@@ -107,17 +216,18 @@ class _PreferencePageState extends State<PreferencePage>{
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("Select your preferences", style: Theme.of(context).textTheme.bodyText1,),
 
                 const SizedBox(height: 20,),
 
+                //todo: how to place preferencelist as a child without using a fixed height?
                 SizedBox(
                   child:_buildPreferenceList(),
-                  height: 400,
+                  height: 450,
                 ),
-
+                
                 const SizedBox(height: 20,),
 
                 Padding(
