@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import './BlankPage.dart';
+
+
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,13 @@ class Login extends StatelessWidget {
                     child: MaterialButton(
                       minWidth: double.infinity,
                       height:60,
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => BlankPage()
+                            )
+                        );
+                      },
                       color: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40)
