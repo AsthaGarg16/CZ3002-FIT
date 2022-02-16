@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'dart:developer' as developer;
 
 import './Login.dart';
@@ -45,11 +46,19 @@ class PreferencePage extends StatefulWidget{
 }
 
 class _PreferencePageState extends State<PreferencePage>{
-  String _numCompartments = 'One';
+  int _numCompartmentsInt = 1;
   bool _dairyFree = false;
   bool _glutenFree = false;
   bool _vegan = false;
   bool _vegetarian = false;
+  late TextEditingController _compartmentText;
+
+  @override
+  void initState() {
+    super.initState();
+    _compartmentText = TextEditingController(text: _numCompartmentsInt.toString());
+  }
+
 
   void _setVegan(bool value){
     _vegan = value;
@@ -67,47 +76,99 @@ class _PreferencePageState extends State<PreferencePage>{
   }
 
   Widget _fridgePreferenceList(){
-    return Column(
+    return SafeArea(child: Column(
       children: <Widget>[
         ListTile(
           title: Text("Fridge", style: Theme.of(context).textTheme.headline3),
         ),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     //todo: how to dynamically set padding ?
-        //       padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
-        //       child: Text("Fridge", style: Theme.of(context).textTheme.headline3)
-        //   ),
-        // ),
 
         ListTile(
             title: Text('Compartments',  style: Theme.of(context).textTheme.bodyText1),
-            trailing: DropdownButton<String>(
-              value: _numCompartments,
-              elevation: 16,
-              style: Theme.of(context).textTheme.labelMedium,
-              underline: Container(
-                height: 2,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _numCompartments = newValue!;
-                });
-              },
-              items: <String>['One', 'Two', 'Free', 'Four']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            )
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.remove, size: 13.0),
+                  onPressed: () => setState(() {
+                    _numCompartmentsInt = _numCompartmentsInt - 1;
+                    _numCompartmentsInt = _numCompartmentsInt.clamp(0, 100);
+                    // _compartmentText.clear();
+                    _compartmentText.text = _numCompartmentsInt.toString();
+                  }),
+                ),
+
+                SizedBox(
+                  child: TextField(
+                    controller: _compartmentText,
+                    style: Theme.of(context).textTheme.bodyText1,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal),
+                      ),
+                    ),
+                    onChanged: (String value){
+                      developer.log(value);
+                    },
+                  ),
+                  width: 25,
+                  height: 30,
+                ),
+
+                // NumberPicker(
+                //   value: _numCompartmentsInt,
+                //   minValue: 1,
+                //   maxValue: 99,
+                //   itemCount: 1,
+                //   step: 1,
+                //   haptics: true,
+                //   onChanged: (value) => setState(() => _numCompartmentsInt = value),
+                //   axis: Axis.horizontal,
+                //   // decoration: BoxDecoration(
+                //   //   borderRadius: BorderRadius.circular(16),
+                //   //   border: Border.all(color: Colors.black26),
+                //   // ),
+                //   // textStyle: Theme.of(context).textTheme.bodyText1,
+                //   selectedTextStyle: Theme.of(context).textTheme.bodyLarge,
+                //   itemHeight: 40,
+                //   itemWidth: 30,
+                // ),
+
+                IconButton(
+                  icon: Icon(Icons.add, size: 13.0),
+                  onPressed: () => setState(() {
+                    _numCompartmentsInt = _numCompartmentsInt + 1;
+                    _numCompartmentsInt = _numCompartmentsInt.clamp(0, 100);
+                    _compartmentText.text = _numCompartmentsInt.toString();
+                  }),
+                ),
+              ]
+          ),
+            // trailing: DropdownButton<String>(
+            //   value: _numCompartments,
+            //   elevation: 16,
+            //   style: Theme.of(context).textTheme.labelMedium,
+            //   underline: Container(
+            //     height: 2,
+            //   ),
+            //   onChanged: (String? newValue) {
+            //     setState(() {
+            //       _numCompartments = newValue!;
+            //     });
+            //   },
+            //   items: <String>['One', 'Two', 'Free', 'Four']
+            //       .map<DropdownMenuItem<String>>((String value) {
+            //     return DropdownMenuItem<String>(
+            //       value: value,
+            //       child: Text(value),
+            //     );
+            //   }).toList(),
+            // )
         ),
 
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
       ],
-    );
+    ));
   }
 
   Widget _dietPreferenceList(){
@@ -180,6 +241,7 @@ class _PreferencePageState extends State<PreferencePage>{
 
   Widget _buildPreferenceList(){
     return ListView(
+      // padding: EdgeInsets.symmetric(horizontal: 5.0),
       physics: NeverScrollableScrollPhysics(),
       children: [
         _fridgePreferenceList(),
@@ -192,6 +254,7 @@ class _PreferencePageState extends State<PreferencePage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         //hero widget to preserve app bar between the two sign up pages. Make sure tag of old page and new page within the hero constructor is the same
           child: Hero(
@@ -213,12 +276,13 @@ class _PreferencePageState extends State<PreferencePage>{
       ),
 
       body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Select your preferences", style: Theme.of(context).textTheme.bodyText1,),
+                Text("Select your preferences", style: Theme.of(context).textTheme.bodyText2,),
 
                 const SizedBox(height: 20,),
 
@@ -230,20 +294,17 @@ class _PreferencePageState extends State<PreferencePage>{
                 
                 const SizedBox(height: 20,),
 
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    padding: EdgeInsets.only(top: 3,left: 3),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      height:60,
-                      onPressed: (){
-                      },
-                      color: Colors.redAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                      child: Text("Create Account", style: Theme.of(context).textTheme.subtitle1,),
-                    ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 70),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),),
+                  child: MaterialButton(
+                    minWidth: double.infinity,
+                    height:60,
+                    onPressed: (){
+                    },
+                    color: Colors.redAccent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                    child: Text("Create Account", style: Theme.of(context).textTheme.subtitle1,),
                   ),
                 ),
               ]
@@ -293,7 +354,7 @@ class SignupPage extends StatelessWidget {
                       children: [
                         Text ("Welcome!", style: Theme.of(context).textTheme.subtitle2,),
                         const SizedBox(height: 20,),
-                        Text("Create an Account", style: Theme.of(context).textTheme.bodyText1,),
+                        Text("Create an Account", style: Theme.of(context).textTheme.bodyText2,),
                         SizedBox(height: 30,)
                       ],
                     ),
@@ -309,10 +370,8 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 3,left: 3),
+                    Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 70),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),),
                         child: MaterialButton(
                           minWidth: double.infinity,
@@ -331,7 +390,6 @@ class SignupPage extends StatelessWidget {
                           child: Text("Next", style: Theme.of(context).textTheme.subtitle1,),
                         ),
                       ),
-                    ),
 
                     const SizedBox(height: 20,),
 
