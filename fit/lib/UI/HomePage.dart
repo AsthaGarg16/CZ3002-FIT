@@ -2,22 +2,22 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'FoodInventory.dart';
-// import 'Recipes.dart';
+import 'RecipePage.dart';
 // import 'ShoppingList.dart';
 // import 'FoodWaste.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
+
+class HomePage extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _HomePageState extends State<HomePage> {
 
 
   int _currentIndex = 0;
-  final List _pages = [FoodInventory(), FoodInventory(), FoodInventory(), FoodInventory()];
+  final List _pages = [FoodInventory(), RecipePage(), FoodInventory(), FoodInventory()];
   final List titles = [
     'Food Inventory',
     'Recipe Recommendation',

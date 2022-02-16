@@ -51,16 +51,7 @@ class RecipePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text("FIT", style: Theme.of(context).textTheme.subtitle1),
-          titleSpacing: 0,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_ios,
-                  size: 20, color: Colors.white70)),
-        ),
+
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,

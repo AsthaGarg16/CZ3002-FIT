@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './BlankPage.dart';
+import './HomePage.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -63,7 +63,7 @@ class Login extends StatelessWidget {
                     height: 60,
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => BlankPage()));
+                          builder: (BuildContext context) => HomePage()));
                     },
                     color: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
