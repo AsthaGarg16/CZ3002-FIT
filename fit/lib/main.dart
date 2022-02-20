@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
               letterSpacing: 1.5),
           labelMedium: TextStyle(
               fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
+              fontWeight: FontWeight.normal,
+              color: Colors.black87,
               letterSpacing: 1.5),
           bodyText1: TextStyle(
               fontSize: 16.0,

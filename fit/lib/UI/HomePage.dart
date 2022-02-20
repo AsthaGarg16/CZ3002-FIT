@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'FoodInventory.dart';
 import 'RecipePage.dart';
-// import 'ShoppingList.dart';
+import 'ShoppingList.dart';
 // import 'FoodWaste.dart';
 
 
@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
 
   int _currentIndex = 0;
-  final List _pages = [FoodInventory(), RecipePage(), FoodInventory(), FoodInventory()];
+  final List _pages = [FoodInventory(), RecipePage(), ShoppingList(), FoodInventory()];
   final List titles = [
     'Food Inventory',
     'Recipe Recommendation',
@@ -27,8 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             title: Text(titles[_currentIndex]),
             centerTitle: true
@@ -41,7 +40,7 @@ class _HomePageState extends State<HomePage> {
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.fastfood),
-                label: "Food Inventory",
+                label: "Inventory",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.restaurant_menu_rounded),
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-        ));
+        );
   }
 
   void onTabTapped(int index) {
