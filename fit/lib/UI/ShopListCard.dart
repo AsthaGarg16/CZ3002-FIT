@@ -45,11 +45,17 @@ class LabeledCheckbox extends StatelessWidget {
                   ),
 
                   const SizedBox(width: 5.0),
-                  Expanded(flex: 4,child: Text(label, style: Theme.of(context).textTheme.labelMedium)),
+                  Expanded(flex: 4,child: Text(label, style: const TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black87))),
                   Expanded(
                       child: Container(
                         alignment: Alignment.centerRight,
-                        child: Text(quantity, style: Theme.of(context).textTheme.labelMedium),
+                        child: Text(quantity, style: const TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87)),
                       )
 
                   ),
