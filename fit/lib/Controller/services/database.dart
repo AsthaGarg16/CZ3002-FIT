@@ -1,5 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
-// import '../../Entity/User.dart';
+// import '../../Entity/FitUser.dart';
 //
 //
 // class DatabaseService{
