@@ -8,6 +8,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email='';
   String password='';
@@ -39,6 +40,8 @@ class _LoginState extends State<Login> {
             .size
             .height,
         width: double.infinity,
+        child: Form(
+            key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -83,7 +86,7 @@ class _LoginState extends State<Login> {
                       const SizedBox(
                         height: 5,
                       ),
-                      TextField(
+                      TextFormField(
                         obscureText: false,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -99,6 +102,13 @@ class _LoginState extends State<Login> {
                             .of(context)
                             .textTheme
                             .bodyText1,
+                        validator: (String? value) {
+                          if (value != null && value.isEmpty) {
+                            return "Please enter email";
+                          }
+
+                          return "null";
+                        },
                         onChanged: (val) {
                           setState(() => email = val);
                         },
@@ -119,7 +129,7 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             height: 5,
                           ),
-                          TextField(
+                          TextFormField(
                             obscureText: true,
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -135,6 +145,17 @@ class _LoginState extends State<Login> {
                                 .of(context)
                                 .textTheme
                                 .bodyText1,
+
+                            validator: (String? value) {
+                              if (value != null && value.isEmpty) {
+                                return "Please enter a password";
+                              }
+                              if (value != null && value.length<6) {
+                                return "Enter a password 6+ chars long";
+                              }
+
+                              return null;
+                            },
                             onChanged: (val) {
                               setState(() => password = val);
                             },
@@ -155,8 +176,12 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       print(email);
                       print(password);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => HomePage()));
+                      if(_formKey.currentState!.validate())
+                        {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage()));
+                        }
+
                     },
                     color: Theme
                         .of(context)
@@ -196,7 +221,7 @@ class _LoginState extends State<Login> {
               ],
             ),
           ],
-        ),
+        )),
       ),
     );
   }
