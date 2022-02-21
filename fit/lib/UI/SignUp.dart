@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'dart:developer' as developer;
 
 import './Login.dart';
@@ -38,6 +37,8 @@ class CustomPageRoute extends PageRouteBuilder {
     }
 }
 
+enum Diet { vegan, vegetarian, }
+
 //Using preference page as a separate class instead of inlcuding it in the sign up page class in
 //case we want to use this page in the app settings later
 class PreferencePage extends StatefulWidget{
@@ -51,6 +52,9 @@ class _PreferencePageState extends State<PreferencePage>{
   bool _glutenFree = false;
   bool _vegan = false;
   bool _vegetarian = false;
+  Diet? _diet = Diet.vegetarian;
+
+
   late TextEditingController _compartmentText;
 
   @override
@@ -63,7 +67,6 @@ class _PreferencePageState extends State<PreferencePage>{
   void _setVegan(bool value){
     _vegan = value;
     if(_vegan){
-      _dairyFree = true;
       _setVegetarian(!_vegan);
     }
   }
@@ -115,25 +118,6 @@ class _PreferencePageState extends State<PreferencePage>{
                   height: 30,
                 ),
 
-                // NumberPicker(
-                //   value: _numCompartmentsInt,
-                //   minValue: 1,
-                //   maxValue: 99,
-                //   itemCount: 1,
-                //   step: 1,
-                //   haptics: true,
-                //   onChanged: (value) => setState(() => _numCompartmentsInt = value),
-                //   axis: Axis.horizontal,
-                //   // decoration: BoxDecoration(
-                //   //   borderRadius: BorderRadius.circular(16),
-                //   //   border: Border.all(color: Colors.black26),
-                //   // ),
-                //   // textStyle: Theme.of(context).textTheme.bodyText1,
-                //   selectedTextStyle: Theme.of(context).textTheme.bodyLarge,
-                //   itemHeight: 40,
-                //   itemWidth: 30,
-                // ),
-
                 IconButton(
                   icon: Icon(Icons.add, size: 13.0),
                   onPressed: () => setState(() {
@@ -144,26 +128,6 @@ class _PreferencePageState extends State<PreferencePage>{
                 ),
               ]
           ),
-            // trailing: DropdownButton<String>(
-            //   value: _numCompartments,
-            //   elevation: 16,
-            //   style: Theme.of(context).textTheme.labelMedium,
-            //   underline: Container(
-            //     height: 2,
-            //   ),
-            //   onChanged: (String? newValue) {
-            //     setState(() {
-            //       _numCompartments = newValue!;
-            //     });
-            //   },
-            //   items: <String>['One', 'Two', 'Free', 'Four']
-            //       .map<DropdownMenuItem<String>>((String value) {
-            //     return DropdownMenuItem<String>(
-            //       value: value,
-            //       child: Text(value),
-            //     );
-            //   }).toList(),
-            // )
         ),
 
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
@@ -185,6 +149,50 @@ class _PreferencePageState extends State<PreferencePage>{
         //       child: Text("Fridge", style: Theme.of(context).textTheme.headline3)
         //   ),
         // ),
+
+        RadioListTile<Diet>(
+          toggleable: true,
+          title: Text('Vegetarian', style: Theme.of(context).textTheme.bodyText1,),
+          value: Diet.vegetarian,
+          groupValue: _diet,
+          onChanged: (Diet? value) {
+            setState(() {
+              _diet = value;
+              if(_diet != null){
+                _setVegetarian(true);
+              }else{
+                _setVegetarian(false);
+              }
+            });
+          },
+          controlAffinity: ListTileControlAffinity.trailing
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+        RadioListTile<Diet>(
+          toggleable: true,
+          title: Text('Vegan', style: Theme.of(context).textTheme.bodyText1,),
+          value: Diet.vegan,
+          groupValue: _diet,
+          onChanged: (Diet? value) {
+            setState(() {
+              _diet = value;
+              if(_diet != null){
+                _setVegan(true);
+              }else{
+                _setVegan(false);
+              }
+            });
+          },
+          controlAffinity: ListTileControlAffinity.trailing
+        ),
+
+        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+        ListTile(
+          title: Text("Allergens", style: Theme.of(context).textTheme.headline3),
+        ),
 
         CheckboxListTile(
           title: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
@@ -211,30 +219,6 @@ class _PreferencePageState extends State<PreferencePage>{
         ),
 
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
-
-        CheckboxListTile(
-          title: Text('Vegetarian', style: Theme.of(context).textTheme.bodyText1),
-          value: _vegetarian,
-          onChanged: (bool? value) {
-            setState(() {
-              _setVegetarian(!_vegetarian);
-              // developer.log(_glutenFree.toString());
-            });
-          },
-        ),
-
-        CheckboxListTile(
-          title: Text('Vegan', style: Theme.of(context).textTheme.bodyText1),
-          value: _vegan,
-          onChanged: (bool? value) {
-            setState(() {
-              _setVegan(!_vegan);
-              // developer.log(_glutenFree.toString());
-            });
-          },
-        ),
-
-        const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
       ],
     );
   }
@@ -242,7 +226,7 @@ class _PreferencePageState extends State<PreferencePage>{
   Widget _buildPreferenceList(){
     return ListView(
       // padding: EdgeInsets.symmetric(horizontal: 5.0),
-      physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       children: [
         _fridgePreferenceList(),
         SizedBox(height: 20.0),
@@ -314,7 +298,16 @@ class _PreferencePageState extends State<PreferencePage>{
   }
 }
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget{
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+
 
   @override
   Widget build(BuildContext context) {
@@ -363,9 +356,10 @@ class SignupPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Column(
                         children: [
-                          makeInput(label: "Email:"),
-                          makeInput(label: "Password:",obscureText: true),
-                          makeInput(label: "Confirm Pasword:",obscureText: true)
+                          makeInput(label: "Name"),
+                          makeInput(label: "Email"),
+                          makeInput(label: "Password",obscureText: true),
+                          makeInput(label: "Confirm Pasword",obscureText: true)
                         ],
                       ),
                     ),
@@ -380,7 +374,7 @@ class SignupPage extends StatelessWidget {
                             Navigator.of(context).push(
                               //To make sliding transision we use custom page route which extends material page route
                                 CustomPageRoute(
-                                  oldScreen: this,
+                                  oldScreen: this.widget,
                                   newScreen: PreferencePage(),
                                 )
                             );
@@ -406,6 +400,60 @@ class SignupPage extends StatelessWidget {
             ),
           ),
       ),
+    );
+  }
+
+  Widget makeInput({label="text", obscureText = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        TextFormField(
+          key: ValueKey("ABC"),
+          validator: (String? value){
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: Theme.of(context).textTheme.labelMedium,
+          onChanged: (value) {
+            if(widget.key.toString() == "Email") {
+              setState(() => email = value);
+              print(email);
+            }else if(widget.key.toString() == "Password"){
+              setState(() => password = value);
+              print(password);
+            }else if(widget.key.toString() == "Confirm Password"){
+              setState(() => confirmPassword = value);
+              print(confirmPassword);
+            }
+            print(widget.key);
+
+          },
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: (Colors.grey[400])!,
+              ),
+            ),
+            border: OutlineInputBorder(
+                borderSide: BorderSide(color: (Colors.grey[400])!)),
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        )
+      ],
     );
   }
 }
