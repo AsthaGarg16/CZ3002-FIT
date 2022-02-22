@@ -107,7 +107,7 @@ class _LoginState extends State<Login> {
                             return "Please enter email";
                           }
 
-                          return "null";
+                          return null;
                         },
                         onChanged: (val) {
                           setState(() => email = val);

@@ -5,14 +5,16 @@ class ShopListWidget extends StatefulWidget {
     required this.label,
     required this.quantity,
     required this.isRecipe,
-    required this.recipe,}) : super(key: key);
+    required this.recipe,
+    required this.value,
+    required this.labelColor}) : super(key: key);
 
   final String label;
   final String quantity;
   final bool isRecipe;
   final String recipe;
-  bool value = false;
-  Color labelColor = Colors.black87;
+  bool value;
+  Color labelColor;
 
   @override
   State<ShopListWidget> createState() => _MyStatefulWidgetState();
@@ -62,14 +64,14 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     Expanded(flex: 4,child: Text(widget.label, style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.normal,
-                        color: widget.labelColor))),
+                        color: widget.value?Colors.teal:Colors.black87))),
                     Expanded(
                         child: Container(
                           alignment: Alignment.centerRight,
                           child: Text(widget.quantity, style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.normal,
-                              color: widget.labelColor)),
+                              color: widget.value?Colors.teal:Colors.black87)),
                         )
 
                     ),
