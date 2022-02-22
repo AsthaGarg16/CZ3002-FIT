@@ -1,3 +1,4 @@
+import 'package:fit/Controller/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:developer' as developer;
@@ -310,6 +311,7 @@ class _SignupPageState extends State<SignupPage> {
   String email = '';
   String password = '';
   String confirmPassword = '';
+  AuthService _auth=new AuthService();
 
 
   @override
@@ -340,239 +342,256 @@ class _SignupPageState extends State<SignupPage> {
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text ("Welcome!", style: Theme.of(context).textTheme.subtitle2,),
-                        const SizedBox(height: 20,),
-                        Text("Create an Account", style: Theme.of(context).textTheme.bodyText2,),
-                        SizedBox(height: 30,)
-                      ],
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Name",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              TextFormField(
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: (Colors.grey[400])!,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: (Colors.grey[400])!)),
-                                ),
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyText1,
-
-                                validator: (String? value) {
-                                  if (value != null && value.isEmpty) {
-                                    return "Please enter your name";
-                                  }
-
-                                  return null;
-                                },
-                                onChanged: (val) {
-                                  setState(() => name = val);
-                                },
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Email: ",
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextFormField(
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: (Colors.grey[400])!,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
-                                    ),
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .bodyText1,
-                                    validator: (String? value) {
-                                      if (value != null && value.isEmpty) {
-                                        return "Please enter email";
-                                      }
-                                      return "null";
-                                    },
-                                    onChanged: (val) {
-                                      setState(() => email = val);
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 30,
-                                  )
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Password: ",
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextFormField(
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: (Colors.grey[400])!,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
-                                    ),
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .bodyText1,
-
-                                    validator: (String? value) {
-                                      if (value != null && value.isEmpty) {
-                                        return "Please enter a password";
-                                      }
-                                      if (value != null && value.length<6) {
-                                        return "Enter a password 6+ chars long";
-                                      }
-
-                                      return null;
-                                    },
-                                    onChanged: (val) {
-                                      setState(() => password = val);
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 30,
-                                  )
-                                ],
-                              ),
-
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Password: ",
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextFormField(
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: (Colors.grey[400])!,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
-                                    ),
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .bodyText1,
-
-                                    validator: (String? value) {
-                                      if (value != null && value.isEmpty) {
-                                        return "Please confirm your password";
-                                      }
-                                      if (value != null && value != password) {
-                                        return "Passwords do not match";
-                                      }
-
-                                      return null;
-                                    },
-                                    onChanged: (val) {
-                                      setState(() => confirmPassword = val);
-                                      print(confirmPassword);
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 30,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-
-                          // makeInput(label: "Name"),
-                          // makeInput(label: "Email"),
-                          // makeInput(label: "Password",obscureText: true),
-                          // makeInput(label: "Confirm Pasword",obscureText: true)
+                          Text ("Welcome!", style: Theme.of(context).textTheme.subtitle2,),
+                          const SizedBox(height: 20,),
+                          Text("Create an Account", style: Theme.of(context).textTheme.bodyText2,),
+                          SizedBox(height: 30,)
                         ],
                       ),
-                    ),
 
-                    Container(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Name",
+                                  style: TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                TextFormField(
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: (Colors.grey[400])!,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                  ),
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyText1,
+
+                                  validator: (String? value) {
+                                    if (value != null && value.isEmpty) {
+                                      return "Please enter your name";
+                                    }
+
+                                    return null;
+                                  },
+                                  onChanged: (val) {
+                                    setState(() => name = val);
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Email: ",
+                                      style: TextStyle(
+                                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextFormField(
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: (Colors.grey[400])!,
+                                          ),
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                      ),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyText1,
+                                      validator: (String? value) {
+                                        if (value != null && value.isEmpty) {
+                                          return "Please enter email";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (val) {
+                                        setState(() => email = val);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Password: ",
+                                      style: TextStyle(
+                                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextFormField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: (Colors.grey[400])!,
+                                          ),
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                      ),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyText1,
+
+                                      validator: (String? value) {
+                                        if (value != null && value.isEmpty) {
+                                          return "Please enter a password";
+                                        }
+                                        if (value != null && value.length<6) {
+                                          return "Enter a password 6+ chars long";
+                                        }
+
+                                        return null;
+                                      },
+                                      onChanged: (val) {
+                                        setState(() => password = val);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    )
+                                  ],
+                                ),
+
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Password: ",
+                                      style: TextStyle(
+                                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextFormField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: (Colors.grey[400])!,
+                                          ),
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                      ),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyText1,
+
+                                      validator: (String? value) {
+                                        if (value != null && value.isEmpty) {
+                                          return "Please confirm your password";
+                                        }
+                                        if (value != null && value != password) {
+                                          return "Passwords do not match";
+                                        }
+
+                                        return null;
+                                      },
+                                      onChanged: (val) {
+                                        setState(() => confirmPassword = val);
+                                        print(confirmPassword);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+
+                            // makeInput(label: "Name"),
+                            // makeInput(label: "Email"),
+                            // makeInput(label: "Password",obscureText: true),
+                            // makeInput(label: "Confirm Pasword",obscureText: true)
+                          ],
+                        ),
+                      ),
+
+                      Container(
                         padding: const EdgeInsets.symmetric(horizontal: 70),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),),
                         child: MaterialButton(
                           minWidth: double.infinity,
                           height:60,
-                          onPressed: (){
+                          onPressed: ()async{
                             print(name);
                             print(email);
                             print(password);
                             print(confirmPassword);
                             if(_formKey.currentState!.validate()) {
-                              Navigator.of(context).push(
-                                //To make sliding transision we use custom page route which extends material page route
-                                  CustomPageRoute(
-                                    oldScreen: this.widget,
-                                    newScreen: PreferencePage(),
-                                  )
-                              );
+
+                              await _auth
+                                  .registerWithEmailAndPassword(
+                                    email, password).then((signupSuccess)=>{
+                                      if(signupSuccess)
+                                        {
+                                        Navigator.of(context).push(
+                                        //To make sliding transision we use custom page route which extends material page route
+                                        CustomPageRoute(
+                                        oldScreen: this.widget,
+                                        newScreen: PreferencePage(),
+                                        )
+                                        )
+                                        }
+                              });
+                              // print("res"+result);
+
+                                    //frontend team change state according to this
+                                    // setState(() {
+                                    // error = 'Please supply a valid email';
+                                    // });
+
                             }
                           },
                           color: Colors.redAccent,
@@ -581,19 +600,22 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
 
-                    const SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Already have an account? "),
-                        Text("Login", style: Theme.of(context).textTheme.labelMedium),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Already have an account? "),
+                          Text("Login", style: Theme.of(context).textTheme.labelMedium),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+
+            )
+
           ),
       ),
     );
