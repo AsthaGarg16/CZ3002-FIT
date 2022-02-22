@@ -304,6 +304,9 @@ class SignupPage extends StatefulWidget{
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String name = '';
   String email = '';
   String password = '';
   String confirmPassword = '';
@@ -356,10 +359,197 @@ class _SignupPageState extends State<SignupPage> {
                       padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Column(
                         children: [
-                          makeInput(label: "Name"),
-                          makeInput(label: "Email"),
-                          makeInput(label: "Password",obscureText: true),
-                          makeInput(label: "Confirm Pasword",obscureText: true)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Name",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              TextFormField(
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: (Colors.grey[400])!,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                ),
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyText1,
+
+                                validator: (String? value) {
+                                  if (value != null && value.isEmpty) {
+                                    return "Please enter your name";
+                                  }
+
+                                  return null;
+                                },
+                                onChanged: (val) {
+                                  setState(() => name = val);
+                                },
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Email: ",
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: (Colors.grey[400])!,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                    ),
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyText1,
+                                    validator: (String? value) {
+                                      if (value != null && value.isEmpty) {
+                                        return "Please enter email";
+                                      }
+                                      return "null";
+                                    },
+                                    onChanged: (val) {
+                                      setState(() => email = val);
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  )
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Password: ",
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: (Colors.grey[400])!,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                    ),
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyText1,
+
+                                    validator: (String? value) {
+                                      if (value != null && value.isEmpty) {
+                                        return "Please enter a password";
+                                      }
+                                      if (value != null && value.length<6) {
+                                        return "Enter a password 6+ chars long";
+                                      }
+
+                                      return null;
+                                    },
+                                    onChanged: (val) {
+                                      setState(() => password = val);
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  )
+                                ],
+                              ),
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Password: ",
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: (Colors.grey[400])!,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: (Colors.grey[400])!)),
+                                    ),
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyText1,
+
+                                    validator: (String? value) {
+                                      if (value != null && value.isEmpty) {
+                                        return "Please confirm your password";
+                                      }
+                                      if (value != null && value != password) {
+                                        return "Passwords do not match";
+                                      }
+
+                                      return null;
+                                    },
+                                    onChanged: (val) {
+                                      setState(() => confirmPassword = val);
+                                      print(confirmPassword);
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          // makeInput(label: "Name"),
+                          // makeInput(label: "Email"),
+                          // makeInput(label: "Password",obscureText: true),
+                          // makeInput(label: "Confirm Pasword",obscureText: true)
                         ],
                       ),
                     ),
@@ -371,13 +561,19 @@ class _SignupPageState extends State<SignupPage> {
                           minWidth: double.infinity,
                           height:60,
                           onPressed: (){
-                            Navigator.of(context).push(
-                              //To make sliding transision we use custom page route which extends material page route
-                                CustomPageRoute(
-                                  oldScreen: this.widget,
-                                  newScreen: PreferencePage(),
-                                )
-                            );
+                            print(name);
+                            print(email);
+                            print(password);
+                            print(confirmPassword);
+                            if(_formKey.currentState!.validate()) {
+                              Navigator.of(context).push(
+                                //To make sliding transision we use custom page route which extends material page route
+                                  CustomPageRoute(
+                                    oldScreen: this.widget,
+                                    newScreen: PreferencePage(),
+                                  )
+                              );
+                            }
                           },
                           color: Colors.redAccent,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -403,57 +599,57 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget makeInput({label="text", obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        TextFormField(
-          key: ValueKey("ABC"),
-          validator: (String? value){
-            if (value == null || value.isEmpty) {
-              return 'Please enter some text';
-            }
-            return null;
-          },
-          style: Theme.of(context).textTheme.labelMedium,
-          onChanged: (value) {
-            if(widget.key.toString() == "Email") {
-              setState(() => email = value);
-              print(email);
-            }else if(widget.key.toString() == "Password"){
-              setState(() => password = value);
-              print(password);
-            }else if(widget.key.toString() == "Confirm Password"){
-              setState(() => confirmPassword = value);
-              print(confirmPassword);
-            }
-            print(widget.key);
-
-          },
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: (Colors.grey[400])!,
-              ),
-            ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: (Colors.grey[400])!)),
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        )
-      ],
-    );
-  }
+  // Widget makeInput({label="text", obscureText = false}) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: const TextStyle(
+  //             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+  //       ),
+  //       const SizedBox(
+  //         height: 5,
+  //       ),
+  //       TextFormField(
+  //         key: ValueKey("ABC"),
+  //         validator: (String? value){
+  //           if (value == null || value.isEmpty) {
+  //             return 'Please enter some text';
+  //           }
+  //           return null;
+  //         },
+  //         style: Theme.of(context).textTheme.labelMedium,
+  //         onChanged: (value) {
+  //           if(widget.key.toString() == "Email") {
+  //             setState(() => email = value);
+  //             print(email);
+  //           }else if(widget.key.toString() == "Password"){
+  //             setState(() => password = value);
+  //             print(password);
+  //           }else if(widget.key.toString() == "Confirm Password"){
+  //             setState(() => confirmPassword = value);
+  //             print(confirmPassword);
+  //           }
+  //           print(widget.key);
+  //
+  //         },
+  //         obscureText: obscureText,
+  //         decoration: InputDecoration(
+  //           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+  //           enabledBorder: OutlineInputBorder(
+  //             borderSide: BorderSide(
+  //               color: (Colors.grey[400])!,
+  //             ),
+  //           ),
+  //           border: OutlineInputBorder(
+  //               borderSide: BorderSide(color: (Colors.grey[400])!)),
+  //         ),
+  //       ),
+  //       const SizedBox(
+  //         height: 30,
+  //       )
+  //     ],
+  //   );
+  // }
 }
