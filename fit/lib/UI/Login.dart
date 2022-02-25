@@ -1,3 +1,4 @@
+import 'package:fit/Controller/services/auth.dart';
 import 'package:flutter/material.dart';
 
 import './HomePage.dart';
@@ -12,6 +13,7 @@ class _LoginState extends State<Login> {
 
   String email='';
   String password='';
+  AuthService _auth=new AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -173,13 +175,19 @@ class _LoginState extends State<Login> {
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height: 60,
-                    onPressed: () {
+                    onPressed: ()async{
                       print(email);
                       print(password);
                       if(_formKey.currentState!.validate())
                         {
+                          await _auth
+                              .signIn(
+                              email, password).then((loginSuccess)=>{
+                                if(loginSuccess){
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()));
+                              builder: (BuildContext context) => HomePage()))
+                                }
+                              });
                         }
 
                     },
