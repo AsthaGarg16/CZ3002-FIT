@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit/Controller/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,6 +55,8 @@ class _PreferencePageState extends State<PreferencePage>{
   bool _vegan = false;
   bool _vegetarian = false;
   Diet? _diet = Diet.vegetarian;
+
+  CollectionReference fit = FirebaseFirestore.instance.collection('fit');
 
 
   late TextEditingController _compartmentText;
@@ -285,7 +288,9 @@ class _PreferencePageState extends State<PreferencePage>{
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height:60,
-                    onPressed: (){
+                    onPressed: () async {
+                      await fit.add({'Email': 'dummy@email.com' , 'Vegan':_vegan,'Vegetarian':_vegetarian, 'dairyFree': _dairyFree,
+                      'fridgeDetails': _numCompartmentsInt, 'glutenFree': _glutenFree}).then((value) => print("User Details Added"));
                     },
                     color: Colors.redAccent,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -308,7 +313,7 @@ class _SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String name = '';
-  String email = '';
+  static String email = '';
   String password = '';
   String confirmPassword = '';
   AuthService _auth=new AuthService();
