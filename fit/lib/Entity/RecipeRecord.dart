@@ -2,7 +2,7 @@ import 'package:fit/Entity/FoodRecord.dart';
 
 class RecipeRecord {
   int _recipeId;
-  String  _recipeName;
+  String _recipeName;
   String _recipeIngredient;
   String _email;
 
@@ -14,16 +14,14 @@ class RecipeRecord {
 
   String get recipeName => _recipeName;
 
-  set recipeName(String value){
+  set recipeName(String value) {
     _recipeName = value;
   }
 
-  RecipeRecord(
-      String email,
+  RecipeRecord(String email,
       String recipeName,
       int recipeId,
-      String recipeIngredient
-      )
+      String recipeIngredient)
       : _email = email,
         _recipeName = recipeName,
         _recipeId = recipeId,
@@ -32,13 +30,13 @@ class RecipeRecord {
 
   int get recipeId => _recipeId;
 
-  set recipeId(int value){
+  set recipeId(int value) {
     _recipeId = value;
   }
 
   String get recipeIngredient => _recipeIngredient;
 
-  set recipeIngredient(String value){
+  set recipeIngredient(String value) {
     _recipeIngredient = value;
   }
-
+}
