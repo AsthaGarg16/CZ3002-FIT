@@ -18,7 +18,7 @@ class UserController{
 
     await for (var snapshot in _firestore
         .collection('fit')
-    //.where('username', isEqualTo: username)
+        .where('Email', isEqualTo: email)
         .snapshots()) {
       var documents = snapshot.docs;
       if (documents.isNotEmpty) {
