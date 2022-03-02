@@ -1,6 +1,4 @@
 
-
-
 import 'package:fit/Entity/FoodRecord.dart';
 
 class Inventory {
