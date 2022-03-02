@@ -4,6 +4,7 @@
 class FitUser {
   String _email;
 
+
   String get email => _email;
 
   set email(String value) {
@@ -17,15 +18,15 @@ class FitUser {
   bool _vegetarian;
   bool _vegan;
 
-  FitUser(
-      String name,
-        String email,
-        int fridgeDetails,
-        bool dairyFree,
-        bool glutenFree,
-        bool vegetarian,
-        bool vegan
-        )
+  FitUser({
+    String name = " ",
+    String email = " ",
+    int fridgeDetails = 0,
+    bool dairyFree = false,
+    bool glutenFree = false,
+    bool vegetarian = false,
+    bool vegan = false
+})
       : _name = name,
         _email = email,
        _fridgeDetails=fridgeDetails,

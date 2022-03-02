@@ -289,7 +289,7 @@ class _PreferencePageState extends State<PreferencePage>{
                     minWidth: double.infinity,
                     height:60,
                     onPressed: () async {
-                      await fit.add({'Email': 'dummy@email.com' , 'Vegan':_vegan,'Vegetarian':_vegetarian, 'dairyFree': _dairyFree,
+                      await fit.add({'Email': "dummyname@email.com" , 'Vegan':_vegan,'Vegetarian':_vegetarian, 'dairyFree': _dairyFree,
                       'fridgeDetails': _numCompartmentsInt, 'glutenFree': _glutenFree}).then((value) => print("User Details Added"));
                     },
                     color: Colors.redAccent,
