@@ -215,7 +215,11 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text("Don't have an account?"),
+                    Text("Don't have an account?",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .labelMedium,),
                     const SizedBox(
                       width: 10,
                     ),

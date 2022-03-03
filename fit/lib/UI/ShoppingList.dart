@@ -71,34 +71,11 @@ class ShoppingList extends StatefulWidget {
 
 class _ShopListState extends State<ShoppingList> {
 
-  void reorderData(int oldindex, int newindex){
-    setState(() {
-      if(newindex>oldindex){
-        newindex-=1;
-      }
-      final items =widget.shopList.removeAt(oldindex);
-      widget.shopList.insert(newindex, items);
-    });
-  }
-
-  void sorting(){
-    setState(() {
-      widget.shopList.sort();
-    });
-  }
 
 
   @override
   Widget build(BuildContext context) {
 
-    void _handleCheck(bool newValue)
-    {
-      setState(() {
-
-
-      }
-      );
-    }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
