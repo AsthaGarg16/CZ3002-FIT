@@ -7,7 +7,8 @@ class ShopListWidget extends StatefulWidget {
     required this.isRecipe,
     required this.recipe,
     required this.value,
-    required this.labelColor}) : super(key: key);
+    required this.labelColor,
+    required this.onValueChanged}) : super(key: key);
 
   final String label;
   final String quantity;
@@ -15,14 +16,13 @@ class ShopListWidget extends StatefulWidget {
   final String recipe;
   bool value;
   Color labelColor;
+  final Function onValueChanged;
 
   @override
   State<ShopListWidget> createState() => _MyStatefulWidgetState();
 }
 
 class _MyStatefulWidgetState extends State<ShopListWidget> {
-
-
   @override
   Widget build(BuildContext context) {
     bool _isSelected = false;
@@ -40,6 +40,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                   _isSelected = !widget.value;
                   widget.value=_isSelected;
                   widget.labelColor = widget.value?Colors.teal:Colors.black87;
+                  widget.onValueChanged();
                 });
 
               },
@@ -55,6 +56,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                             _isSelected = newValue!;
                             widget.value = _isSelected;
                             widget.labelColor = widget.value?Colors.teal:Colors.black87;
+                            widget.onValueChanged();
                           });
                         },
                       ),
@@ -88,4 +90,5 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
     );
 
   }
+
 }

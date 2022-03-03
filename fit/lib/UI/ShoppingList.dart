@@ -70,6 +70,7 @@ class ShoppingList extends StatefulWidget {
 }
 
 class _ShopListState extends State<ShoppingList> {
+
   void reorderData(int oldindex, int newindex){
     setState(() {
       if(newindex>oldindex){
@@ -124,7 +125,16 @@ class _ShopListState extends State<ShoppingList> {
                                   recipe: widget.shopList[index]['recipe'].toString(),
                                   isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
                                   value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
-                                  labelColor: Colors.black87
+                                  labelColor: Colors.black87,
+                                  onValueChanged: (){
+                                    setState((){
+                                      Map<String, Object> shopListItem = widget.shopList.removeAt(index);
+                                      shopListItem["value"] = true;
+                                      widget.shopListChecked.add(shopListItem);
+                                      // print(widget.shopListChecked);
+                                      // print(widget.shopList);
+                                    });
+                                  },
                               );
                             }),
                             ListView.builder(
@@ -139,7 +149,10 @@ class _ShopListState extends State<ShoppingList> {
                                       recipe: widget.shopListChecked[index]['recipe'].toString(),
                                       isRecipe: widget.shopListChecked[index]['isRecipe'].toString().toLowerCase() == 'true',
                                       value: widget.shopListChecked[index]['value'].toString().toLowerCase() == 'true',
-                                      labelColor: Colors.black87
+                                      labelColor: Colors.black87,
+                                      onValueChanged: (index){
+
+                                      },
                                   );
                                 })
                           ]
