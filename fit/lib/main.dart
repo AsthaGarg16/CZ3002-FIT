@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.normal,
-              color: Colors.black87),
+              color: Colors.white),
         ),
         fontFamily: "mw",
       ),
