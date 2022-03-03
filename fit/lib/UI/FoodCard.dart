@@ -77,8 +77,8 @@ class FoodCardState extends State<FoodCard> {
                                             IconButton(
                                               icon: new Icon(Icons.remove),
                                               onPressed: () =>
-                                                  setState(() => widget
-                                                      .foodQuantity--),),
+                                              { if (widget.foodQuantity > 0) setState(() => widget.foodQuantity--)
+                                              },),
                                             Text(widget.foodQuantity.toString(),
                                                 style: Theme
                                                     .of(context)
