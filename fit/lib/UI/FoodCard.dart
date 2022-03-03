@@ -39,45 +39,65 @@ class FoodCardState extends State<FoodCard> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Stack(
-                              overflow: Overflow.visible,
-                              children: <Widget>[
-                                Positioned(
-                                  right: -40.0,
-                                  top: -40.0,
-                                  child: InkResponse(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: CircleAvatar(
-                                      child: Icon(Icons.close),
-                                      backgroundColor: Colors.red,
+                          return StatefulBuilder(builder: (context, StateSetter setState)
+                          {
+                            return AlertDialog(
+                              content: Stack(
+                                overflow: Overflow.visible,
+                                children: <Widget>[
+                                  Positioned(
+                                    right: -40.0,
+                                    top: -40.0,
+                                    child: InkResponse(
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: CircleAvatar(
+                                        child: Icon(Icons.close),
+                                        backgroundColor: Colors.red,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Form(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Center(
-                                        child: Text(widget.foodName.toUpperCase(),style: Theme.of(context).textTheme.bodyText1),
-                                      ),
+                                  Form(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Center(
+                                          child: Text(
+                                              widget.foodName.toUpperCase(),
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                        ),
 
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          widget.foodQuantity!=0? new  IconButton(icon: new Icon(Icons.remove),onPressed: ()=>setState(()=>widget.foodQuantity--),):new Container(),
-                                          new Text(widget.foodQuantity.toString(),style: Theme.of(context).textTheme.bodyText1),
-                                          new IconButton(icon: new Icon(Icons.add),onPressed: ()=>setState(()=>widget.foodQuantity++))
-                                        ],
-                                      ),
-                                    ],
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            IconButton(
+                                              icon: new Icon(Icons.remove),
+                                              onPressed: () =>
+                                                  setState(() => widget
+                                                      .foodQuantity--),),
+                                            Text(widget.foodQuantity.toString(),
+                                                style: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyText1),
+                                            IconButton(
+                                                icon: new Icon(Icons.add),
+                                                onPressed: () =>
+                                                    setState(() => widget
+                                                        .foodQuantity++))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
+                                ],
+                              ),
+                            );
+                          });
                         });
                   },
                   child:
