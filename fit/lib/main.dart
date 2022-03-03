@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               color: Colors.black87,
               letterSpacing: 2.0),
           headline3: TextStyle(
-              fontSize: 16.0,
+              fontSize: 20.0,
               fontWeight: FontWeight.bold,
               color: Colors.teal,
               letterSpacing: 2.0),
@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
               color: Colors.black87,
               letterSpacing: 1.5),
           labelMedium: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.normal,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
               color: Colors.black87,
               letterSpacing: 1.5),
           bodyText1: TextStyle(
@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
               color: Colors.black87),
           bodyText2: TextStyle(
               fontSize: 13.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white),
+              fontWeight: FontWeight.normal,
+              color: Colors.black87),
         ),
         fontFamily: "mw",
       ),
