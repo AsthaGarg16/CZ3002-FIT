@@ -178,17 +178,19 @@ class _LoginState extends State<Login> {
                     onPressed: ()async{
                       print(email);
                       print(password);
-                      if(_formKey.currentState!.validate())
-                        {
-                          await _auth
-                              .signIn(
-                              email, password).then((loginSuccess)=>{
-                                if(loginSuccess){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()))
-                                }
-                              });
-                        }
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()));
+                      // if(_formKey.currentState!.validate())
+                      //   {
+                      //     await _auth
+                      //         .signIn(
+                      //         email, password).then((loginSuccess)=>{
+                      //           if(loginSuccess){
+                      //     Navigator.of(context).push(MaterialPageRoute(
+                      //         builder: (BuildContext context) => HomePage()))
+                      //           }
+                      //         });
+                      //   }
 
                     },
                     color: Theme

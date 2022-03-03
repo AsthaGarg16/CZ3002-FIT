@@ -110,47 +110,52 @@ class _ShopListState extends State<ShoppingList> {
                 Expanded(
                     child: Scrollbar(
                         isAlwaysShown: true,
-                        child: ReorderableListView(
+                        child: Column(
                           children: <Widget>[
-                            for(final list in widget.shopList)
-
-                              ShopListWidget(
-                                key:ValueKey(list),
-                              label:
-                              list['label'].toString(),
-                              quantity: list['quantity'].toString(),
-                              recipe: list['recipe'].toString(),
-                              isRecipe: list['isRecipe'].toString().toLowerCase() == 'true',
-                                value: list['value'].toString().toLowerCase() == 'true',
+                        ListView.builder(
+                        shrinkWrap: true,
+                            itemCount: widget.shopList.length,
+                            itemBuilder: (context, index) {
+                              return ShopListWidget(
+                                  key:ValueKey(widget.shopList[index]),
+                                  label:
+                                  widget.shopList[index]['label'].toString(),
+                                  quantity: widget.shopList[index]['quantity'].toString(),
+                                  recipe: widget.shopList[index]['recipe'].toString(),
+                                  isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                  value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
                                   labelColor: Colors.black87
-                              ),
-                            for(final list in widget.shopListChecked)
+                              );
+                            }),
+                            ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: widget.shopListChecked.length,
+                                itemBuilder: (context, index) {
+                                  return ShopListWidget(
+                                      key:ValueKey(widget.shopListChecked[index]),
+                                      label:
+                                      widget.shopListChecked[index]['label'].toString(),
+                                      quantity: widget.shopListChecked[index]['quantity'].toString(),
+                                      recipe: widget.shopListChecked[index]['recipe'].toString(),
+                                      isRecipe: widget.shopListChecked[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                      value: widget.shopListChecked[index]['value'].toString().toLowerCase() == 'true',
+                                      labelColor: Colors.black87
+                                  );
+                                })
+                          ]
+                        )
 
-                              ShopListWidget(
-                                  key:ValueKey(list),
-                                  label:list['label'].toString(),
-                                  quantity: list['quantity'].toString(),
-                                  recipe: list['recipe'].toString(),
-                                  isRecipe: list['isRecipe'].toString().toLowerCase() == 'true',
-                                  value: list['value'].toString().toLowerCase() == 'true',
-                                labelColor: Colors.teal,
-                              ),
-
-                          ],
-                          onReorder: reorderData,
 
 
-                            )))
-              ],
-            ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            //_showMaterialDialog();
-            // Add your onPressed code here!
-          },
+            )),]),),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      //_showMaterialDialog();
+                      // Add your onPressed code here!
+                    },
 
-          child: const Icon(Icons.add, size:30.0),
-        ));
+                    child: const Icon(Icons.add, size:30.0),
+                  )
+    );
   }
 }
