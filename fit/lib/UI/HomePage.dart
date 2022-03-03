@@ -29,8 +29,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: AppBar(
-            title: Text(titles[_currentIndex]),
-            centerTitle: true
+            title: Text(titles[_currentIndex], style: Theme.of(context).textTheme.subtitle1),
+            centerTitle: true,
           ),
           body: _pages[_currentIndex],
           bottomNavigationBar: BottomNavigationBar(
