@@ -61,14 +61,14 @@ class FoodCardState extends State<FoodCard> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       Center(
-                                        child: Text(widget.foodName.toUpperCase(),style: Theme.of(context).textTheme.subtitle1),
+                                        child: Text(widget.foodName.toUpperCase(),style: Theme.of(context).textTheme.bodyText1),
                                       ),
 
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           widget.foodQuantity!=0? new  IconButton(icon: new Icon(Icons.remove),onPressed: ()=>setState(()=>widget.foodQuantity--),):new Container(),
-                                          new Text(widget.foodQuantity.toString()),
+                                          new Text(widget.foodQuantity.toString(),style: Theme.of(context).textTheme.bodyText1),
                                           new IconButton(icon: new Icon(Icons.add),onPressed: ()=>setState(()=>widget.foodQuantity++))
                                         ],
                                       ),
@@ -92,7 +92,7 @@ class FoodCardState extends State<FoodCard> {
                             ),
                             Center(
                               child: Text(widget.foodName,
-                                  style: Theme.of(context).textTheme.subtitle2),
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ),
                             Center(
                               child: Text(widget.foodExpiry,

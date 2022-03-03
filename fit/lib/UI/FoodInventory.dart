@@ -75,16 +75,17 @@ class _FoodInventoryState extends State<FoodInventory>{
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TabBar(
                 tabs: [
-                  Tab(child: Text('All', style: Theme.of(context).textTheme.subtitle1)),
-                  Tab(child: Text('Diary Free', style: Theme.of(context).textTheme.subtitle1)),
-                  Tab(child: Text('Gluten Free', style: Theme.of(context).textTheme.subtitle1)),
-                  Tab(child: Text('Vegan', style: Theme.of(context).textTheme.subtitle1)),
-                  Tab(child: Text('Vegetarian', style: Theme.of(context).textTheme.subtitle1)),
+                  Tab(child: Text('All', style: Theme.of(context).textTheme.bodyText2)),
+                  Tab(child: Text('Diary Free', style: Theme.of(context).textTheme.bodyText2)),
+                  Tab(child: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText2)),
+                  Tab(child: Text('Vegan', style: Theme.of(context).textTheme.bodyText2)),
+                  Tab(child: Text('Vegetarian', style: Theme.of(context).textTheme.bodyText2)),
                 ],
               )
             ],
