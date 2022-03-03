@@ -8,12 +8,13 @@ class FoodCard extends StatefulWidget {
         required this.foodExpiry,
         required this.foodImage,
         required this.foodQuantity,
+        required this.onQuantityChanged,
       })
       : super(key: key);
   final String foodName;
   final String foodExpiry;
   final String foodImage;
-
+  final Function(int) onQuantityChanged;
   int foodQuantity;
 
   @override
@@ -27,8 +28,6 @@ class FoodCardState extends State<FoodCard> {
   }
   @override
   Widget build(BuildContext context) {
-    Timer _timer;
-
     return Center(
       child:
             Container(margin:EdgeInsets.all(8.0), height: 250, child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -68,7 +67,18 @@ class FoodCardState extends State<FoodCard> {
                                               style: Theme
                                                   .of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .headline3),
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                          padding: EdgeInsets.only(top: 16.0),
+                                          child: Text(
+                                              "Quantity",
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .labelMedium),
+                                          )
                                         ),
 
                                         Row(
@@ -76,8 +86,10 @@ class FoodCardState extends State<FoodCard> {
                                           children: <Widget>[
                                             IconButton(
                                               icon: new Icon(Icons.remove),
-                                              onPressed: () =>
-                                              { if (widget.foodQuantity > 0) setState(() => widget.foodQuantity--)
+                                              onPressed: ()
+                                              {
+                                                if (widget.foodQuantity > 0) setState(() => widget.foodQuantity--);
+                                                widget.onQuantityChanged(widget.foodQuantity);
                                               },),
                                             Text(widget.foodQuantity.toString(),
                                                 style: Theme
@@ -86,10 +98,30 @@ class FoodCardState extends State<FoodCard> {
                                                     .bodyText1),
                                             IconButton(
                                                 icon: new Icon(Icons.add),
-                                                onPressed: () =>
-                                                    setState(() => widget
-                                                        .foodQuantity++))
+                                                onPressed: ()
+                                                {
+                                                  setState(() => widget.foodQuantity++);
+                                                  widget.onQuantityChanged(widget.foodQuantity);
+                                                })
                                           ],
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                              padding: EdgeInsets.only(bottom: 8.0),
+                                              child: Text(
+                                              "Food Expiry",
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .labelMedium),)
+                                        ),
+                                        Center(
+                                          child: Text(
+                                              widget.foodExpiry,
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyText1),
                                         ),
                                       ],
                                     ),

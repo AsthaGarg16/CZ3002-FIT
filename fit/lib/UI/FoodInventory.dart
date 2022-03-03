@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'FoodCard.dart';
 class FoodInventory extends StatefulWidget{
   FoodInventory({Key? key}) : super(key: key);
-
-  @override
-  _FoodInventoryState createState() => new _FoodInventoryState();
-}
-
-class _FoodInventoryState extends State<FoodInventory>{
-  @override
   List<Map<String, dynamic>> foodList = [
     {
       'title': 'Apple',
@@ -61,6 +54,11 @@ class _FoodInventoryState extends State<FoodInventory>{
   ];
 
 
+  @override
+  _FoodInventoryState createState() => new _FoodInventoryState();
+}
+
+class _FoodInventoryState extends State<FoodInventory>{
 
 
   @override
@@ -69,7 +67,7 @@ class _FoodInventoryState extends State<FoodInventory>{
   }
 
   Widget build(BuildContext context) {
-    int noFood = foodList.length ;
+    int noFood = widget.foodList.length ;
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -102,10 +100,14 @@ class _FoodInventoryState extends State<FoodInventory>{
                       itemCount: noFood,
                       itemBuilder: (ctx, i) {
                         return FoodCard(
-                          foodName: foodList[i]['title'].toString(),
-                          foodExpiry:foodList[i]['expiry'].toString(),
-                          foodImage: foodList[i]['image'].toString(),
-                          foodQuantity: int.parse(foodList[i]['quantity']),
+                          foodName: widget.foodList[i]['title'].toString(),
+                          foodExpiry: widget.foodList[i]['expiry'].toString(),
+                          foodImage: widget.foodList[i]['image'].toString(),
+                          foodQuantity: int.parse(widget.foodList[i]['quantity']),
+                          onQuantityChanged: (int val) {
+                            setState(() => widget.foodList[i]['quantity'] =  val.toString());
+                            print("new value " + widget.foodList[i]['quantity']);
+                          },
                         );
                       },
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
