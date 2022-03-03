@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'FoodCard.dart';
 
+
 class FoodInventory extends StatefulWidget {
+
   FoodInventory({Key? key}) : super(key: key);
 
-  @override
-  _FoodInventoryState createState() => new _FoodInventoryState();
-}
-
-class _FoodInventoryState extends State<FoodInventory> {
-  int numCompartments = 5;
-
-  @override
   List<Map<String, dynamic>> foodList = [
     {
       'title': 'Apple',
@@ -72,12 +67,18 @@ class _FoodInventoryState extends State<FoodInventory> {
   ];
 
   @override
+  _FoodInventoryState createState() => new _FoodInventoryState();
+}
+
+class _FoodInventoryState extends State<FoodInventory> {
+  int numCompartments = 5;
+
+  @override
   void initState() {
     super.initState();
   }
 
   Widget build(BuildContext context) {
-    int noFood = foodList.length;
     return DefaultTabController(
       length: numCompartments + 1,
       child: Scaffold(
@@ -103,10 +104,10 @@ class _FoodInventoryState extends State<FoodInventory> {
         ),
         body: TabBarView(
           children: List<Widget>.generate(numCompartments + 1, (int index) {
-            List<Map<String, dynamic>> filteredData = foodList;
+            List<Map<String, dynamic>> filteredData = widget.foodList;
 
             if (index > 0) {
-              filteredData = foodList
+              filteredData = widget.foodList
                   .where((item) => item["compartment"] == index)
                   .toList();
             }
@@ -126,10 +127,10 @@ class _FoodInventoryState extends State<FoodInventory> {
                     foodExpiry: filteredData[i]['expiry'].toString(),
                     foodImage: filteredData[i]['image'].toString(),
                     foodQuantity: int.parse(filteredData[i]['quantity']),
-                      onQuantityChanged: (index){
-                        setState((){
-                        });
-                      }
+                    onQuantityChanged: (int val) {
+                      setState(() => filteredData[i]['quantity'] =  val.toString());
+                      print("new value " + filteredData[i]['quantity']);
+                    },
                   );
                   // }
                 },
@@ -139,18 +140,30 @@ class _FoodInventoryState extends State<FoodInventory> {
                   crossAxisSpacing: 1.0,
                   mainAxisSpacing: 2,
                   mainAxisExtent: 120,
-                ),
-              ),
-            );
-          }),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Add your onPressed code here!
-          },
-          backgroundColor: Colors.green,
-          child: const Icon(Icons.add),
-        ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+            floatingActionButton:
+              SpeedDial(
+                  icon: Icons.more_horiz,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  overlayOpacity: 0,
+                  children: [
+                    SpeedDialChild(
+                      child: const Icon(Icons.add),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      onTap: () {/* Do someting */},
+                    ),
+                    SpeedDialChild(
+                      child: const Icon(Icons.mode_edit_outline_outlined ),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      onTap: () {/* Do something */},
+                    ),
+                  ])
       ),
     );
   }

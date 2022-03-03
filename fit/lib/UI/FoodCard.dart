@@ -148,7 +148,7 @@ class FoodCardState extends State<FoodCard> {
                             ),
                             Center(
                               child: Text(widget.foodName,
-                                  style: Theme.of(context).textTheme.bodyText1),
+                                  style: Theme.of(context).textTheme.labelMedium),
                             ),
                             Center(
                               child: Text(widget.foodExpiry,
