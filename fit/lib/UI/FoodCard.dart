@@ -29,8 +29,12 @@ class FoodCardState extends State<FoodCard> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child:
-            Container(margin:EdgeInsets.all(8.0), height: 250, child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      child: Container(
+        margin:EdgeInsets.all(8.0),
+        height: 250,
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
               InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
@@ -38,8 +42,7 @@ class FoodCardState extends State<FoodCard> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return StatefulBuilder(builder: (context, StateSetter setState)
-                          {
+                          return StatefulBuilder(builder: (context, StateSetter setState){
                             return AlertDialog(
                               content: Stack(
                                 overflow: Overflow.visible,
@@ -57,6 +60,7 @@ class FoodCardState extends State<FoodCard> {
                                       ),
                                     ),
                                   ),
+
                                   Form(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -131,9 +135,9 @@ class FoodCardState extends State<FoodCard> {
                             );
                           });
                         });
-                  },
-                  child:
-                  Stack(
+                    },
+
+                  child: Stack(
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -155,9 +159,9 @@ class FoodCardState extends State<FoodCard> {
                       ]
                   )
               ),
-            ]),)
-        ,
-
+            ]
+        ),
+      ),
     );
   }
 }

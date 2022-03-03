@@ -1,65 +1,75 @@
 import 'package:flutter/material.dart';
 import 'FoodCard.dart';
-class FoodInventory extends StatefulWidget{
-  FoodInventory({Key? key}) : super(key: key);
-  List<Map<String, dynamic>> foodList = [
-    {
-      'title': 'Apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'Grape',
-      'expiry': '10/05/22',
-      'image': 'assets/images/grape.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'Pear',
-      'expiry': '10/05/22',
-      'image': 'assets/images/pear.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'banana',
-      'expiry': '10/05/22',
-      'image': 'assets/images/banana.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity' : "1"
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity' : "1"
-    }
-  ];
 
+class FoodInventory extends StatefulWidget {
+  FoodInventory({Key? key}) : super(key: key);
 
   @override
   _FoodInventoryState createState() => new _FoodInventoryState();
 }
 
-class _FoodInventoryState extends State<FoodInventory>{
+class _FoodInventoryState extends State<FoodInventory> {
+  int numCompartments = 5;
 
+  @override
+  List<Map<String, dynamic>> foodList = [
+    {
+      'title': 'Apple',
+      'expiry': '10/05/22',
+      'image': 'assets/images/apple.jpg',
+      'quantity': "1",
+      'compartment': 1,
+    },
+    {
+      'title': 'Grape',
+      'expiry': '10/05/22',
+      'image': 'assets/images/grape.jpg',
+      'quantity': "1",
+      'compartment': 2,
+    },
+    {
+      'title': 'Pear',
+      'expiry': '10/05/22',
+      'image': 'assets/images/pear.jpg',
+      'quantity': "1",
+      'compartment': 3,
+    },
+    {
+      'title': 'apple',
+      'expiry': '10/05/22',
+      'image': 'assets/images/apple.jpg',
+      'quantity': "1",
+      'compartment': 4,
+    },
+    {
+      'title': 'banana',
+      'expiry': '10/05/22',
+      'image': 'assets/images/banana.jpg',
+      'quantity': "1",
+      'compartment': 5,
+    },
+    {
+      'title': 'apple',
+      'expiry': '10/05/22',
+      'image': 'assets/images/apple.jpg',
+      'quantity': "1",
+      'compartment': 1,
+    },
+    {
+      'title': 'apple',
+      'expiry': '10/05/22',
+      'image': 'assets/images/apple.jpg',
+      'quantity': "1",
+      'compartment': 2,
+    },
+    {
+      'title': 'apple',
+      'expiry': '10/05/22',
+      'image': 'assets/images/apple.jpg',
+      'quantity': "1",
+      'compartment': 3,
+    }
+  ];
 
   @override
   void initState() {
@@ -67,9 +77,9 @@ class _FoodInventoryState extends State<FoodInventory>{
   }
 
   Widget build(BuildContext context) {
-    int noFood = widget.foodList.length ;
+    int noFood = foodList.length;
     return DefaultTabController(
-      length: 5,
+      length: numCompartments + 1,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -78,61 +88,69 @@ class _FoodInventoryState extends State<FoodInventory>{
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TabBar(
-                tabs: [
-                  Tab(child: Text('All', style: Theme.of(context).textTheme.bodyText2)),
-                  Tab(child: Text('Diary Free', style: Theme.of(context).textTheme.bodyText2)),
-                  Tab(child: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText2)),
-                  Tab(child: Text('Vegan', style: Theme.of(context).textTheme.bodyText2)),
-                  Tab(child: Text('Vegetarian', style: Theme.of(context).textTheme.bodyText2)),
-                ],
+                isScrollable: true,
+                tabs: List<Widget>.generate(numCompartments + 1, (int index) {
+                  return Tab(
+                      child: Text(
+                          index > 0
+                              ? "Compartment " + (index).toString()
+                              : "All",
+                          style: Theme.of(context).textTheme.bodyText2));
+                }),
               )
             ],
           ),
         ),
-        body:
-            Container(height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                child:TabBarView(
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      itemCount: noFood,
-                      itemBuilder: (ctx, i) {
-                        return FoodCard(
-                          foodName: widget.foodList[i]['title'].toString(),
-                          foodExpiry: widget.foodList[i]['expiry'].toString(),
-                          foodImage: widget.foodList[i]['image'].toString(),
-                          foodQuantity: int.parse(widget.foodList[i]['quantity']),
-                          onQuantityChanged: (int val) {
-                            setState(() => widget.foodList[i]['quantity'] =  val.toString());
-                            print("new value " + widget.foodList[i]['quantity']);
-                          },
-                        );
-                      },
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 1.0,
-                        mainAxisSpacing: 2,
-                        mainAxisExtent: 120,
+        body: TabBarView(
+          children: List<Widget>.generate(numCompartments + 1, (int index) {
+            List<Map<String, dynamic>> filteredData = foodList;
 
-                      ),
-                    ),
-                    Icon(Icons.flight, size: 350),
-                    Icon(Icons.directions_transit, size: 350),
-                    Icon(Icons.directions_car, size: 350),
-                    Icon(Icons.directions_bike, size: 350),
-                  ],
+            if (index > 0) {
+              filteredData = foodList
+                  .where((item) => item["compartment"] == index)
+                  .toList();
+            }
+
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              child: GridView.builder(
+                shrinkWrap: true,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                itemCount: filteredData.length,
+                itemBuilder: (ctx, int i) {
+                  // if(foodList[i]["compartment"] == index + 1) {
+                  return FoodCard(
+                    foodName: filteredData[i]['title'].toString(),
+                    foodExpiry: filteredData[i]['expiry'].toString(),
+                    foodImage: filteredData[i]['image'].toString(),
+                    foodQuantity: int.parse(filteredData[i]['quantity']),
+                      onQuantityChanged: (index){
+                        setState((){
+                        });
+                      }
+                  );
+                  // }
+                },
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 1.0,
+                  mainAxisSpacing: 2,
+                  mainAxisExtent: 120,
                 ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              backgroundColor: Colors.green,
-              child: const Icon(Icons.add),
-            ),
+              ),
+            );
+          }),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Add your onPressed code here!
+          },
+          backgroundColor: Colors.green,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

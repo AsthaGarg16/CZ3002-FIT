@@ -21,7 +21,7 @@ class FitUser {
   FitUser({
     String name = " ",
     String email = " ",
-    int fridgeDetails = 0,
+    int fridgeDetails = 10,
     bool dairyFree = false,
     bool glutenFree = false,
     bool vegetarian = false,
