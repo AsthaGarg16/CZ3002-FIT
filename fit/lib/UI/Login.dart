@@ -1,6 +1,7 @@
 import 'package:fit/Controller/services/auth.dart';
 import 'package:flutter/material.dart';
 
+import '../Controller/services/UserController.dart';
 import './HomePage.dart';
 
 class Login extends StatefulWidget {
@@ -180,17 +181,17 @@ class _LoginState extends State<Login> {
                       print(password);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
-                      // if(_formKey.currentState!.validate())
-                      //   {
-                      //     await _auth
-                      //         .signIn(
-                      //         email, password).then((loginSuccess)=>{
-                      //           if(loginSuccess){
-                      //     Navigator.of(context).push(MaterialPageRoute(
-                      //         builder: (BuildContext context) => HomePage()))
-                      //           }
-                      //         });
-                      //   }
+                      if(_formKey.currentState!.validate())
+                        {
+                          await _auth
+                              .signIn(
+                              email, password).then((loginSuccess) async =>{
+                                if(loginSuccess){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage()))
+                                }
+                              });
+                        }
 
                     },
                     color: Theme
