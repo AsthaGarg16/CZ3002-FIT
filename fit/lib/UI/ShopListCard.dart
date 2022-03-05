@@ -34,7 +34,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
       }
 
     return Container(
-        height: MediaQuery.of(context).size.height * 0.09,
+        height: MediaQuery.of(context).size.height * 0.075,
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.black26),
@@ -73,7 +73,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     const SizedBox(width: 5.0),
 
                         Expanded(flex: 4,child: Text(text, style: TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 15.0,
                             fontWeight: FontWeight.normal,
                             color: widget.value?Colors.teal:Colors.black87))),
 
@@ -82,7 +82,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                         child: Container(
                           alignment: Alignment.centerRight,
                           child: Text(widget.quantity, style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 15.0,
                               fontWeight: FontWeight.normal,
                               color: widget.value?Colors.teal:Colors.black87)),
                         )
