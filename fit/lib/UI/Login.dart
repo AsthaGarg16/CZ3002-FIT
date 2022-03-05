@@ -215,21 +215,23 @@ class _LoginState extends State<Login> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
+                  children: const [
                     Text("Don't have an account?",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .labelMedium,),
-                    const SizedBox(
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87,
+                          letterSpacing: 1.25),),
+                    SizedBox(
                       width: 10,
                     ),
                     Text(
                       "Sign Up",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .labelMedium,
+                      style:TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87,
+                          letterSpacing: 1.25),
                     ),
                   ],
                 )
