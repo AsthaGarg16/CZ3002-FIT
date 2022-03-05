@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../Entity/FoodItem.dart';
 import '../Entity/Units.dart';
 import 'ShopListCard.dart';
-import 'ShopListDialogUtils.dart';
 
 class ShoppingList extends StatefulWidget {
   List<Map<String, Object>> shopList = [
@@ -78,7 +77,10 @@ class _ShopListState extends State<ShoppingList> {
 
   @override
   Widget build(BuildContext context) {
-
+    // void removeSwipeItems(idx){
+    //   _swiperList.removeAt(idx);
+    //   notifyListeners();
+    // }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -97,25 +99,36 @@ class _ShopListState extends State<ShoppingList> {
                         shrinkWrap: true,
                             itemCount: widget.shopList.length,
                             itemBuilder: (context, index) {
-                              return ShopListWidget(
-                                  key:ValueKey(widget.shopList[index]),
-                                  label:
-                                  widget.shopList[index]['label'].toString(),
-                                  quantity: widget.shopList[index]['quantity'].toString(),
-                                  recipe: widget.shopList[index]['recipe'].toString(),
-                                  isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
-                                  value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
-                                  labelColor: Colors.black87,
-                                  onValueChanged: (){
-                                    setState((){
-                                      Map<String, Object> shopListItem = widget.shopList.removeAt(index);
-                                      shopListItem["value"] = true;
-                                      widget.shopListChecked.add(shopListItem);
-                                      // print(widget.shopListChecked);
-                                      // print(widget.shopList);
-                                    });
-                                  },
-                              );
+                              return Dismissible(
+                                  key: ValueKey(widget.shopList[index]),
+                                    onDismissed: (direction) {
+                                        setState(() {
+                                          String item = widget.shopList[index]['label'].toString();
+                                          widget.shopList.removeAt(index);
+
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(content: Text('$item deleted')));
+                                        }); },
+                                  background: Container(color: Colors.redAccent),
+                                child:ShopListWidget(
+                                    key:ValueKey(widget.shopList[index]),
+                                    label:
+                                    widget.shopList[index]['label'].toString(),
+                                    quantity: widget.shopList[index]['quantity'].toString(),
+                                    recipe: widget.shopList[index]['recipe'].toString(),
+                                    isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                    value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
+                                    labelColor: Colors.black87,
+                                    onValueChanged: (){
+                                      setState((){
+                                        Map<String, Object> shopListItem = widget.shopList.removeAt(index);
+                                        shopListItem["value"] = true;
+                                        widget.shopListChecked.add(shopListItem);
+                                        // print(widget.shopListChecked);
+                                        // print(widget.shopList);
+                                      });
+                                    },
+                                ));
                             }),
                             ListView.builder(
                                 controller: ScrollController(),

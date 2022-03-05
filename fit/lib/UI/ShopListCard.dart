@@ -23,6 +23,7 @@ class ShopListWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<ShopListWidget> {
+
   @override
   Widget build(BuildContext context) {
     bool _isSelected = false;
@@ -79,7 +80,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     ),
                     const SizedBox(width: 2.0),
                     Expanded(
-                      child: IconButton(icon: const Icon(Icons.arrow_drop_down_rounded), onPressed: () {  },),
+                      child: widget.value?Container():IconButton(icon: const Icon(Icons.arrow_drop_down_rounded), onPressed: () {  },),
                     ),
 
                   ],
