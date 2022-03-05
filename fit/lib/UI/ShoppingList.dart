@@ -103,11 +103,18 @@ class _ShopListState extends State<ShoppingList> {
                                   key: ValueKey(widget.shopList[index]),
                                     onDismissed: (direction) {
                                         setState(() {
-                                          String item = widget.shopList[index]['label'].toString();
+                                          Map<String,Object> deletedItem = widget.shopList[index];
+                                          String deletedLabel = widget.shopList[index]['label'].toString();
                                           widget.shopList.removeAt(index);
 
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(content: Text('$item deleted')));
+                                              .showSnackBar(SnackBar(
+                                              duration: const Duration(seconds: 2, milliseconds: 50),
+                                              content: Text('$deletedLabel deleted'),
+                                              action: SnackBarAction(
+                                                  label: "UNDO",
+                                                  onPressed: () => setState(() => widget.shopList.insert(index, deletedItem),) // this is what you needed
+                                              )));
                                         }); },
                                   background: Container(color: Colors.redAccent),
                                 child:ShopListWidget(
