@@ -8,15 +8,19 @@ class ShopListWidget extends StatefulWidget {
     required this.recipe,
     required this.value,
     required this.labelColor,
-    required this.onValueChanged}) : super(key: key);
+    required this.visible,
+    required this.onValueChanged,
+    required this.onButtonPress}) : super(key: key);
 
   final String label;
   final String quantity;
   final bool isRecipe;
   final String recipe;
   bool value;
+  bool visible;
   Color labelColor;
   final Function onValueChanged;
+  final Function onButtonPress;
 
   @override
   State<ShopListWidget> createState() => _MyStatefulWidgetState();
@@ -90,7 +94,9 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     ),
                     //const SizedBox(width: 2.0),
                     Expanded(
-                      child: widget.value?Container():IconButton(icon: const Icon(Icons.arrow_drop_down_rounded), onPressed: () {  },),
+                      child: widget.value?Container():IconButton(icon: const Icon(Icons.arrow_drop_down_rounded),
+                        color: widget.visible?Colors.teal:Colors.black87,
+                        onPressed: () { widget.onButtonPress(); },),
                     ),
 
                   ],

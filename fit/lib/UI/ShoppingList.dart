@@ -6,6 +6,7 @@ import '../Entity/Units.dart';
 import 'ShopListCard.dart';
 
 class ShoppingList extends StatefulWidget {
+  List<String> altItem = ['alt 1', 'alt 2', 'alt 3'];
   List<Map<String, Object>> shopList = [
     {
       'label': 'Spaghetti',
@@ -13,6 +14,8 @@ class ShoppingList extends StatefulWidget {
       'recipe': 'Spaghetti Bolognese',
       'isRecipe' : true,
       'value': false,
+      'alternatives': List<String>.filled(3,"alternate "),
+      'isVisible' :false,
     },
     {
       'label': 'Tomatoes',
@@ -20,6 +23,8 @@ class ShoppingList extends StatefulWidget {
       'recipe': '',
       'isRecipe' : false,
     'value': false,
+      'alternatives': List<String>.filled(3,"alternate "),
+      'isVisible' :false,
     },
     {
       'label': 'Chilli Flakes',
@@ -27,6 +32,8 @@ class ShoppingList extends StatefulWidget {
       'recipe': '',
       'isRecipe' : false,
     'value': false,
+      'alternatives': List<String>.filled(3,"alternate "),
+      'isVisible' :false,
     },
     {
       'label': 'Apples',
@@ -34,6 +41,8 @@ class ShoppingList extends StatefulWidget {
       'recipe': 'Fruit Bowl',
       'isRecipe' : true,
       'value': false,
+      'alternatives': List<String>.filled(3,"alternate "),
+      'isVisible' :false,
     },
   ];
 
@@ -67,20 +76,16 @@ class ShoppingList extends StatefulWidget {
       'value': true,
     },
   ];
+
   @override
   _ShopListState createState() => _ShopListState();
 }
 
 class _ShopListState extends State<ShoppingList> {
 
-
-
   @override
   Widget build(BuildContext context) {
-    // void removeSwipeItems(idx){
-    //   _swiperList.removeAt(idx);
-    //   notifyListeners();
-    // }
+
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -99,43 +104,83 @@ class _ShopListState extends State<ShoppingList> {
                         shrinkWrap: true,
                             itemCount: widget.shopList.length,
                             itemBuilder: (context, index) {
-                              return Dismissible(
-                                  key: ValueKey(widget.shopList[index]),
-                                    onDismissed: (direction) {
-                                        setState(() {
-                                          Map<String,Object> deletedItem = widget.shopList[index];
-                                          String deletedLabel = widget.shopList[index]['label'].toString();
-                                          widget.shopList.removeAt(index);
+                              return Column(
+                                children:<Widget>[
+                                      Dismissible(
+                                      key: ValueKey(widget.shopList[index]),
+                                      onDismissed: (direction) {
+                                      setState(() {
+                                      Map<String,Object> deletedItem = widget.shopList[index];
+                                      String deletedLabel = widget.shopList[index]['label'].toString();
+                                      widget.shopList.removeAt(index);
 
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                              duration: const Duration(seconds: 2, milliseconds: 50),
-                                              content: Text('$deletedLabel deleted'),
-                                              action: SnackBarAction(
-                                                  label: "UNDO",
-                                                  onPressed: () => setState(() => widget.shopList.insert(index, deletedItem),) // this is what you needed
-                                              )));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                            duration: const Duration(seconds: 2, milliseconds: 50),
+                                            content: Text('$deletedLabel deleted'),
+                                            action: SnackBarAction(
+                                            label: "UNDO",
+                                            onPressed: () => setState(() => widget.shopList.insert(index, deletedItem),) // this is what you needed
+                                        )));
                                         }); },
-                                  background: Container(color: Colors.redAccent),
-                                child:ShopListWidget(
-                                    key:ValueKey(widget.shopList[index]),
-                                    label:
-                                    widget.shopList[index]['label'].toString(),
-                                    quantity: widget.shopList[index]['quantity'].toString(),
-                                    recipe: widget.shopList[index]['recipe'].toString(),
-                                    isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
-                                    value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
-                                    labelColor: Colors.black87,
-                                    onValueChanged: (){
-                                      setState((){
+                                        background: Container(color: Colors.redAccent),
+                                        child:ShopListWidget(
+                                        key:ValueKey(widget.shopList[index]),
+                                        label:
+                                        widget.shopList[index]['label'].toString(),
+                                        quantity: widget.shopList[index]['quantity'].toString(),
+                                        recipe: widget.shopList[index]['recipe'].toString(),
+                                        isRecipe: widget.shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                        value: widget.shopList[index]['value'].toString().toLowerCase() == 'true',
+                                        labelColor: Colors.black87,
+                                        visible:widget.shopList[index]['isVisible']==true,
+                                        onValueChanged: (){
+                                        setState((){
                                         Map<String, Object> shopListItem = widget.shopList.removeAt(index);
                                         shopListItem["value"] = true;
                                         widget.shopListChecked.add(shopListItem);
                                         // print(widget.shopListChecked);
                                         // print(widget.shopList);
-                                      });
-                                    },
-                                ));
+                                        });
+                                        },
+                                        onButtonPress: (){
+                                          setState((){
+                                            print("Changing state");
+                                            widget.shopList[index]['isVisible'] = !(widget.shopList[index]['isVisible']==true);
+                                          });
+                                          },
+                                        )),
+                                  Visibility(
+                                    visible: widget.shopList[index]['isVisible']==true,
+                                    replacement:Container(),
+                                    maintainState: true,
+                                    child:(
+                                        ListView.separated(
+                                            controller: ScrollController(),
+                                            shrinkWrap: true,
+                                            itemCount: 2,
+                                            itemBuilder:(context, index2)
+                                            {
+                                                  return Material(
+                                                      child: ListTile(
+                                                        title: Text("tileItem[index2]", style: const TextStyle(
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: Colors.black87)),
+                                                        dense:true,
+                                                      )
+                                                  );
+                                            },
+                                          separatorBuilder: (context, index) {
+                                            return const Divider();
+                                          },
+                                        )
+                                    )
+
+                                  )
+                                ]
+                              );
+
                             }),
                             ListView.builder(
                                 controller: ScrollController(),
@@ -151,6 +196,8 @@ class _ShopListState extends State<ShoppingList> {
                                       isRecipe: widget.shopListChecked[index]['isRecipe'].toString().toLowerCase() == 'true',
                                       value: widget.shopListChecked[index]['value'].toString().toLowerCase() == 'true',
                                       labelColor: Colors.black87,
+                                      visible:false,
+                                      onButtonPress:(){} ,
                                       onValueChanged: (index){
 
                                       },
