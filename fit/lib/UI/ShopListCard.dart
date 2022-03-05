@@ -94,7 +94,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     ),
                     //const SizedBox(width: 2.0),
                     Expanded(
-                      child: widget.value?Container():IconButton(icon: const Icon(Icons.arrow_drop_down_rounded),
+                      child: widget.value?Container():IconButton(icon: widget.visible?const Icon(Icons.arrow_drop_up_rounded):const Icon(Icons.arrow_drop_down_rounded),
                         color: widget.visible?Colors.teal:Colors.black87,
                         onPressed: () { widget.onButtonPress(); },),
                     ),

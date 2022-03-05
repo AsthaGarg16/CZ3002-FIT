@@ -247,7 +247,7 @@ class _ShopListState extends State<ShoppingList> {
           .textTheme
           .subtitle2,textAlign: TextAlign.center,),
       content: Container(
-        height: 270,
+        height: 320,
         child: Column(
           children: <Widget>[
 
@@ -395,13 +395,17 @@ class _ShopListState extends State<ShoppingList> {
 
       actions: <Widget>[
         MaterialButton(
-          onPressed: () {
-            if(chosenValue!=null)
+          onPressed: () async{
+            if(_dialogformKey.currentState!.validate())
             {
-              _unit = chosenValue??Units.units[0];
+              if(chosenValue!=null)
+              {
+                _unit = chosenValue??Units.units[0];
+              }
+              newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_recipeID);
+              Navigator.pop(context,newItem);
             }
-            newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_recipeID);
-            Navigator.pop(context,newItem);
+
           },
           color: Theme
               .of(context)
