@@ -27,8 +27,14 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
   @override
   Widget build(BuildContext context) {
     bool _isSelected = false;
+    String text = widget.label;
+    if(widget.isRecipe)
+      {
+        text = text + "  ("+widget.recipe+")";
+      }
 
     return Container(
+        height: MediaQuery.of(context).size.height * 0.09,
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.black26),
@@ -46,8 +52,9 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
 
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
+                  //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Expanded(
                       child: Checkbox(
@@ -64,10 +71,13 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     ),
 
                     const SizedBox(width: 5.0),
-                    Expanded(flex: 4,child: Text(widget.label, style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.normal,
-                        color: widget.value?Colors.teal:Colors.black87))),
+
+                        Expanded(flex: 4,child: Text(text, style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                            color: widget.value?Colors.teal:Colors.black87))),
+
+
                     Expanded(
                         child: Container(
                           alignment: Alignment.centerRight,
@@ -78,7 +88,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                         )
 
                     ),
-                    const SizedBox(width: 2.0),
+                    //const SizedBox(width: 2.0),
                     Expanded(
                       child: widget.value?Container():IconButton(icon: const Icon(Icons.arrow_drop_down_rounded), onPressed: () {  },),
                     ),
