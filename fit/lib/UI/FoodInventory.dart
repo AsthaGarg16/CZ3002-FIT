@@ -168,3 +168,75 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 }
+
+class InventorySearch extends SearchDelegate<String>{
+  List<String> items = [ //use a function to get a list of inventory items as a string for this attribute
+    "Apple",
+    "Banana",
+    "Pear",
+  ];
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [IconButton(
+        onPressed: (){
+          query = "";
+        },
+        icon: const Icon(Icons.clear)
+    )];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+          close(context, "");
+        },
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation
+        )
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container(
+        height: 100,
+        width: 100,
+        child: Card(
+          color: Colors.red,
+          shape: StadiumBorder(),
+          child: Center(
+            child: Text(query),
+          )
+        )
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = items.where((p) => p.toLowerCase().startsWith(query)).toList();
+    
+    return ListView.builder(
+        itemBuilder: (context, index) => ListTile(
+          onTap: (){
+            showResults(context);
+          },
+          leading: const Icon(Icons.free_breakfast),
+          title: RichText(
+            text: TextSpan(
+              text: suggestionList[index].substring(0, query.length),
+              style: Theme.of(context).textTheme.labelMedium,
+              children: [TextSpan(
+                text: suggestionList[index].substring(query.length),
+                style: Theme.of(context).textTheme.subtitle2,
+              )]
+            )
+          ),
+        ),
+      itemCount: suggestionList.length,
+    );
+  }
+  
+}
