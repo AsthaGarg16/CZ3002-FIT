@@ -3,68 +3,70 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'FoodCard.dart';
 
 
+List<Map<String, dynamic>> foodList = [
+  {
+    'title': 'Apple',
+    'expiry': '10/05/22',
+    'image': 'assets/images/apple.jpg',
+    'quantity': "1",
+    'compartment': 1,
+  },
+  {
+    'title': 'Grape',
+    'expiry': '10/05/22',
+    'image': 'assets/images/grape.jpg',
+    'quantity': "1",
+    'compartment': 2,
+  },
+  {
+    'title': 'Pear',
+    'expiry': '10/05/22',
+    'image': 'assets/images/pear.jpg',
+    'quantity': "1",
+    'compartment': 3,
+  },
+  {
+    'title': 'apple',
+    'expiry': '10/05/22',
+    'image': 'assets/images/apple.jpg',
+    'quantity': "1",
+    'compartment': 4,
+  },
+  {
+    'title': 'banana',
+    'expiry': '10/05/22',
+    'image': 'assets/images/banana.jpg',
+    'quantity': "1",
+    'compartment': 5,
+  },
+  {
+    'title': 'apple',
+    'expiry': '10/05/22',
+    'image': 'assets/images/apple.jpg',
+    'quantity': "1",
+    'compartment': 1,
+  },
+  {
+    'title': 'apple',
+    'expiry': '10/05/22',
+    'image': 'assets/images/apple.jpg',
+    'quantity': "1",
+    'compartment': 2,
+  },
+  {
+    'title': 'apple',
+    'expiry': '10/05/22',
+    'image': 'assets/images/apple.jpg',
+    'quantity': "1",
+    'compartment': 3,
+  }
+];
+
 class FoodInventory extends StatefulWidget {
 
   FoodInventory({Key? key}) : super(key: key);
 
-  List<Map<String, dynamic>> foodList = [
-    {
-      'title': 'Apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity': "1",
-      'compartment': 1,
-    },
-    {
-      'title': 'Grape',
-      'expiry': '10/05/22',
-      'image': 'assets/images/grape.jpg',
-      'quantity': "1",
-      'compartment': 2,
-    },
-    {
-      'title': 'Pear',
-      'expiry': '10/05/22',
-      'image': 'assets/images/pear.jpg',
-      'quantity': "1",
-      'compartment': 3,
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity': "1",
-      'compartment': 4,
-    },
-    {
-      'title': 'banana',
-      'expiry': '10/05/22',
-      'image': 'assets/images/banana.jpg',
-      'quantity': "1",
-      'compartment': 5,
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity': "1",
-      'compartment': 1,
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity': "1",
-      'compartment': 2,
-    },
-    {
-      'title': 'apple',
-      'expiry': '10/05/22',
-      'image': 'assets/images/apple.jpg',
-      'quantity': "1",
-      'compartment': 3,
-    }
-  ];
+
 
   @override
   _FoodInventoryState createState() => new _FoodInventoryState();
@@ -104,10 +106,10 @@ class _FoodInventoryState extends State<FoodInventory> {
         ),
         body: TabBarView(
           children: List<Widget>.generate(numCompartments + 1, (int index) {
-            List<Map<String, dynamic>> filteredData = widget.foodList;
+            List<Map<String, dynamic>> filteredData = foodList;
 
             if (index > 0) {
-              filteredData = widget.foodList
+              filteredData = foodList
                   .where((item) => item["compartment"] == index)
                   .toList();
             }
@@ -216,8 +218,9 @@ class InventorySearch extends SearchDelegate<String>{
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestionList = items.where((p) => p.toLowerCase().startsWith(query)).toList();
-    
+    // final suggestionList = items.where((p) => p.toLowerCase().startsWith(query)).toList();
+    final suggestionList = foodList.where((p) => p["title"].toLowerCase().startsWith(query)).toList();
+
     return ListView.builder(
         itemBuilder: (context, index) => ListTile(
           onTap: (){
@@ -226,11 +229,11 @@ class InventorySearch extends SearchDelegate<String>{
           leading: const Icon(Icons.free_breakfast),
           title: RichText(
             text: TextSpan(
-              text: suggestionList[index].substring(0, query.length),
+              text: suggestionList[index]["title"].substring(0, query.length),
               style: Theme.of(context).textTheme.labelMedium,
               children: [TextSpan(
-                text: suggestionList[index].substring(query.length),
-                style: Theme.of(context).textTheme.subtitle2,
+                text: suggestionList[index]["title"].substring(query.length),
+                style: Theme.of(context).textTheme.labelSmall,
               )]
             )
           ),

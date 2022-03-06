@@ -74,14 +74,14 @@ class _HomePageState extends State<HomePage> {
             // title: customSearchBar,
             // centerTitle: centerTitle,
             centerTitle: true,
-            actions: <Widget>[
+            actions: _currentIndex == 0 ? <Widget>[
               IconButton(
                   onPressed: (){
                     showSearch(context: context, delegate: InventorySearch());
                   },
                   icon: const Icon(Icons.search)
               )
-            ]
+            ] : []
             // actions: _currentIndex == 0 ? [
             //   IconButton(
             //     onPressed: (){
