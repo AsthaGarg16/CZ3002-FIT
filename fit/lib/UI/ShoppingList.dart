@@ -246,8 +246,8 @@ class _ShopListState extends State<ShoppingList> {
           .of(context)
           .textTheme
           .subtitle2,textAlign: TextAlign.center,),
-      content: Container(
-        height: 320,
+      content: SingleChildScrollView(
+        //height: 320,
         child: Column(
           children: <Widget>[
 
