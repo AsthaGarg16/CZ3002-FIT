@@ -56,12 +56,12 @@ class RecipeInstructionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Text(title,style: Theme.of(context).textTheme.subtitle2),
-      Container(child:Image.asset(recipeImage)),
-      
-
-    ],)
+    return Column(
+      children: <Widget>[
+        Text(title, style: Theme.of(context).textTheme.subtitle2),
+        Container(child: Image.asset(recipeImage)),
+      ],
+    );
     // TODO: implement build
     throw UnimplementedError();
   }
