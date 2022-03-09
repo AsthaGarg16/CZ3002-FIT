@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../Controller/services/UserController.dart';
 import './HomePage.dart';
+import './SignUp.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -215,24 +216,28 @@ class _LoginState extends State<Login> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
-                        Text("Don't have an account?",
+                      children: [
+                        const Text("Don't have an account?",
                           style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.normal,
                               color: Colors.black87,
                               letterSpacing: 1.25),),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          "Sign Up",
-                          style:TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87,
-                              letterSpacing: 1.25),
-                        ),
+                        InkWell(
+                          child: const Text(
+                            "Sign Up",
+                            style:TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black87,
+                                letterSpacing: 1.25),
+                          ),
+                          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => SignupPage())),
+                        )
                       ],
                     )
                   ],
