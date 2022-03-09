@@ -1,53 +1,44 @@
-import 'package:fit/UI/FilterCheckbox.dart';
 import 'package:flutter/material.dart';
 import 'RecipeCard.dart';
 
 class RecipePage extends StatelessWidget {
-  List<Map<String, dynamic>> recipeList = [
+  List<Map<String, Object>> recipeList = [
     {
-      'id': 1,
       'title': 'Sphagetti Bolognese',
       'description': 'Meat and tomato based pasta',
       'image': 'assets/images/pasta.jpg'
     },
     {
-      'id': 2,
       'title': 'Salad',
       'description': 'Healthy bowl of greens',
       'image': 'assets/images/salad.jpg'
     },
     {
-      'id': 3,
-      'title': 'Spaghetti Bolognese',
-      'description': 'Meat and tomato based pasta',
-      'image': 'assets/images/pasta.jpg'
-    },
-    {
-      'id': 4,
       'title': 'Sphagetti Bolognese',
       'description': 'Meat and tomato based pasta',
       'image': 'assets/images/pasta.jpg'
     },
     {
-      'id': 5,
       'title': 'Sphagetti Bolognese',
       'description': 'Meat and tomato based pasta',
       'image': 'assets/images/pasta.jpg'
     },
     {
-      'id': 6,
+      'title': 'Sphagetti Bolognese',
+      'description': 'Meat and tomato based pasta',
+      'image': 'assets/images/pasta.jpg'
+    },
+    {
       'title': 'Salad',
       'description': 'Healthy bowl of greens',
       'image': 'assets/images/salad.jpg'
     },
     {
-      'id': 7,
       'title': 'Sphagetti Bolognese',
       'description': 'Meat and tomato based pasta',
       'image': 'assets/images/pasta.jpg'
     },
     {
-      'id': 8,
       'title': 'Sphagetti Bolognese',
       'description': 'Meat and tomato based pasta',
       'image': 'assets/images/pasta.jpg'
@@ -60,6 +51,7 @@ class RecipePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
@@ -80,13 +72,7 @@ class RecipePage extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.filter_alt),
                           color: Colors.black,
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return FilterCheckbox();
-                                });
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ]),
@@ -104,16 +90,6 @@ class RecipePage extends StatelessWidget {
                                     recipeList[index]['description'].toString(),
                                 recipeImage:
                                     recipeList[index]['image'].toString(),
-                                recipeID: (recipeList[index]['id']) ?? -1,
-                                onRecipeSelected: (int ID) {
-                                  print(ID);
-                                },
-                                //   Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
-
-                                //     ))
-                                // },
                               );
                             })))
               ],
