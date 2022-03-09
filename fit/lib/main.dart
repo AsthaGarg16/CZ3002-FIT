@@ -1,10 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'Controller/services/InventoryController.dart';
 import 'UI/EntryPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // print('help');
+  // Map<String, dynamic> request = {
+  //   "query": "Apple",
+  //   "number": "1"
+  // };
+  //
+  // InventoryController ic= InventoryController();
+  // String imgUrl=await ic.fetchImageUrl(request);
+  // print(imgUrl);
   runApp(MyApp());
 
 }
