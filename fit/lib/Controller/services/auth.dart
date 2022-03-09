@@ -41,20 +41,21 @@ class AuthService {
           email: email,
           password: password
       );
-      print("something");
-      await UserController.readUserDetails(email);
-      print("blabla");
-      int fridgeDetails = UserController.userDetails.fridgeDetails;
-      bool vegan = UserController.userDetails.vegan;
-      bool vegetarian = UserController.userDetails.vegetarian;
-      bool dairyFree = UserController.userDetails.dairyFree;
-      bool glutenFree = UserController.userDetails.glutenFree;
-      print("fridgeDetails: $fridgeDetails");
-      print("Vegan: $vegan");
-      print("vegetarian: $vegetarian");
-      print("dairyFree: $dairyFree");
-      print("glutenFree: $glutenFree");
-      print("login success");
+      await UserController.retrieveDetails(email);
+      // print("something");
+      // await UserController.readUserDetails(email);
+      // print("blabla");
+      // int fridgeDetails = UserController.userDetails.fridgeDetails;
+      // bool vegan = UserController.userDetails.vegan;
+      // bool vegetarian = UserController.userDetails.vegetarian;
+      // bool dairyFree = UserController.userDetails.dairyFree;
+      // bool glutenFree = UserController.userDetails.glutenFree;
+      // print("fridgeDetails: $fridgeDetails");
+      // print("Vegan: $vegan");
+      // print("vegetarian: $vegetarian");
+      // print("dairyFree: $dairyFree");
+      // print("glutenFree: $glutenFree");
+      // print("login success");
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

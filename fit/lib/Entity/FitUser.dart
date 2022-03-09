@@ -2,15 +2,8 @@
 // need to check if date of birth and target range have been added to account details, profilepage and food preference
 /// Entity representing the user, their personal details, and the logbooks, plans and reminders associated with them.
 class FitUser {
+
   String _email;
-
-
-  String get email => _email;
-
-  set email(String value) {
-    _email = value;
-  }
-
   String _name;
   int  _fridgeDetails;
   bool _dairyFree;
@@ -21,7 +14,7 @@ class FitUser {
   FitUser({
     String name = " ",
     String email = " ",
-    int fridgeDetails = 0,
+    int fridgeDetails = 10,
     bool dairyFree = false,
     bool glutenFree = false,
     bool vegetarian = false,
@@ -39,6 +32,13 @@ class FitUser {
 
   set name(String value) {
     _name = value;
+  }
+
+
+  String get email => _email;
+
+  set email(String value) {
+    _email = value;
   }
 
   int get fridgeDetails => _fridgeDetails;

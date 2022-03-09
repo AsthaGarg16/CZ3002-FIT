@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:developer' as developer;
 
+import '../Controller/services/UserController.dart';
 import './Login.dart';
 
 class CustomPageRoute extends PageRouteBuilder {
@@ -289,8 +290,7 @@ class _PreferencePageState extends State<PreferencePage>{
                     minWidth: double.infinity,
                     height:60,
                     onPressed: () async {
-                      await fit.add({'Email': "dummyname@email.com" , 'Vegan':_vegan,'Vegetarian':_vegetarian, 'dairyFree': _dairyFree,
-                      'fridgeDetails': _numCompartmentsInt, 'glutenFree': _glutenFree}).then((value) => print("User Details Added"));
+                    UserController.addUseronSignup("someemail@email.com" , "somename",_numCompartmentsInt,_dairyFree,_glutenFree,_vegetarian,_vegan);
                     },
                     color: Colors.redAccent,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
