@@ -1,7 +1,6 @@
 import 'package:fit/Controller/services/auth.dart';
 import 'package:flutter/material.dart';
 
-import '../Controller/services/UserController.dart';
 import './HomePage.dart';
 
 class Login extends StatefulWidget {
@@ -159,7 +158,6 @@ class _LoginState extends State<Login> {
                           ),
                         ],
                       ),
-<<<<<<< HEAD
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(100, 0, 100, 0),
@@ -197,72 +195,6 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(
                       height: 20,
-=======
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(100, 0, 100, 0),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: ()async{
-                      print(email);
-                      print(password);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => HomePage()));
-                      if(_formKey.currentState!.validate())
-                        {
-                          await _auth
-                              .signIn(
-                              email, password).then((loginSuccess) async =>{
-                                if(loginSuccess){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()))
-                                }
-                              });
-                        }
-
-                    },
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    child: Text(
-                      "Login",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .subtitle1,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Text("Don't have an account?",
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black87,
-                          letterSpacing: 1.25),),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Sign Up",
-                      style:TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black87,
-                          letterSpacing: 1.25),
->>>>>>> ce8653485e710306381ee4dcf04a1c9558bf7c45
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
