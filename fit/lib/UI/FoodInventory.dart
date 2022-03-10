@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'FoodCard.dart';
-
+import 'FoodInventoryUtils.dart';
 
 List<Map<String, dynamic>> foodList = [
   {
@@ -62,11 +61,10 @@ List<Map<String, dynamic>> foodList = [
   }
 ];
 
+
 class FoodInventory extends StatefulWidget {
 
   FoodInventory({Key? key}) : super(key: key);
-
-
 
   @override
   _FoodInventoryState createState() => new _FoodInventoryState();
@@ -75,97 +73,87 @@ class FoodInventory extends StatefulWidget {
 class _FoodInventoryState extends State<FoodInventory> {
   int numCompartments = 5;
 
+
   @override
   void initState() {
     super.initState();
+
   }
 
   Widget build(BuildContext context) {
+    FoodInventorryUtils fabMenu = FoodInventorryUtils(
+      foodList: foodList,
+      onFoodRecordChanged: (List<Map<String, dynamic>> val) {
+        setState(() => foodList = val);
+      },
+    );
     return DefaultTabController(
       length: numCompartments + 1,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TabBar(
-                isScrollable: true,
-                tabs: List<Widget>.generate(numCompartments + 1, (int index) {
-                  return Tab(
-                      child: Text(
-                          index > 0
-                              ? "Compartment " + (index).toString()
-                              : "All",
-                          style: Theme.of(context).textTheme.bodyText2));
-                }),
-              )
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: List<Widget>.generate(numCompartments + 1, (int index) {
-            List<Map<String, dynamic>> filteredData = foodList;
-
-            if (index > 0) {
-              filteredData = foodList
-                  .where((item) => item["compartment"] == index)
-                  .toList();
-            }
-
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              width: double.infinity,
-              child: GridView.builder(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                itemCount: filteredData.length,
-                itemBuilder: (ctx, int i) {
-                  // if(foodList[i]["compartment"] == index + 1) {
-                  return FoodCard(
-                    foodName: filteredData[i]['title'].toString(),
-                    foodExpiry: filteredData[i]['expiry'].toString(),
-                    foodImage: filteredData[i]['image'].toString(),
-                    foodQuantity: int.parse(filteredData[i]['quantity']),
-                    onQuantityChanged: (int val) {
-                      setState(() => filteredData[i]['quantity'] =  val.toString());
-                      print("new value " + filteredData[i]['quantity']);
-                    },
-                  );
-                  // }
-                },
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 1.0,
-                  mainAxisSpacing: 2,
-                  mainAxisExtent: 120,
-                    ),
-                  ),
-                );
-              }),
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TabBar(
+                  isScrollable: true,
+                  tabs: List<Widget>.generate(numCompartments + 1, (int index) {
+                    return Tab(
+                        child: Text(
+                            index > 0
+                                ? "Compartment " + (index).toString()
+                                : "All",
+                            style: Theme.of(context).textTheme.bodyText2));
+                  }),
+                )
+              ],
             ),
-            floatingActionButton:
-              SpeedDial(
-                  icon: Icons.more_horiz,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  overlayOpacity: 0,
-                  children: [
-                    SpeedDialChild(
-                      child: const Icon(Icons.add),
-                      foregroundColor: Colors.white,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      onTap: () {/* Do someting */},
-                    ),
-                    SpeedDialChild(
-                      child: const Icon(Icons.mode_edit_outline_outlined ),
-                      foregroundColor: Colors.white,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      onTap: () {/* Do something */},
-                    ),
-                  ])
+          ),
+          body: TabBarView(
+            children: List<Widget>.generate(numCompartments + 1, (int index) {
+
+              List<Map<String, dynamic>> filteredData = foodList;
+
+              if (index > 0) {
+                filteredData = foodList
+                    .where((item) => item["compartment"] == index)
+                    .toList();
+              }
+
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  itemCount: filteredData.length,
+                  itemBuilder: (ctx, int i) {
+                    // if(foodList[i]["compartment"] == index + 1) {
+                    return FoodCard(
+                      foodName: filteredData[i]['title'].toString(),
+                      foodExpiry: filteredData[i]['expiry'].toString(),
+                      foodImage: filteredData[i]['image'].toString(),
+                      foodQuantity: int.parse(filteredData[i]['quantity']),
+                      onQuantityChanged: (int val) {
+                        setState(() => filteredData[i]['quantity'] =  val.toString());
+                      },
+                    );
+                    // }
+                  },
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 1.0,
+                    mainAxisSpacing: 2,
+                    mainAxisExtent: 120,
+                  ),
+                ),
+              );
+            }),
+          ),
+          floatingActionButton: fabMenu
       ),
     );
   }
@@ -195,8 +183,8 @@ class InventorySearch extends SearchDelegate<String>{
           close(context, "");
         },
         icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation
+            icon: AnimatedIcons.menu_arrow,
+            progress: transitionAnimation
         )
     );
   }
@@ -207,11 +195,11 @@ class InventorySearch extends SearchDelegate<String>{
         height: 100,
         width: 100,
         child: Card(
-          color: Colors.red,
-          shape: StadiumBorder(),
-          child: Center(
-            child: Text(query),
-          )
+            color: Colors.red,
+            shape: StadiumBorder(),
+            child: Center(
+              child: Text(query),
+            )
         )
     );
   }
@@ -222,24 +210,24 @@ class InventorySearch extends SearchDelegate<String>{
     final suggestionList = foodList.where((p) => p["title"].toLowerCase().startsWith(query)).toList();
 
     return ListView.builder(
-        itemBuilder: (context, index) => ListTile(
-          onTap: (){
-            showResults(context);
-          },
-          leading: const Icon(Icons.free_breakfast),
-          title: RichText(
+      itemBuilder: (context, index) => ListTile(
+        onTap: (){
+          showResults(context);
+        },
+        leading: const Icon(Icons.free_breakfast),
+        title: RichText(
             text: TextSpan(
-              text: suggestionList[index]["title"].substring(0, query.length),
-              style: Theme.of(context).textTheme.labelMedium,
-              children: [TextSpan(
-                text: suggestionList[index]["title"].substring(query.length),
-                style: Theme.of(context).textTheme.labelSmall,
-              )]
+                text: suggestionList[index]["title"].substring(0, query.length),
+                style: Theme.of(context).textTheme.labelMedium,
+                children: [TextSpan(
+                  text: suggestionList[index]["title"].substring(query.length),
+                  style: Theme.of(context).textTheme.labelSmall,
+                )]
             )
-          ),
         ),
+      ),
       itemCount: suggestionList.length,
     );
   }
-  
+
 }
