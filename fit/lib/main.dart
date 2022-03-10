@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fit/Controller/services/database.dart';
 import 'package:flutter/material.dart';
 import 'Controller/services/InventoryController.dart';
 import 'UI/EntryPage.dart';
@@ -6,7 +8,32 @@ import 'UI/EntryPage.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // print('help');
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  DatabaseService databaseService = new DatabaseService();
+
+  // Testing out databaseService.writeNewDocument() function
+  // Map <String, dynamic> testing = {"testing": "123"};
+  CollectionReference collectionReference = firestore.collection("fit");
+  // databaseService.writeNewDocument(collectionReference, testing);
+
+  // Testing out databaseService.updateDocument() function
+  String email = "123456@gmail.com";
+  // Map <String, dynamic> user = {"dairyFree": false,
+  //                               "email": email,
+  //                               "fridgeDetails": 3,
+  //                               "glutenFree": false,
+  //                               "name": "123456",
+  //                               "vegan": false,
+  //                               "vegetarian": true};
+  DocumentReference documentReference = firestore.collection("fit").doc(email);
+  // databaseService.updateDocument(documentReference, user, false);
+
+  // Testing out all of databaseService read/get functions
+  // databaseService.getDocument(documentReference);
+  // databaseService.getCollection(collectionReference);
+  // databaseService.getField(documentReference, ["name"]);
+
+  // Spoonacular functionality example
   // Map<String, dynamic> request = {
   //   "query": "Apple",
   //   "number": "1"
