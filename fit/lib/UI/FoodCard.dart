@@ -9,12 +9,21 @@ class FoodCard extends StatefulWidget {
         required this.foodImage,
         required this.foodQuantity,
         required this.onQuantityChanged,
+        required this.onValueChanged,
+        required this.labelColor,
+        required this.value,
+        required this.visible
       })
       : super(key: key);
   final String foodName;
   final String foodExpiry;
   final String foodImage;
   final Function(int) onQuantityChanged;
+  final Function onValueChanged;
+
+  Color labelColor;
+  bool value;
+  bool visible;
   int foodQuantity;
 
   @override
@@ -26,15 +35,29 @@ class FoodCardState extends State<FoodCard> {
   void initState() {
     super.initState();
   }
+  // final GlobalKey _closeKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    bool _isSelected = false;
     return Center(
       child: Container(
         margin:EdgeInsets.all(8.0),
-        height: 250,
+        height: 300,
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              if (widget.visible) Expanded(
+                child: Checkbox(
+                  value: widget.value,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _isSelected = newValue!;
+                      widget.value = _isSelected;
+                      widget.labelColor = widget.value?Colors.teal:Colors.black87;
+                      widget.onValueChanged();
+                    });
+                  },),
+              ),
               InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
@@ -138,6 +161,7 @@ class FoodCardState extends State<FoodCard> {
                     },
 
                   child: Stack(
+
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

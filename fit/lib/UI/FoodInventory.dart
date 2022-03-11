@@ -9,6 +9,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'compartment': 1,
+    'value': false,
   },
   {
     'title': 'Grape',
@@ -16,6 +17,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/grape.jpg',
     'quantity': "1",
     'compartment': 2,
+    'value': false,
   },
   {
     'title': 'Pear',
@@ -23,6 +25,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/pear.jpg',
     'quantity': "1",
     'compartment': 3,
+    'value': false,
   },
   {
     'title': 'apple',
@@ -30,6 +33,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'compartment': 4,
+    'value': false,
   },
   {
     'title': 'banana',
@@ -37,6 +41,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/banana.jpg',
     'quantity': "1",
     'compartment': 5,
+    'value': false,
   },
   {
     'title': 'apple',
@@ -44,6 +49,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'compartment': 1,
+    'value': false,
   },
   {
     'title': 'apple',
@@ -51,6 +57,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'compartment': 2,
+    'value': false,
   },
   {
     'title': 'apple',
@@ -58,6 +65,7 @@ List<Map<String, dynamic>> foodList = [
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'compartment': 3,
+    'value': false,
   }
 ];
 
@@ -79,12 +87,15 @@ class _FoodInventoryState extends State<FoodInventory> {
     super.initState();
 
   }
-
+  bool editBtn = false;
   Widget build(BuildContext context) {
     FoodInventorryUtils fabMenu = FoodInventorryUtils(
       foodList: foodList,
       onFoodRecordChanged: (List<Map<String, dynamic>> val) {
         setState(() => foodList = val);
+      },
+      onEdit: (bool val) {
+        setState(() => editBtn = val);
       },
     );
     return DefaultTabController(
@@ -121,35 +132,79 @@ class _FoodInventoryState extends State<FoodInventory> {
                     .toList();
               }
 
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  itemCount: filteredData.length,
-                  itemBuilder: (ctx, int i) {
-                    // if(foodList[i]["compartment"] == index + 1) {
-                    return FoodCard(
-                      foodName: filteredData[i]['title'].toString(),
-                      foodExpiry: filteredData[i]['expiry'].toString(),
-                      foodImage: filteredData[i]['image'].toString(),
-                      foodQuantity: int.parse(filteredData[i]['quantity']),
-                      onQuantityChanged: (int val) {
-                        setState(() => filteredData[i]['quantity'] =  val.toString());
+              return Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: double.infinity,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      itemCount: filteredData.length,
+                      itemBuilder: (ctx, int i) {
+                      return FoodCard(
+                          foodName: filteredData[i]['title'].toString(),
+                          foodExpiry: filteredData[i]['expiry'].toString(),
+                          foodImage: filteredData[i]['image'].toString(),
+                          foodQuantity: int.parse(filteredData[i]['quantity']),
+                          value: filteredData[i]['value'] == true,
+                          visible: editBtn,
+                          onQuantityChanged: (int val) {
+                            setState(() => filteredData[i]['quantity'] =  val.toString());
+                          },
+                          labelColor: Colors.black87,
+                          onValueChanged: (){
+                            setState((){
+                            Map<String, dynamic> foodListItem =  foodList[i];
+                            foodListItem["value"] = true;
+                            });
+                          },
+                        );
                       },
-                    );
-                    // }
-                  },
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 1.0,
-                    mainAxisSpacing: 2,
-                    mainAxisExtent: 120,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: 0.75,
+                        crossAxisSpacing: 1.0,
+                        mainAxisSpacing: 10,
+                        mainAxisExtent: 145,
+                      ),
+                    ),
                   ),
-                ),
+                  if (editBtn) Positioned(
+                      bottom: 30,
+                      left: 20,
+                      child:  Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            FloatingActionButton(
+                              child: Icon(Icons.check_circle_outline),
+                              onPressed: () {
+                                setState(() {
+                                  editBtn = !editBtn;
+                                });
+                              },
+                              heroTag: 1,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FloatingActionButton(
+                              child: Icon(Icons.delete_rounded),
+                              onPressed: () {
+                                setState(() {
+                                  filteredData.removeWhere((item) {
+                                    return item['value']==true;
+                                  } );
+                                });
+
+                              },
+                              heroTag: 2,
+                            )
+                          ]
+                      )
+                  )
+                ],
               );
             }),
           ),

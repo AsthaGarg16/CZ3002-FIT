@@ -13,10 +13,12 @@ class FoodInventorryUtils extends StatefulWidget {
       {Key? key,
         required this.foodList,
         required this.onFoodRecordChanged,
+        required this.onEdit,
       })
       : super(key: key);
   List<Map<String, dynamic>> foodList;
   final Function(List<Map<String, dynamic>>) onFoodRecordChanged;
+  final Function(bool) onEdit;
   @override
   FoodInventorryUtilsState createState() => FoodInventorryUtilsState();
 }
@@ -304,9 +306,11 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     });
 
   }
+
+
   @override
   Widget build(BuildContext context) {
-
+    // return StatefulBuilder(builder: (context, StateSetter setState){
       return SpeedDial(
         icon: Icons.more_horiz,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -359,8 +363,17 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
             child: const Icon(Icons.mode_edit_outline_outlined ),
             foregroundColor: Colors.white,
             backgroundColor: Theme.of(context).colorScheme.primary,
-            onTap: () {/* Do something */},
-          )
+            onTap: () {
+              setState(() {
+                bool hide = true;
+                print("this is hide");
+                print(hide);
+                widget.onEdit(hide);
+              });
+
+            },
+          ),
+
         ]);
   }
 }
