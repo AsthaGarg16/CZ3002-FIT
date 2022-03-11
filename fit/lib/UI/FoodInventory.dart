@@ -192,11 +192,36 @@ class _FoodInventoryState extends State<FoodInventory> {
                             FloatingActionButton(
                               child: Icon(Icons.delete_rounded),
                               onPressed: () {
-                                setState(() {
-                                  filteredData.removeWhere((item) {
-                                    return item['value']==true;
-                                  } );
-                                });
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                return AlertDialog(
+                                  title: Text('Please Confirm', style: Theme.of(context).textTheme.subtitle2,),
+                                  content: Text('Are you sure to remove the items?', style:Theme.of(context).textTheme.bodyText1),
+                                  actions: [
+                                    // The "Yes" button
+                                    TextButton(
+                                        onPressed: () {
+                                          // Remove the box
+                                          setState(() {
+                                            filteredData.removeWhere((item) {
+                                              return item['value']==true;
+                                            } );
+                                          });
+
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Thrown')),
+                                    TextButton(
+                                        onPressed: () {
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Consume'))
+                                  ],
+                                );});
+
 
                               },
                               heroTag: 2,

@@ -269,8 +269,19 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               color: Colors.white)),
         ),
         MaterialButton(
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () async {
+            if(_dialogformKey.currentState!.validate())
+            {
+              if(chosenValue!=null)
+              {
+                _unit = chosenValue??Units.units[0];
+              }
+              newItem = FoodRecord(_name,_quantity,_unit,_expiryDate,_compNum, _imageUrl);
+              Navigator.pop(context,newItem);
+            };
+
+            showCustomDialog(context);
+            // Navigator.pop(context);
           },
           color: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
