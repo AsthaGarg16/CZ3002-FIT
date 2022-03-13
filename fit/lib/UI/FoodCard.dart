@@ -33,12 +33,15 @@ class FoodCard extends StatefulWidget {
 
 class FoodCardState extends State<FoodCard> {
   Color expiryColor = Colors.white;
+  bool expired = false;
   @override
   void initState() {
     super.initState();
-    expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
+    expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0? Colors.white70:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
     ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<6?Colors.orange:
-    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.yellow:Colors.white));
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.yellow:Colors.white)));
+    expired = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0?true:false;
   }
   // final GlobalKey _closeKey = GlobalKey();
   @override
@@ -48,17 +51,21 @@ class FoodCardState extends State<FoodCard> {
       child: Container(
         margin:EdgeInsets.all(5.0),
         height: 300,
+        foregroundDecoration: BoxDecoration(
+          color: expired ? Colors.grey:Colors.transparent,
+          backgroundBlendMode: BlendMode.saturation,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
             color: expiryColor,
-            width: 5,
+            width: 4,
           ),
           borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(7),
-              topRight: Radius.circular(7),
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7)
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)
           ),
           boxShadow: [
             BoxShadow(
@@ -198,18 +205,18 @@ class FoodCardState extends State<FoodCard> {
                             ),
                             Center(
                               child: Text(widget.foodName,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
+                                      color: expired?Colors.black38:Colors.black87,
                                       letterSpacing: 1.5),),
                             ),
                             Center(
                               child: Text(widget.foodExpiry,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 13.0,
                                       fontWeight: FontWeight.normal,
-                                      color: Colors.black87)),
+                                      color: expired?Colors.black45:Colors.black87)),
                             ),
                           ],
                         ),

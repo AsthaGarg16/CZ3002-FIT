@@ -43,7 +43,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'banana',
-    'expiry': '20220510',
+    'expiry': '20220313',
     'image': 'assets/images/banana.jpg',
     'quantity': "1",
     'unit': '',
