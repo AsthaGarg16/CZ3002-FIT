@@ -8,6 +8,7 @@ class FoodCard extends StatefulWidget {
         required this.foodExpiry,
         required this.foodImage,
         required this.foodQuantity,
+        required this.unit,
         required this.onQuantityChanged,
         required this.onValueChanged,
         required this.labelColor,
@@ -20,7 +21,7 @@ class FoodCard extends StatefulWidget {
   final String foodImage;
   final Function(int) onQuantityChanged;
   final Function onValueChanged;
-
+  final String unit;
   Color labelColor;
   bool value;
   bool visible;

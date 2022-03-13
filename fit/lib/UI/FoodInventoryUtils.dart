@@ -5,7 +5,7 @@ import 'dart:core';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
-
+import 'ShoppingList.dart';
 
 
 /// My app class to display the date range picker
@@ -39,6 +39,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   final GlobalKey _accKey = GlobalKey();
   DateTime selectedDate = DateTime.now();
   TextEditingController _date = new TextEditingController();
+  final dateFormatter = DateFormat('dd-MM-yy');
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -69,7 +70,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     int _compNum = 0;
     // qr_code_scanner_rounded
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
-    final dateFormatter = DateFormat('dd-MM-yy');
+
     AlertDialog AddItemDialog = AlertDialog(
       title: Text(title, style:Theme
           .of(context)
@@ -314,6 +315,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
           'image': 'assets/images/apple.jpg',
           'quantity': value.quantity.toString(),
           'compartment': 3,
+          'unit': value.unit,
         };
         widget.foodList.add(newObj);
         widget.onFoodRecordChanged(widget.foodList);
@@ -323,6 +325,78 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
   }
 
+  Widget setupAlertDialoadContainer(addingList) {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child: ListView.builder(
+        controller: ScrollController(),
+        shrinkWrap: true,
+        itemCount: addingList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(addingList[index]['title'], style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Quantity', style: TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                  Row(
+                    children: [
+                      Text(addingList[index]['quantity'], style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                      Text(addingList[index]['unit'], style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                    ],
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Text('Expiry Date', style: TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),),
+
+                  Expanded(
+                    flex: 6,
+                    child: GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                            obscureText: false,
+                            controller: _date,
+                            keyboardType: TextInputType.datetime,
+                            decoration: InputDecoration(
+                              hintText: 'Today',
+                              prefixIcon: const Icon(Icons.calendar_today),
+                            ),
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                            onChanged: (val) {
+                              setState(() => addingList[index]['expiry'] = DateTime.parse(val));
+                            }
+                        ),
+                      ),
+                    )
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+            ]);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -375,8 +449,56 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                         PopupMenuItem(
                           child: MaterialButton(
                               onPressed: () {
-                                // showCustomDialog(context);
-                              },
+                                List<Map<String, dynamic>> addingList = [];
+                                for (var item in shopListDb) {
+                                  if (item['value'] == true) {
+                                    List<String> quant = item['quantity'].toString().split(' ').toList();
+                                    if (quant.length == 1) quant.add("");
+                                    Map<String, Object> newObj = {
+                                      'title': item['label'].toString(),
+                                      'expiry':
+                                          dateFormatter.format(DateTime.now()),
+                                      'image': 'assets/images/apple.jpg',
+                                      'quantity': quant[0],
+                                      'unit' :  quant[1],
+                                      'compartment': 3,
+                                    };
+                                    addingList.add(newObj);
+                                  }
+                                };
+
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Confirm adding shopping items', style:Theme
+                                            .of(context)
+                                            .textTheme
+                                            .subtitle2,textAlign: TextAlign.center,),
+                                        content: setupAlertDialoadContainer(addingList),
+                                        actions: <Widget>[
+                                          MaterialButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                widget.foodList = [...widget.foodList, ...addingList,];
+                                                widget.onFoodRecordChanged(widget.foodList);
+                                              });
+                                              Navigator.pop(context, addingList);
+                                              Navigator.pop(context);
+                                            },
+                                            color: Theme.of(context).colorScheme.primary,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10)),
+                                            child: Text("OK", style: const TextStyle(fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white)),
+                                          ),
+                                        ],
+                                      );
+                                    });
+
+
+                            },
                               child: Text('Add items from shopping list', style: Theme.of(context).textTheme.bodyText1)),
                         ),
 
@@ -403,8 +525,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
             onTap: () {
               setState(() {
                 bool hide = true;
-                print("this is hide");
-                print(hide);
                 widget.onEdit(hide);
               });
 

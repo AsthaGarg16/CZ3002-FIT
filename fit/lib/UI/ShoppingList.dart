@@ -5,8 +5,85 @@ import '../Entity/FoodItem.dart';
 import '../Entity/Units.dart';
 import 'ShopListCard.dart';
 
+List<Map<String, Object>> shopListDb = [
+  {
+    'label': 'Spaghetti',
+    'quantity': '200 g',
+    'recipe': 'Spaghetti Bolognese',
+    'isRecipe' : true,
+    'value': false,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Tomatoes',
+    'quantity': '200 g',
+    'recipe': '',
+    'isRecipe' : false,
+    'value': false,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Chilli Flakes',
+    'quantity': '50 g',
+    'recipe': '',
+    'isRecipe' : false,
+    'value': false,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Apples',
+    'quantity': '5',
+    'recipe': 'Fruit Bowl',
+    'isRecipe' : true,
+    'value': false,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Flour',
+    'quantity': '200 g',
+    'recipe': 'Spaghetti Bolognese',
+    'isRecipe' : true,
+    'value': true,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Onion',
+    'quantity': '200 g',
+    'recipe': '',
+    'isRecipe' : false,
+    'value': true,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Sunflower Oil',
+    'quantity': '5 l',
+    'recipe': '',
+    'isRecipe' : false,
+    'value': true,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+  {
+    'label': 'Oranges',
+    'quantity': '5',
+    'recipe': 'Fruit Bowl',
+    'isRecipe' : true,
+    'value': true,
+    'alternatives': List<String>.filled(3,"alternate "),
+    'isVisible' :false,
+  },
+
+];
+
 class ShoppingList extends StatefulWidget {
   List<String> altItem = ['alt 1', 'alt 2', 'alt 3'];
+
   List<Map<String, Object>> shopList = [
     {
       'label': 'Spaghetti',
@@ -101,7 +178,7 @@ class _ShopListState extends State<ShoppingList> {
                           children: <Widget>[
                         ListView.builder(
                             controller: ScrollController(),
-                        shrinkWrap: true,
+                            shrinkWrap: true,
                             itemCount: widget.shopList.length,
                             itemBuilder: (context, index) {
                               return Column(

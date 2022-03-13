@@ -3,12 +3,14 @@ import 'FoodCard.dart';
 import 'FoodInventoryUtils.dart';
 
 
+
 List<Map<String, dynamic>> foodList = [
   {
     'title': 'Apple',
     'expiry': '10/05/22',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 1,
     'value': false,
   },
@@ -17,6 +19,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/grape.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 2,
     'value': false,
   },
@@ -25,6 +28,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/pear.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 3,
     'value': false,
   },
@@ -33,6 +37,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 4,
     'value': false,
   },
@@ -41,6 +46,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/banana.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 5,
     'value': false,
   },
@@ -49,6 +55,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 1,
     'value': false,
   },
@@ -57,6 +64,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 2,
     'value': false,
   },
@@ -65,6 +73,7 @@ List<Map<String, dynamic>> foodList = [
     'expiry': '10/05/22',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
+    'unit': '',
     'compartment': 3,
     'value': false,
   }
@@ -162,6 +171,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                           foodExpiry: filteredData[i]['expiry'].toString(),
                           foodImage: filteredData[i]['image'].toString(),
                           foodQuantity: int.parse(filteredData[i]['quantity']),
+                          unit: filteredData[i]['unit'].toString(),
                           value: filteredData[i]['value'] == true,
                           visible: editBtn,
                           onQuantityChanged: (int val) {
@@ -191,23 +201,31 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                       child:  Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            FloatingActionButton(
+                            FlatButton(
                               child: Icon(Icons.check_circle_outline),
                               onPressed: () {
                                 setState(() {
                                   editBtn = !editBtn;
                                   for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
-                                  print(filteredData);
+
                                 });
 
                               },
-                              heroTag: 1,
+                              shape: CircleBorder(),
+                              color: Theme.of(context).colorScheme.primary,
+                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                                height: 45,
+
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            FloatingActionButton(
+                            FlatButton(
                               child: Icon(Icons.delete_rounded),
+                              shape: CircleBorder(),
+                              color: Theme.of(context).colorScheme.primary,
+                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                              height: 45,
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -261,7 +279,6 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                 );});
 
                               },
-                              heroTag: 2,
                             ),
                           ]
                       )
@@ -270,7 +287,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
               );
             }),
           ),
-          floatingActionButton: fabMenu
+          floatingActionButton:  fabMenu
       ),
     );
   }
