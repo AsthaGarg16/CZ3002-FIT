@@ -32,9 +32,13 @@ class FoodCard extends StatefulWidget {
 }
 
 class FoodCardState extends State<FoodCard> {
+  Color expiryColor = Colors.white;
   @override
   void initState() {
     super.initState();
+    expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<6?Colors.orange:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.amber:Colors.white));
   }
   // final GlobalKey _closeKey = GlobalKey();
   @override
@@ -42,9 +46,30 @@ class FoodCardState extends State<FoodCard> {
     bool _isSelected = false;
     return Center(
       child: Container(
-        margin:EdgeInsets.all(8.0),
+        margin:EdgeInsets.all(5.0),
         height: 300,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: expiryColor,
+            width: 5,
+          ),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(7),
+              topRight: Radius.circular(7),
+              bottomLeft: Radius.circular(7),
+              bottomRight: Radius.circular(7)
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 3, // changes position of shadow
+            ),
+          ],
+        ),
         child: Column(
+           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               if (widget.visible) Expanded(
@@ -173,7 +198,11 @@ class FoodCardState extends State<FoodCard> {
                             ),
                             Center(
                               child: Text(widget.foodName,
-                                  style: Theme.of(context).textTheme.labelMedium),
+                                  style: const TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      letterSpacing: 1.5),),
                             ),
                             Center(
                               child: Text(widget.foodExpiry,

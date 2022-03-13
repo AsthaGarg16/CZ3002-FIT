@@ -7,7 +7,7 @@ import 'FoodInventoryUtils.dart';
 List<Map<String, dynamic>> foodList = [
   {
     'title': 'Apple',
-    'expiry': '10/05/22',
+    'expiry': '20220510',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -16,7 +16,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'Grape',
-    'expiry': '10/05/22',
+    'expiry': '20220510',
     'image': 'assets/images/grape.jpg',
     'quantity': "1",
     'unit': '',
@@ -25,7 +25,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'Pear',
-    'expiry': '10/05/22',
+    'expiry': '20220510',
     'image': 'assets/images/pear.jpg',
     'quantity': "1",
     'unit': '',
@@ -34,7 +34,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '10/05/22',
+    'expiry': '20220510',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -43,7 +43,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'banana',
-    'expiry': '10/05/22',
+    'expiry': '20220510',
     'image': 'assets/images/banana.jpg',
     'quantity': "1",
     'unit': '',
@@ -52,7 +52,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '10/05/22',
+    'expiry': '20220320',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -61,7 +61,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '10/05/22',
+    'expiry': '20220317',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -70,7 +70,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '10/05/22',
+    'expiry': '20220315',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
