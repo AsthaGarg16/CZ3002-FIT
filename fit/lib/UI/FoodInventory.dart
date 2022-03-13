@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'FoodCard.dart';
 import 'FoodInventoryUtils.dart';
+import 'HomePage.dart';
 
 List<Map<String, dynamic>> foodList = [
   {
@@ -71,20 +72,20 @@ List<Map<String, dynamic>> foodList = [
 
 
 class FoodInventory extends StatefulWidget {
-
   FoodInventory({Key? key}) : super(key: key);
 
   @override
   _FoodInventoryState createState() => new _FoodInventoryState();
 }
 
-class _FoodInventoryState extends State<FoodInventory> {
+class _FoodInventoryState extends State<FoodInventory> with SingleTickerProviderStateMixin {
   int numCompartments = 5;
-
+  late TabController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = TabController(length: numCompartments + 1, vsync: this);
 
   }
   bool editBtn = false;
@@ -97,17 +98,29 @@ class _FoodInventoryState extends State<FoodInventory> {
       onEdit: (bool val) {
         setState(() => editBtn = val);
       },
+      InventoryTabController: controller,
     );
+
     return DefaultTabController(
       length: numCompartments + 1,
+      // initialIndex: widget.showPage,
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: false,
+            // actions: <Widget>[
+            //   IconButton(
+            //       onPressed: (){
+            //         showSearch(context: context, delegate: InventorySearch(controller));
+            //       },
+            //       icon: const Icon(Icons.search)
+            //   )
+            // ],
             flexibleSpace: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TabBar(
+                  controller: controller,
                   isScrollable: true,
                   tabs: List<Widget>.generate(numCompartments + 1, (int index) {
                     return Tab(
@@ -122,6 +135,7 @@ class _FoodInventoryState extends State<FoodInventory> {
             ),
           ),
           body: TabBarView(
+            controller: controller,
             children: List<Widget>.generate(numCompartments + 1, (int index) {
 
               List<Map<String, dynamic>> filteredData = foodList;
@@ -225,7 +239,7 @@ class _FoodInventoryState extends State<FoodInventory> {
 
                               },
                               heroTag: 2,
-                            )
+                            ),
                           ]
                       )
                   )
@@ -240,11 +254,11 @@ class _FoodInventoryState extends State<FoodInventory> {
 }
 
 class InventorySearch extends SearchDelegate<String>{
-  List<String> items = [ //use a function to get a list of inventory items as a string for this attribute
-    "Apple",
-    "Banana",
-    "Pear",
-  ];
+
+  TabController controller;
+
+
+  InventorySearch(this.controller);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -269,20 +283,7 @@ class InventorySearch extends SearchDelegate<String>{
     );
   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container(
-        height: 100,
-        width: 100,
-        child: Card(
-            color: Colors.red,
-            shape: StadiumBorder(),
-            child: Center(
-              child: Text(query),
-            )
-        )
-    );
-  }
+
 
   @override
   Widget buildSuggestions(BuildContext context) {
@@ -292,7 +293,8 @@ class InventorySearch extends SearchDelegate<String>{
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: (){
-          showResults(context);
+          close(context, "");
+          controller.animateTo(foodList[index]["compartment"]);
         },
         leading: const Icon(Icons.free_breakfast),
         title: RichText(
@@ -308,6 +310,12 @@ class InventorySearch extends SearchDelegate<String>{
       ),
       itemCount: suggestionList.length,
     );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    throw UnimplementedError();
   }
 
 }

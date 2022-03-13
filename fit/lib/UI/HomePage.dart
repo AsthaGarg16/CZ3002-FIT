@@ -9,19 +9,30 @@ import 'ShoppingList.dart';
 
 
 class HomePage extends StatefulWidget {
+  // int foodInventoryInitPage = 0;
+  //
+  // HomePage(this.foodInventoryInitPage);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+
   int _currentIndex = 0;
-  final List _pages = [FoodInventory(), RecipePage(), ShoppingList(), FoodInventory()];
+  List _pages = [];
+  // List _pages = [FoodInventory(showPage: 0,), RecipePage(), ShoppingList(), FoodInventory(showPage: 0,)];
   final List titles = [
     'Food Inventory',
     'Recipe Recommendation',
     'Shopping List',
     'Food Waste'
   ];
+
+  void initState(){
+    _pages = [FoodInventory(), RecipePage(), ShoppingList(), FoodInventory()];
+  }
 
   // Icon customIcon = const Icon(Icons.search, size: 20.0,);
   // bool searchFlag = false;
@@ -74,14 +85,14 @@ class _HomePageState extends State<HomePage> {
             // title: customSearchBar,
             // centerTitle: centerTitle,
             centerTitle: true,
-            actions: _currentIndex == 0 ? <Widget>[
-              IconButton(
-                  onPressed: (){
-                    showSearch(context: context, delegate: InventorySearch());
-                  },
-                  icon: const Icon(Icons.search)
-              )
-            ] : []
+            // actions: _currentIndex == 0 ? <Widget>[
+            //   IconButton(
+            //       onPressed: (){
+            //         showSearch(context: context, delegate: InventorySearch());
+            //       },
+            //       icon: const Icon(Icons.search)
+            //   )
+            // ] : []
             // actions: _currentIndex == 0 ? [
             //   IconButton(
             //     onPressed: (){

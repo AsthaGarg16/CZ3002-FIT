@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:core';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
+import 'FoodInventory.dart';
 
 
 
@@ -14,11 +15,13 @@ class FoodInventorryUtils extends StatefulWidget {
         required this.foodList,
         required this.onFoodRecordChanged,
         required this.onEdit,
+        required this.InventoryTabController,
       })
       : super(key: key);
   List<Map<String, dynamic>> foodList;
   final Function(List<Map<String, dynamic>>) onFoodRecordChanged;
   final Function(bool) onEdit;
+  TabController InventoryTabController;
   @override
   FoodInventorryUtilsState createState() => FoodInventorryUtilsState();
 }
@@ -322,7 +325,17 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   @override
   Widget build(BuildContext context) {
     // return StatefulBuilder(builder: (context, StateSetter setState){
-      return SpeedDial(
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+
+            FloatingActionButton(onPressed: (){
+              showSearch(context: context, delegate: InventorySearch(widget.InventoryTabController));
+            }, child: Icon(Icons.search)),
+
+            SizedBox(height: 10),
+
+            SpeedDial(
         icon: Icons.more_horiz,
         backgroundColor: Theme.of(context).colorScheme.primary,
         overlayOpacity: 0,
@@ -385,6 +398,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
             },
           ),
 
-        ]);
+        ])]);
   }
 }
