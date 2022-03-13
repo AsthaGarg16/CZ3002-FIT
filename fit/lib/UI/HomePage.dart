@@ -7,24 +7,39 @@ import 'ShoppingList.dart';
 // import 'FoodWaste.dart';
 
 class HomePage extends StatefulWidget {
+  // int foodInventoryInitPage = 0;
+  //
+  // HomePage(this.foodInventoryInitPage);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+
   int _currentIndex = 0;
+<<<<<<< HEAD
   final List _pages = [
     FoodInventory(),
     RecipePage(),
     ShoppingList(),
     FoodInventory()
   ];
+=======
+  List _pages = [];
+  // List _pages = [FoodInventory(showPage: 0,), RecipePage(), ShoppingList(), FoodInventory(showPage: 0,)];
+>>>>>>> 4e334af5088197e0fdea460e9938bcd9899c4fa1
   final List titles = [
     'Food Inventory',
     'Recipes',
     'Shopping List',
     'Food Waste'
   ];
+
+  void initState(){
+    _pages = [FoodInventory(), RecipePage(), ShoppingList(), FoodInventory()];
+  }
 
   // Icon customIcon = const Icon(Icons.search, size: 20.0,);
   // bool searchFlag = false;
@@ -69,6 +84,7 @@ class _HomePageState extends State<HomePage> {
     // }
 
     return Scaffold(
+<<<<<<< HEAD
       appBar: AppBar(
           title: Text(titles[_currentIndex],
               style: Theme.of(context).textTheme.subtitle1),
@@ -100,6 +116,36 @@ class _HomePageState extends State<HomePage> {
           //     icon: customIcon,
           //   ),
           // ] : [],
+=======
+          appBar: AppBar(
+            title: Text(titles[_currentIndex], style: Theme.of(context).textTheme.subtitle1),
+            // automaticallyImplyLeading: showBackButton,
+            // title: customSearchBar,
+            // centerTitle: centerTitle,
+            centerTitle: true,
+            // actions: _currentIndex == 0 ? <Widget>[
+            //   IconButton(
+            //       onPressed: (){
+            //         showSearch(context: context, delegate: InventorySearch());
+            //       },
+            //       icon: const Icon(Icons.search)
+            //   )
+            // ] : []
+            // actions: _currentIndex == 0 ? [
+            //   IconButton(
+            //     onPressed: (){
+            //       setState(() {
+            //         if (customIcon.icon == Icons.search) {
+            //           searchFlag = true;
+            //         } else {
+            //           searchFlag = false;
+            //         }
+            //       });
+            //     },
+            //     icon: customIcon,
+            //   ),
+            // ] : [],
+>>>>>>> 4e334af5088197e0fdea460e9938bcd9899c4fa1
           ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
