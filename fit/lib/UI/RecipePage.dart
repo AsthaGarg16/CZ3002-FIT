@@ -1,6 +1,7 @@
 import 'package:fit/UI/FilterCheckbox.dart';
 import 'package:flutter/material.dart';
 import 'RecipeCard.dart';
+import 'RecipeInstructionsPage.dart';
 
 class RecipePage extends StatelessWidget {
   List<Map<String, dynamic>> recipeList = [
@@ -107,8 +108,12 @@ class RecipePage extends StatelessWidget {
                                 recipeID: (recipeList[index]['id']) ?? -1,
                                 onRecipeSelected: (int ID) {
                                   print(ID);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          RecipeInstructionsPage()));
                                 },
-                                //   Navigator.push(
+
+                                //
                                 //     context,
                                 //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
 
