@@ -108,6 +108,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
         setState(() => editBtn = val);
       },
       InventoryTabController: controller,
+      numOfCompartments: numCompartments,
     );
 
     return DefaultTabController(

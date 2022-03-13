@@ -16,9 +16,11 @@ class FoodInventorryUtils extends StatefulWidget {
         required this.onFoodRecordChanged,
         required this.onEdit,
         required this.InventoryTabController,
+        required this.numOfCompartments,
       })
       : super(key: key);
   List<Map<String, dynamic>> foodList;
+  int numOfCompartments;
   final Function(List<Map<String, dynamic>>) onFoodRecordChanged;
   final Function(bool) onEdit;
   TabController InventoryTabController;
@@ -64,10 +66,12 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     String _name="";
     int  _quantity=0;
     String _unit = Units.units[0];
+    String _compartment = "1";
     String? chosenValue;
+    String? chosenValue2;
     DateTime _expiryDate = DateTime.now();
     String _imageUrl='assets/images/apple.jpg';
-    int _compNum = 0;
+    int _compNum = 1;
     // qr_code_scanner_rounded
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
 
@@ -93,6 +97,41 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
+                                const Text("Compartment: ", style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                                ),
+                                DropdownButtonFormField<String>(
+                                    value: _compartment,
+                                    //elevation: 5,
+                                    style: const TextStyle(
+                                        fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+
+                                    items: List<String>.generate(widget.numOfCompartments, (i) => (i + 1).toString()).map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value, style: const TextStyle(
+                                            fontFamily:"mw",fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    hint: const Text(
+                                      "Select compartment",
+                                      style: TextStyle(
+                                          fontFamily:"mw",fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                                    ),
+                                    onChanged: (String? value) {
+
+                                      setState(() {
+                                        chosenValue2=value;
+                                        _compNum = int.parse(chosenValue2!);
+                                      });
+
+                                    }
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 const Text(
                                   "Item name: ",
                                   style: TextStyle(
@@ -259,6 +298,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               {
                 _unit = chosenValue??Units.units[0];
               }
+
               newItem = FoodRecord(_name,_quantity,_unit,_expiryDate,_compNum, _imageUrl);
               Navigator.pop(context,newItem);
             }
@@ -282,6 +322,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               {
                 _unit = chosenValue??Units.units[0];
               }
+
               newItem = FoodRecord(_name,_quantity,_unit,_expiryDate,_compNum, _imageUrl);
               Navigator.pop(context,newItem);
             };
@@ -314,7 +355,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
           'expiry': dateFormatter.format(value.expiryDate),
           'image': 'assets/images/apple.jpg',
           'quantity': value.quantity.toString(),
-          'compartment': 3,
+          'compartment': value.compNum,
           'unit': value.unit,
         };
         widget.foodList.add(newObj);
