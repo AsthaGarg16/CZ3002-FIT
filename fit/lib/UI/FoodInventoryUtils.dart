@@ -49,12 +49,12 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
         initialDate: selectedDate,
         firstDate: DateTime(1901, 1),
         lastDate: DateTime(2100));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-
         _date.text = DateFormat.yMd().format(picked);
       });
+    }
   }
 
   showCustomDialog(BuildContext context,
@@ -277,6 +277,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                       style: const TextStyle(
                                           fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                       onChanged: (val) {
+                                        print(DateTime.parse(val));
                                         setState(() => _expiryDate = DateTime.parse(val));
                                       }
                                     ),
@@ -299,7 +300,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 _unit = chosenValue??Units.units[0];
               }
 
-              newItem = FoodRecord(_name,_quantity,_unit,_expiryDate,_compNum, _imageUrl);
+              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, _imageUrl);
               Navigator.pop(context,newItem);
             }
 
@@ -323,7 +324,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 _unit = chosenValue??Units.units[0];
               }
 
-              newItem = FoodRecord(_name,_quantity,_unit,_expiryDate,_compNum, _imageUrl);
+              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, _imageUrl);
               Navigator.pop(context,newItem);
             };
 

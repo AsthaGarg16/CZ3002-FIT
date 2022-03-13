@@ -177,7 +177,10 @@ class FoodCardState extends State<FoodCard> {
                             ),
                             Center(
                               child: Text(widget.foodExpiry,
-                                  style: Theme.of(context).textTheme.bodyText1),
+                                  style: const TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black87)),
                             ),
                           ],
                         ),
