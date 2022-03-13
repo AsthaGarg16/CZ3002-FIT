@@ -38,7 +38,7 @@ class FoodCardState extends State<FoodCard> {
     super.initState();
     expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
     ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<6?Colors.orange:
-    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.amber:Colors.white));
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.yellow:Colors.white));
   }
   // final GlobalKey _closeKey = GlobalKey();
   @override
