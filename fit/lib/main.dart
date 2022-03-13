@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit/Controller/services/database.dart';
 import 'package:flutter/material.dart';
 import 'Controller/services/InventoryController.dart';
+import 'Controller/services/RecipeController.dart';
 import '../../Entity/Inventory.dart';
 import '../../Entity/FoodRecord.dart';
 import 'UI/EntryPage.dart';
@@ -15,11 +16,11 @@ void main() async{
 
   // Testing out databaseService.writeNewDocument() function
   // Map <String, dynamic> testing = {"testing": "123"};
-  CollectionReference collectionReference = firestore.collection("fit");
+  // CollectionReference collectionReference = firestore.collection("fit");
   // databaseService.writeNewDocument(collectionReference, testing);
 
   // Testing out databaseService.updateDocument() function
-  String email = "123456@gmail.com";
+  // String email = "123456@gmail.com";
   // Map <String, dynamic> user = {"dairyFree": false,
   //                               "email": email,
   //                               "fridgeDetails": 3,
@@ -27,7 +28,7 @@ void main() async{
   //                               "name": "123456",
   //                               "vegan": false,
   //                               "vegetarian": true};
-  DocumentReference documentReference = firestore.collection("fit").doc(email);
+  // DocumentReference documentReference = firestore.collection("fit").doc(email);
   // databaseService.updateDocument(documentReference, user, false);
 
   // Testing out all of databaseService read/get functions
@@ -35,32 +36,38 @@ void main() async{
   // databaseService.getCollection(collectionReference);
   // databaseService.getField(documentReference, ["name"]);
 
-  // Spoonacular functionality example
+  // Spoonacular InventoryController Testing
   // Map<String, dynamic> request = {
   //   "query": "Apple",
   //   "number": "1"
   // };
-  //
   // InventoryController ic= InventoryController();
   // String img=await InventoryController.checkFoodImageCache("apple");
   // print(img);
   // Inventory inv =await InventoryController.getInventory("nisha.rmanian@gmail.com");
-  //
   // for(FoodRecord r in inv.inventoryItems)
   // {
   //   print("name"+ r.name+ "quan"+ r.expiryDate.toString());
   // }
-  //InventoryController.addFoodRecord("nisha.rmanian@gmail.com","apple",2,"",DateTime(2021,3,29),"https://spoonacular.com/cdn/ingredients_100x100/apple.jpg",1);
-
+  // InventoryController.addFoodRecord("nisha.rmanian@gmail.com","apple",2,"",DateTime(2021,3,29),"https://spoonacular.com/cdn/ingredients_100x100/apple.jpg",1);
   // InventoryController.createFoodRecord("nisha.rmanian@gmail.com","banana",2,"",DateTime(2021,3,29),"banana",1);
-  //InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com","banana",DateTime(2021,3,31));
-
-  //
-  // print("hello");
-
+  // InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com","banana",DateTime(2021,3,31));
   // String imgUrl=await InventoryController.fetchImageUrl(request);
   // print(imgUrl);
 
+  // Spoonacular RecipeController Testing
+  // RecipeController rc= RecipeController("123456@gmail.com");
+  // List<int> recipeIDs = await rc.fetchRecipeIDs("pasta,tuna,apple,chicken", "3");
+  // print(recipeIDs);
+  //
+  // for(int i=0; i<recipeIDs.length; i++){
+  //   Map<String, dynamic> recipeInfo = await rc.fetchRecipeInfo(recipeIDs[i]);
+  //   print(recipeInfo);
+  //   Map<String, dynamic> recipeInstructions = await rc.fetchRecipeInstructions(recipeIDs[i]);
+  //   print(recipeInstructions);
+  //   rc.storeInFirestore(recipeInfo, recipeInstructions);
+  // }
+  // rc.readFromFirestore(633538);
 
   runApp(MyApp());
 

@@ -7,7 +7,7 @@ class DatabaseService{
   // This will allow you to create document and collection references in main code
 
   //Constructor
-  DatabaseService() {}
+  DatabaseService();
 
   // In main code, put data to write in the form of Map<String, dynamic>
   // Also, define collection reference in the main code and call DatabaseService.writeNewDocument(colRef, map)
