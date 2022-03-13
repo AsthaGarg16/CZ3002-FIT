@@ -54,7 +54,7 @@ class FoodCardState extends State<FoodCard> {
                       _isSelected = newValue!;
                       widget.value = _isSelected;
                       widget.labelColor = widget.value?Colors.teal:Colors.black87;
-                      widget.onValueChanged();
+                      widget.onValueChanged(_isSelected);
                     });
                   },),
               ),

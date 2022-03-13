@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'FoodCard.dart';
 import 'FoodInventoryUtils.dart';
 
+
 List<Map<String, dynamic>> foodList = [
   {
     'title': 'Apple',
@@ -167,10 +168,10 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                             setState(() => filteredData[i]['quantity'] =  val.toString());
                           },
                           labelColor: Colors.black87,
-                          onValueChanged: (){
+                          onValueChanged: (bool val){
                             setState((){
                             Map<String, dynamic> foodListItem =  foodList[i];
-                            foodListItem["value"] = true;
+                            foodListItem["value"] = val;
                             });
                           },
                         );
@@ -195,7 +196,10 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                               onPressed: () {
                                 setState(() {
                                   editBtn = !editBtn;
+                                  for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
+                                  print(filteredData);
                                 });
+
                               },
                               heroTag: 1,
                             ),
@@ -214,27 +218,47 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                   actions: [
                                     // The "Yes" button
                                     TextButton(
+                                        onPressed: () =>
+                                          showDialog(
+                                          context: context,
+                                          builder: (BuildContext ctx) {
+                                            print("hello");
+
+                                            return AlertDialog(
+                                              title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
+                                              content: Image.asset('assets/images/food_disposal.jpg', ),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      // Close the dialog
+                                                      setState(() {
+                                                        filteredData.removeWhere((item) {
+                                                          return item['value']==true;
+                                                        });
+                                                      });
+                                                      // pop up 2 times to come back main page
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+
+                                                    },
+                                                    child: const Text('OK'))
+                                              ],
+                                            );
+                                          }),
+                                        child: const Text('Thrown')),
+                                    TextButton(
                                         onPressed: () {
-                                          // Remove the box
                                           setState(() {
                                             filteredData.removeWhere((item) {
                                               return item['value']==true;
                                             } );
                                           });
-
-                                          // Close the dialog
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Thrown')),
-                                    TextButton(
-                                        onPressed: () {
                                           // Close the dialog
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text('Consume'))
                                   ],
                                 );});
-
 
                               },
                               heroTag: 2,
