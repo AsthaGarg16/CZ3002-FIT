@@ -6,8 +6,6 @@ import 'RecipePage.dart';
 import 'ShoppingList.dart';
 // import 'FoodWaste.dart';
 
-
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -15,17 +13,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List _pages = [FoodInventory(), RecipePage(), ShoppingList(), FoodInventory()];
+  final List _pages = [
+    FoodInventory(),
+    RecipePage(),
+    ShoppingList(),
+    FoodInventory()
+  ];
   final List titles = [
     'Food Inventory',
-    'Recipe Recommendation',
+    'Recipes',
     'Shopping List',
     'Food Waste'
   ];
 
   // Icon customIcon = const Icon(Icons.search, size: 20.0,);
   // bool searchFlag = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,62 +68,64 @@ class _HomePageState extends State<HomePage> {
     //   );
     // }
 
-
     return Scaffold(
-          appBar: AppBar(
-            title: Text(titles[_currentIndex], style: Theme.of(context).textTheme.subtitle1),
-            // automaticallyImplyLeading: showBackButton,
-            // title: customSearchBar,
-            // centerTitle: centerTitle,
-            centerTitle: true,
-            actions: _currentIndex == 0 ? <Widget>[
-              IconButton(
-                  onPressed: (){
-                    showSearch(context: context, delegate: InventorySearch());
-                  },
-                  icon: const Icon(Icons.search)
-              )
-            ] : []
-            // actions: _currentIndex == 0 ? [
-            //   IconButton(
-            //     onPressed: (){
-            //       setState(() {
-            //         if (customIcon.icon == Icons.search) {
-            //           searchFlag = true;
-            //         } else {
-            //           searchFlag = false;
-            //         }
-            //       });
-            //     },
-            //     icon: customIcon,
-            //   ),
-            // ] : [],
+      appBar: AppBar(
+          title: Text(titles[_currentIndex],
+              style: Theme.of(context).textTheme.subtitle1),
+          // automaticallyImplyLeading: showBackButton,
+          // title: customSearchBar,
+          // centerTitle: centerTitle,
+          centerTitle: true,
+          actions: _currentIndex == 0
+              ? <Widget>[
+                  IconButton(
+                      onPressed: () {
+                        showSearch(
+                            context: context, delegate: InventorySearch());
+                      },
+                      icon: const Icon(Icons.search))
+                ]
+              : []
+          // actions: _currentIndex == 0 ? [
+          //   IconButton(
+          //     onPressed: (){
+          //       setState(() {
+          //         if (customIcon.icon == Icons.search) {
+          //           searchFlag = true;
+          //         } else {
+          //           searchFlag = false;
+          //         }
+          //       });
+          //     },
+          //     icon: customIcon,
+          //   ),
+          // ] : [],
           ),
-          body: _pages[_currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            onTap: onTabTapped,
-            currentIndex: _currentIndex,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.fastfood),
-                label: "Inventory",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.restaurant_menu_rounded),
-                label: "Recipes",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.add_shopping_cart),
-                label: "Shopping List",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.show_chart),
-                label: "Food Waste",
-              ),
-            ],
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood),
+            label: "Inventory",
           ),
-        );
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant_menu_rounded),
+            label: "Recipes",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: "Shopping List",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: "Food Waste",
+          ),
+        ],
+      ),
+    );
   }
 
   void onTabTapped(int index) {

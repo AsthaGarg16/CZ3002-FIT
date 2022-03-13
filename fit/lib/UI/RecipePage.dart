@@ -60,68 +60,54 @@ class RecipePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Recipes",
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                      Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.white12,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.filter_alt),
-                          color: Colors.black,
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return FilterCheckbox();
-                                });
-                          },
-                        ),
-                      ),
-                    ]),
-                Expanded(
-                    child: Scrollbar(
-                        isAlwaysShown: true,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: recipeList.length,
-                            itemBuilder: (context, index) {
-                              return RecipeCard(
-                                recipeName:
-                                    recipeList[index]['title'].toString(),
-                                recipeDescription:
-                                    recipeList[index]['description'].toString(),
-                                recipeImage:
-                                    recipeList[index]['image'].toString(),
-                                recipeID: (recipeList[index]['id']) ?? -1,
-                                onRecipeSelected: (int ID) {
-                                  print(ID);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          RecipeInstructionsPage()));
-                                },
+      resizeToAvoidBottomInset: false,
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                  child: Scrollbar(
+                      isAlwaysShown: true,
+                      child: ListView.builder(
+                          padding: const EdgeInsets.all(10),
+                          shrinkWrap: true,
+                          itemCount: recipeList.length,
+                          itemBuilder: (context, index) {
+                            return RecipeCard(
+                              recipeName: recipeList[index]['title'].toString(),
+                              recipeDescription:
+                                  recipeList[index]['description'].toString(),
+                              recipeImage:
+                                  recipeList[index]['image'].toString(),
+                              recipeID: (recipeList[index]['id']) ?? -1,
+                              onRecipeSelected: (int ID) {
+                                print(ID);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        RecipeInstructionsPage()));
+                              },
 
-                                //
-                                //     context,
-                                //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
+                              //
+                              //     context,
+                              //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
 
-                                //     ))
-                                // },
-                              );
-                            })))
-              ],
-            )));
+                              //     ))
+                              // },
+                            );
+                          })))
+            ],
+          )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return FilterCheckbox();
+              });
+        },
+        child: const Icon(Icons.filter_alt, size: 30.0),
+      ),
+    );
   }
 }

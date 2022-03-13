@@ -9,23 +9,28 @@ class FilterCheckbox extends StatefulWidget {
 
 class _FilterCheckboxState extends State<FilterCheckbox> {
   List<Map> preferenceList = [
-    {"pref": "Low Carb", "isChecked": false},
-    {"pref": "Medium Carb", "isChecked": false},
-    {"pref": "High Carb", "isChecked": false},
-    {"pref": "Low Protein", "isChecked": false},
-    {"pref": "Medium Protein", "isChecked": false},
-    {"pref": "High Protein", "isChecked": false},
-    {"pref": "Low Calorie", "isChecked": false},
-    {"pref": "Medium Calorie", "isChecked": false},
-    {"pref": "High Calorie", "isChecked": false},
-    {"pref": "Vegetarian", "isChecked": false},
-    {"pref": "Vegan", "isChecked": false},
-    {"pref": "Dairy Free", "isChecked": false},
-    {"pref": "Gluten Free", "isChecked": false},
+    {"pref": "Low Carb", "isChecked": false, "text": "Low"},
+    {"pref": "Medium Carb", "isChecked": false, "text": "Medium"},
+    {"pref": "High Carb", "isChecked": false, "text": "High"},
+    {"pref": "Low Protein", "isChecked": false, "text": "Low"},
+    {"pref": "Medium Protein", "isChecked": false, "text": "Medium"},
+    {"pref": "High Protein", "isChecked": false, "text": "High"},
+    {"pref": "Low Calorie", "isChecked": false, "text": "Low"},
+    {"pref": "Medium Calorie", "isChecked": false, "text": "Medium"},
+    {"pref": "High Calorie", "isChecked": false, "text": "High"},
+    {"pref": "Vegetarian", "isChecked": false, "text": "Vegetarian"},
+    {"pref": "Vegan", "isChecked": false, "text": "Vegan"},
+    {"pref": "Dairy Free", "isChecked": false, "text": "Dairy Free"},
+    {"pref": "Gluten Free", "isChecked": false, "text": "Gluten Free"},
   ];
 
   @override
   Widget build(BuildContext context) {
+    preferenceList.map((pref) => new CheckboxListTile(value: pref["isChecked"], onChanged: (newValue) {
+                        setState(() {
+                          preferenceList[index]["isChecked"] = newValue;
+                        });
+                      },)
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -38,36 +43,27 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
       return Colors.red;
     }
 
-    return SimpleDialog(
-        title: const Text("Select Preferences"),
-        children: <Widget>[
-          Container(
-              height: 400.00,
-              width: 350.00,
-              child: GridView.builder(
-                  itemCount: preferenceList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    //crossAxisSpacing: 4.0,
-                    //mainAxisSpacing: 4.0
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    //preferenceList.map((preference) {
-                    return CheckboxListTile(
+    return SimpleDialog(title: const Text("Select Preferences"), children: <
+        Widget>[
+      Container(
+          height: 400.00,
+          width: 550.00,
+          child: Column(children: [Text("Carbohydrate")], Row(children: []),)
+          )
+    ]);
+  }
+}
+CheckboxListTile(
                       value: preferenceList[index]["isChecked"],
                       contentPadding: EdgeInsets.all(0),
                       controlAffinity: ListTileControlAffinity.leading,
                       title: Text(
-                        preferenceList[index]["pref"],
-                        style: Theme.of(context).textTheme.bodyText2,
+                        preferenceList[index]["text"],
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       onChanged: (newValue) {
                         setState(() {
                           preferenceList[index]["isChecked"] = newValue;
                         });
                       },
-                    );
-                  }))
-        ]);
-  }
-}
+                    )

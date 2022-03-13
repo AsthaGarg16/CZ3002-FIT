@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class RecipeInstructionsPage extends StatelessWidget {
   final int recipeID = 1;
-  final String recipeName = "Spag bol";
+  final String recipeName = "Spaghetti bolognese";
   final String recipeImage = "assets/images/pasta.jpg";
   final int servings = 4;
   final int readyInMinutes = 40;
@@ -10,7 +10,7 @@ class RecipeInstructionsPage extends StatelessWidget {
   final String sourceUrl =
       'https://www.bbcgoodfood.com/recipes/best-spaghetti-bolognese-recipe';
   final int aggregateLikes = 808;
-  final List steps = [
+  final List<String> instructions = [
     "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
     "Add 4 finely chopped bacon rashers and fry for 10 mins until golden and crisp.",
     "Reduce the heat and add the 2 onions, 2 carrots, 2 celery sticks, 2 garlic cloves and the leaves from 2-3 sprigs rosemary, all finely chopped, then fry for 10 mins. Stir the veg often until it softens.",
@@ -42,10 +42,28 @@ class RecipeInstructionsPage extends StatelessWidget {
   //   required this.aggregateLikes,
   //   required this.steps,
   // }) : super(key: key);
+
   RecipeInstructionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> ingredientsWidgetList = ingredientsList
+        .map((name) => new Container(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.bodyText1,
+            )))
+        .toList();
+    List<Widget> recipeInstructionWidgetList = instructions
+        .map((name) => new Container(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.bodyText1,
+            )))
+        .toList();
+
     return Scaffold(
         body: NestedScrollView(
             floatHeaderSlivers: true,
@@ -55,7 +73,7 @@ class RecipeInstructionsPage extends StatelessWidget {
                 SliverAppBar(
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(recipeName,
-                        style: Theme.of(context).textTheme.subtitle2),
+                        style: Theme.of(context).textTheme.labelMedium),
                     background: Image.asset(
                       recipeImage,
                       fit: BoxFit.fill,
@@ -67,7 +85,7 @@ class RecipeInstructionsPage extends StatelessWidget {
                 ),
               ];
             },
-            body: Column(
+            body: ListView(
               children: [
                 Row(
                   children: [
@@ -81,31 +99,14 @@ class RecipeInstructionsPage extends StatelessWidget {
                 ),
                 Text(
                   "Ingredients",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: ingredientsList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          child: Text(
-                            ingredientsList[index],
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        );
-                      }),
+                ...ingredientsWidgetList,
+                Text(
+                  "Directions",
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
-                Expanded(
-                    child: ListView.builder(
-                        itemCount: steps.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return SizedBox(
-                            child: Text(
-                              "$index. " + steps[index],
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          );
-                        })),
+                ...recipeInstructionWidgetList,
               ],
             )));
     // TODO: implement build
