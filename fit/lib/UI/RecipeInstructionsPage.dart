@@ -65,6 +65,7 @@ class RecipeInstructionsPage extends StatelessWidget {
         .toList();
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: NestedScrollView(
             floatHeaderSlivers: true,
             headerSliverBuilder:
