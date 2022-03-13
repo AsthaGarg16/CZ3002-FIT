@@ -53,6 +53,7 @@ void main() async{
   //InventoryController.addFoodRecord("nisha.rmanian@gmail.com","apple",2,"",DateTime(2021,3,29),"https://spoonacular.com/cdn/ingredients_100x100/apple.jpg",1);
 
   // InventoryController.createFoodRecord("nisha.rmanian@gmail.com","banana",2,"",DateTime(2021,3,29),"banana",1);
+  //InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com","banana",DateTime(2021,3,31));
 
   //
   // print("hello");

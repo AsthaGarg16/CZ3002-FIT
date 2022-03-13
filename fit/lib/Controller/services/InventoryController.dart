@@ -146,4 +146,66 @@ class InventoryController{
 
   }
 
+  static Future<void> updateFoodRecord (
+      String email,
+      String name,
+      int quantity,
+      String unit,
+      DateTime expiryDate,
+      int compNum) async{
+
+    await FirebaseFirestore.instance
+        .collection('Inventory')
+        .doc(email)
+        .collection('FoodItems')
+        .where("name",isEqualTo: name)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.docs.forEach((document) async {
+        if(document['expiryDate'].microsecondsSinceEpoch== expiryDate.microsecondsSinceEpoch){
+          await FirebaseFirestore.instance
+              .collection('Inventory')
+              .doc(email)
+              .collection('FoodItems')
+              .doc(document.id)
+              .update({'quantity':quantity,'compNum':compNum})
+                  .then((value) => print("Food Record Updated"))
+                  .catchError((error) => print("Failed to update user: $error"));
+        }
+
+      })
+    })
+        .catchError((error) => print('Failed to get inventory: $error'));
+
+  }
+
+  static Future<void> deleteFoodRecord (
+      String email,
+      String name,
+      DateTime expiryDate) async{
+
+    await FirebaseFirestore.instance
+        .collection('Inventory')
+        .doc(email)
+        .collection('FoodItems')
+        .where("name",isEqualTo: name)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.docs.forEach((document) async {
+        if(document['expiryDate'].microsecondsSinceEpoch== expiryDate.microsecondsSinceEpoch){
+          await FirebaseFirestore.instance
+              .collection('Inventory')
+              .doc(email)
+              .collection('FoodItems')
+              .doc(document.id)
+              .delete()
+              .then((value) => print("Food Record deleted"))
+              .catchError((error) => print("Failed to update user: $error"));
+        }
+
+      })
+    })
+        .catchError((error) => print('Failed to get inventory: $error'));
+
+  }
 }
