@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'FoodCard.dart';
 import 'FoodInventoryUtils.dart';
-import 'HomePage.dart';
 
 
 List<Map<String, dynamic>> foodList = [

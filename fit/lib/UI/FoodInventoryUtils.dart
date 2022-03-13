@@ -22,6 +22,8 @@ class FoodInventorryUtils extends StatefulWidget {
   final Function(List<Map<String, dynamic>>) onFoodRecordChanged;
   final Function(bool) onEdit;
   TabController InventoryTabController;
+  bool showFloatingSearchButton = true;
+
   @override
   FoodInventorryUtilsState createState() => FoodInventorryUtilsState();
 }
@@ -324,14 +326,15 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
   @override
   Widget build(BuildContext context) {
+
     // return StatefulBuilder(builder: (context, StateSetter setState){
       return Column(
         mainAxisAlignment: MainAxisAlignment.end,
           children: [
 
-            FloatingActionButton(onPressed: (){
+            widget.showFloatingSearchButton ? FloatingActionButton(onPressed: (){
               showSearch(context: context, delegate: InventorySearch(widget.InventoryTabController));
-            }, child: Icon(Icons.search)),
+            }, child: Icon(Icons.search)) : SizedBox(),
 
             SizedBox(height: 10),
 
@@ -339,6 +342,16 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
         icon: Icons.more_horiz,
         backgroundColor: Theme.of(context).colorScheme.primary,
         overlayOpacity: 0,
+        onOpen: (){
+          setState(() {
+            widget.showFloatingSearchButton = false;
+          });
+          },
+                onClose: (){
+          setState(() {
+            widget.showFloatingSearchButton = true;
+          });
+                },
 
         children: [
           SpeedDialChild(
