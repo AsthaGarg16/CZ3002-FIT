@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit/Controller/services/InventoryController.dart';
 import 'package:fit/Entity/FitUser.dart';
+import 'package:fit/Entity/FoodRecord.dart';
+import 'package:fit/Entity/Inventory.dart';
 
 import '../../Entity/FitUser.dart';
 
@@ -38,6 +41,12 @@ class UserController{
     })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add  new user: $error"));
+  }
+
+  //to make entry to other tables with new email
+  static instantiateCollecOnSignup(String email) {
+    FirebaseFirestore.instance.collection('Inventory').doc(email).set({});
+
   }
   static Future<void> retrieveDetails(String email) async {
     print(email);
@@ -84,7 +93,24 @@ class UserController{
     return user?.email;
   }
 
-  // static readUserDetails(String email) async {
+  //setting user data on login
+  static Future<void> setData() async {
+    await setUserInventory();
+
+  }
+
+  /// Sets the user inventory
+  static Future<void> setUserInventory() async {
+    await InventoryController.getInventory(user!.email).then((userInventory) => {
+      if (userInventory != null)
+        user!.inv = userInventory
+      else
+        user!.inv = Inventory(<FoodRecord>[])
+    });
+  }
+
+
+// static readUserDetails(String email) async {
   //   // FitUser userDetails = new FitUser();
   //
   //   await for (var snapshot in _firestore

@@ -1,4 +1,6 @@
+import 'package:fit/Entity/FoodRecord.dart';
 
+import 'Inventory.dart';
 // need to check if date of birth and target range have been added to account details, profilepage and food preference
 /// Entity representing the user, their personal details, and the logbooks, plans and reminders associated with them.
 class FitUser {
@@ -10,6 +12,13 @@ class FitUser {
   bool _glutenFree;
   bool _vegetarian;
   bool _vegan;
+  late Inventory _inv;
+
+  Inventory get inv => _inv;
+
+  set inv(Inventory value) {
+    _inv = value;
+  }
 
   FitUser({
     String name = " ",
@@ -27,6 +36,7 @@ class FitUser {
        _glutenFree=glutenFree,
        _vegan=vegan,
        _vegetarian=vegetarian;
+
 
   String get name => _name;
 

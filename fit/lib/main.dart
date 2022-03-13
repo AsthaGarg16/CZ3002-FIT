@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit/Controller/services/database.dart';
 import 'package:flutter/material.dart';
 import 'Controller/services/InventoryController.dart';
+import '../../Entity/Inventory.dart';
+import '../../Entity/FoodRecord.dart';
 import 'UI/EntryPage.dart';
 
 void main() async{
@@ -40,8 +42,25 @@ void main() async{
   // };
   //
   // InventoryController ic= InventoryController();
-  // String imgUrl=await ic.fetchImageUrl(request);
+  // String img=await InventoryController.checkFoodImageCache("apple");
+  // print(img);
+  // Inventory inv =await InventoryController.getInventory("nisha.rmanian@gmail.com");
+  //
+  // for(FoodRecord r in inv.inventoryItems)
+  // {
+  //   print("name"+ r.name+ "quan"+ r.expiryDate.toString());
+  // }
+  //InventoryController.addFoodRecord("nisha.rmanian@gmail.com","apple",2,"",DateTime(2021,3,29),"https://spoonacular.com/cdn/ingredients_100x100/apple.jpg",1);
+
+  // InventoryController.createFoodRecord("nisha.rmanian@gmail.com","banana",2,"",DateTime(2021,3,29),"banana",1);
+
+  //
+  // print("hello");
+
+  // String imgUrl=await InventoryController.fetchImageUrl(request);
   // print(imgUrl);
+
+
   runApp(MyApp());
 
 }

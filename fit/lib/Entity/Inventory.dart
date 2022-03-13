@@ -2,20 +2,20 @@
 import 'package:fit/Entity/FoodRecord.dart';
 
 class Inventory {
-  String _email;
+  // String _email;
   List<FoodRecord> _inventoryItems;
 
-  String get email => _email;
+  // String get email => _email;
 
-  set email(String value) {
-    _email = value;
-  }
+  // set email(String value) {
+  //   _email = value;
+  // }
 
   Inventory(
-      String email,
       List<FoodRecord> inventoryItems
       )
-      : _email = email,
+  :
+      // : _email = email,
         _inventoryItems=inventoryItems;
 
   List < FoodRecord > get inventoryItems => _inventoryItems;
