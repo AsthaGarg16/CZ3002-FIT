@@ -1,4 +1,5 @@
 import 'package:fit/Entity/FoodRecord.dart';
+import 'package:fit/Entity/ShoppingList.dart';
 
 import 'Inventory.dart';
 // need to check if date of birth and target range have been added to account details, profilepage and food preference
@@ -13,11 +14,18 @@ class FitUser {
   bool _vegetarian;
   bool _vegan;
   late Inventory _inv;
+  late ShoppingList _shop;
 
   Inventory get inv => _inv;
 
   set inv(Inventory value) {
     _inv = value;
+  }
+
+  ShoppingList get shop => _shop;
+
+  set shop(ShoppingList value) {
+    _shop = value;
   }
 
   FitUser({

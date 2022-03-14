@@ -70,8 +70,8 @@ class FoodCardState extends State<FoodCard> {
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 3, // changes position of shadow
+              spreadRadius: 2,
+              blurRadius: 1.5, // changes position of shadow
             ),
           ],
         ),

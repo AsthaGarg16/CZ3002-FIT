@@ -6,7 +6,8 @@ class FoodItem {
   bool _status;
   bool _inventory_status;
   bool _from_saved_recipes;
-  String _recipeID;
+  int _quantity_from_saved;
+  String _recipe_ID;
 
   FoodItem(
       String name,
@@ -15,15 +16,17 @@ class FoodItem {
       bool status,
       bool inventory_status,
       bool from_saved_recipes,
-      String recipe_ID
-      )
+      int quantity_from_saved,
+      String recipe_ID,
+)
       : _name = name,
         _quantity = quantity,
         _unit = unit,
         _status = status,
         _inventory_status = inventory_status,
         _from_saved_recipes = from_saved_recipes,
-        _recipeID = recipe_ID;
+        _quantity_from_saved = quantity_from_saved,
+        _recipe_ID = recipe_ID;
 
   String get name => _name;
 
@@ -61,9 +64,15 @@ class FoodItem {
     _from_saved_recipes = value;
   }
 
-  String get recipeID => _recipeID;
+  int get quantity_from_saved => _quantity_from_saved;
 
-  set recipeID(String value) {
-    _recipeID = value;
+  set quantity_from_saved(int value){
+    _quantity_from_saved = value;
+  }
+
+  String get recipe_ID => _recipe_ID;
+
+  set recipe_ID(String value) {
+    _recipe_ID = value;
   }
 }

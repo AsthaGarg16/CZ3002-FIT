@@ -61,7 +61,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220317',
+    'expiry': '20220318',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -90,12 +90,21 @@ class FoodInventory extends StatefulWidget {
 class _FoodInventoryState extends State<FoodInventory> with SingleTickerProviderStateMixin {
   int numCompartments = 5;
   late TabController controller;
+  var hasSoonExpire = List.filled(foodList.length, false);
+  late var countSoonExpire = 0;
 
   @override
   void initState() {
     super.initState();
     controller = TabController(length: numCompartments + 1, vsync: this);
-
+    for( int i=0;i<foodList.length;i++)
+    {
+      if(DateTime.now().difference(DateTime.parse(foodList[i]["expiry"])).inDays==0)
+      {
+        hasSoonExpire[i]=true;
+        countSoonExpire++;
+      }
+    }
   }
   bool editBtn = false;
   Widget build(BuildContext context) {
@@ -110,6 +119,9 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
       InventoryTabController: controller,
       numOfCompartments: numCompartments,
     );
+
+
+
 
     return DefaultTabController(
       length: numCompartments + 1,
@@ -158,6 +170,44 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
               return Stack(
                 children: [
+                  if(countSoonExpire>0)Positioned(
+                    top:0,
+                    left:0,
+                    width:MediaQuery.of(context).size.width,
+                    height:60,
+                    child: Card(
+                      margin: const EdgeInsets.all(2.0),
+                      child: SafeArea(
+                        child: ListTile(
+                          leading: const Icon(Icons.warning, color: Colors.red,),
+                          title: const Text('Some items are expiring soon!', style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87)),
+                          trailing: Wrap(
+                            children: <Widget>[
+                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
+                                //display thrown dialog
+                                setState(() {
+                                    countSoonExpire = 0;
+                                });
+                              },), // icon-1
+                              IconButton(icon: Icon(Icons.close),
+                                onPressed: () { setState(() {
+                                countSoonExpire = 0;
+                              }); },),// icon-2
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                  Positioned(
+                      top:countSoonExpire>0?55:0,
+                      left: 0,
+                      width:MediaQuery.of(context).size.width,
+                      child:
                   Container(
                     height: MediaQuery.of(context).size.height,
                     width: double.infinity,
@@ -195,7 +245,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                         mainAxisExtent: 145,
                       ),
                     ),
-                  ),
+                  )),
                   if (editBtn) Positioned(
                       bottom: 30,
                       left: 20,
