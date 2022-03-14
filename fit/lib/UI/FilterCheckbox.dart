@@ -47,14 +47,16 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     return SimpleDialog(title: const Text("Select Preferences"), children: <
         Widget>[
       Container(
-          height: 300.00,
-          width: 700.00,
+          height: 400.00,
+          width: 500.00,
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               Text("Carbohydrate",
                   style: Theme.of(context).textTheme.labelMedium),
               Expanded(
                   child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: 3,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, childAspectRatio: 0.1),
@@ -78,6 +80,7 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
               Text("Protein", style: Theme.of(context).textTheme.labelMedium),
               Expanded(
                   child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 3,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -86,6 +89,7 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                   return CheckboxListTile(
                     value: proteinPrefList[index]["isChecked"],
                     contentPadding: EdgeInsets.all(0),
+                    dense: true,
                     controlAffinity: ListTileControlAffinity.leading,
                     title: Text(
                       proteinPrefList[index]["text"],
@@ -102,13 +106,14 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
               Text("Calories", style: Theme.of(context).textTheme.labelMedium),
               Expanded(
                   child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: 3,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int index) {
                   return CheckboxListTile(
                     value: caloriePrefList[index]["isChecked"],
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.zero,
                     controlAffinity: ListTileControlAffinity.leading,
                     title: Text(
                       caloriePrefList[index]["text"],
@@ -124,6 +129,7 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
               )),
               Expanded(
                   child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 4,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -131,9 +137,9 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                 itemBuilder: (BuildContext context, int index) {
                   return CheckboxListTile(
                     value: dietaryPrefList[index]["isChecked"],
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.zero,
                     controlAffinity: ListTileControlAffinity.leading,
-                    title: Text(
+                    subtitle: Text(
                       dietaryPrefList[index]["text"],
                       style: Theme.of(context).textTheme.bodyText1,
                     ),

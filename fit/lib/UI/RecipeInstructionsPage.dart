@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
-class RecipeInstructionsPage extends StatelessWidget {
+class RecipeInstructionsPage extends StatefulWidget {
+  RecipeInstructionsPage({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return _RecipeInstructionsPage();
+  }
+}
+
+class _RecipeInstructionsPage extends State<StatefulWidget> {
+  bool _isClicked = false;
+  IconData _starIcon = Icons.star_border_outlined;
   final int recipeID = 1;
   final String recipeName = "Spaghetti bolognese";
   final String recipeImage = "assets/images/pasta.jpg";
@@ -43,8 +53,6 @@ class RecipeInstructionsPage extends StatelessWidget {
   //   required this.steps,
   // }) : super(key: key);
 
-  RecipeInstructionsPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     List<Widget> ingredientsWidgetList = ingredientsList
@@ -66,50 +74,70 @@ class RecipeInstructionsPage extends StatelessWidget {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: NestedScrollView(
-            floatHeaderSlivers: true,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text(recipeName,
-                        style: Theme.of(context).textTheme.labelMedium),
-                    background: Image.asset(
-                      recipeImage,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  floating: true,
-                  expandedHeight: 200.0,
-                  forceElevated: innerBoxIsScrolled,
-                ),
-              ];
+        appBar: AppBar(title: Text(recipeName), actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              setState(() {
+                if (_isClicked) {
+                  _isClicked = false;
+                  _starIcon = Icons.star_border_outlined;
+                } else {
+                  _isClicked = true;
+                  _starIcon = Icons.star;
+                }
+              });
             },
-            body: ListView(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Serving: $servings",
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    Text("Total time: $readyInMinutes mins",
-                        style: Theme.of(context).textTheme.bodyText1)
-                  ],
-                ),
-                Text(
-                  "Ingredients",
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                ...ingredientsWidgetList,
-                Text(
-                  "Directions",
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                ...recipeInstructionWidgetList,
-              ],
-            )));
+            icon: Icon(_starIcon),
+          )
+        ]),
+        body: SingleChildScrollView(
+            child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(10),
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20), // Image border
+              child: SizedBox.fromSize(
+                size: Size.fromRadius(60), // Image radius
+                child: Image.asset(recipeImage, fit: BoxFit.cover),
+              ),
+            ),
+            Text(
+              recipeName,
+              style: Theme.of(context).textTheme.headline2,
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.accessibility,
+                    color: Colors.black,
+                  ),
+                  Text(
+                    "Servings: $servings",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Spacer(),
+                  const Icon(Icons.access_alarm),
+                  Text("Total time: $readyInMinutes mins",
+                      style: Theme.of(context).textTheme.bodyText1)
+                ],
+              ),
+            ),
+            Text(
+              "Ingredients",
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            ...ingredientsWidgetList,
+            Text(
+              "Directions",
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            ...recipeInstructionWidgetList,
+          ],
+        )));
     // TODO: implement build
     throw UnimplementedError();
   }
