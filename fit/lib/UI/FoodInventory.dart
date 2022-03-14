@@ -158,6 +158,36 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
               return Stack(
                 children: [
+                  Positioned(
+                    top:0,
+                    left:0,
+                    width:MediaQuery.of(context).size.width,
+                    height:60,
+                    child: Card(
+                      margin: const EdgeInsets.all(2.0),
+                      child: SafeArea(
+                        child: ListTile(
+                          leading: const Icon(Icons.warning, color: Colors.red,),
+                          title: const Text('Some items are expiring today!', style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87)),
+                          trailing: Wrap(
+                            children: <Widget>[
+                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {  },), // icon-1
+                              IconButton(icon: Icon(Icons.close), onPressed: () {  },),// icon-2
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                  Positioned(
+                      top:55,
+                      left: 0,
+                      width:MediaQuery.of(context).size.width,
+                      child:
                   Container(
                     height: MediaQuery.of(context).size.height,
                     width: double.infinity,
@@ -195,7 +225,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                         mainAxisExtent: 145,
                       ),
                     ),
-                  ),
+                  )),
                   if (editBtn) Positioned(
                       bottom: 30,
                       left: 20,
