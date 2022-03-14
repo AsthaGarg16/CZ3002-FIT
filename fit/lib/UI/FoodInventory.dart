@@ -61,7 +61,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220317',
+    'expiry': '20220318',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -70,7 +70,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220315',
+    'expiry': '20220312',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -110,6 +110,17 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
       InventoryTabController: controller,
       numOfCompartments: numCompartments,
     );
+
+    var hasSoonExpire = List.filled(foodList.length, false);
+    var countSoonExpire = 0;
+    for( int i=0;i<foodList.length;i++)
+      {
+        if(DateTime.now().difference(DateTime.parse(foodList[i]["expiry"])).inDays==0)
+          {
+            hasSoonExpire[i]=true;
+            countSoonExpire++;
+          }
+      }
 
     return DefaultTabController(
       length: numCompartments + 1,
@@ -158,7 +169,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
               return Stack(
                 children: [
-                  Positioned(
+                  if(countSoonExpire>0)Positioned(
                     top:0,
                     left:0,
                     width:MediaQuery.of(context).size.width,
@@ -168,7 +179,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                       child: SafeArea(
                         child: ListTile(
                           leading: const Icon(Icons.warning, color: Colors.red,),
-                          title: const Text('Some items are expiring today!', style: TextStyle(
+                          title: const Text('Some items are expiring soon!', style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.normal,
                               color: Colors.black87)),
@@ -184,7 +195,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
                   ),
                   Positioned(
-                      top:55,
+                      top:countSoonExpire>0?55:0,
                       left: 0,
                       width:MediaQuery.of(context).size.width,
                       child:
