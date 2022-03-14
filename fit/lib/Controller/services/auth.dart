@@ -42,6 +42,7 @@ class AuthService {
           password: password
       );
       await UserController.retrieveDetails(email);
+      await UserController.setData();
       // print("something");
       // await UserController.readUserDetails(email);
       // print("blabla");

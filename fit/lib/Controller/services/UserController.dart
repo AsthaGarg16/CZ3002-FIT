@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit/Controller/services/InventoryController.dart';
+import 'package:fit/Controller/services/ShoppingListController.dart';
 import 'package:fit/Entity/FitUser.dart';
 import 'package:fit/Entity/FoodRecord.dart';
 import 'package:fit/Entity/Inventory.dart';
+import 'package:fit/Entity/ShoppingList.dart';
+import 'package:fit/Entity/FoodItem.dart';
 
 import '../../Entity/FitUser.dart';
 
@@ -46,7 +49,7 @@ class UserController{
   //to make entry to other tables with new email
   static instantiateCollecOnSignup(String email) {
     FirebaseFirestore.instance.collection('Inventory').doc(email).set({});
-
+    FirebaseFirestore.instance.collection('ShoppingList').doc(email).set({});
   }
   static Future<void> retrieveDetails(String email) async {
     print(email);
@@ -96,6 +99,7 @@ class UserController{
   //setting user data on login
   static Future<void> setData() async {
     await setUserInventory();
+    await setShoppingList();
 
   }
 
@@ -109,31 +113,14 @@ class UserController{
     });
   }
 
+  static Future<void> setShoppingList() async {
+    await ShoppingListController.getShoppingList(user!.email).then((userShoppingList) => {
+      if (userShoppingList != null)
+        user!.shop = userShoppingList
+      else
+        user!.shop = ShoppingList(<FoodItem>[])
+    });
+  }
 
-// static readUserDetails(String email) async {
-  //   // FitUser userDetails = new FitUser();
-  //
-  //   await for (var snapshot in _firestore
-  //       .collection('fit')
-  //       .where('Email', isEqualTo: email)
-  //       .snapshots()) {
-  //     var documents = snapshot.docs;
-  //     if (documents.isNotEmpty) {
-  //       //print(docs.length);
-  //       for (var Documents in documents) {
-  //         if (Documents.id == email) {
-  //           print('y');
-  //           print('Hello There!');
-  //           print('Doc id' + Documents.id);
-  //           userDetails.vegan = Documents['Vegan'];
-  //           userDetails.email = email;
-  //           userDetails.vegetarian = Documents['Vegetarian'];
-  //           userDetails.dairyFree = Documents['dairyFree'];
-  //           userDetails.fridgeDetails = Documents['fridgeDetails'];
-  //           userDetails.glutenFree = Documents['glutenFree'];
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+
 }

@@ -314,7 +314,8 @@ class _ShopListState extends State<ShoppingList> {
     bool _status=false;
     bool _inventory_status=false;
     bool _from_saved_recipes=false;
-    String _recipeID="";
+    int _quantity_from_saved = 0;
+    String _recipe_ID="";
 
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
 
@@ -479,7 +480,7 @@ class _ShopListState extends State<ShoppingList> {
               {
                 _unit = chosenValue??Units.units[0];
               }
-              newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_recipeID);
+              newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_quantity_from_saved,_recipe_ID);
               Navigator.pop(context,newItem);
             }
 
