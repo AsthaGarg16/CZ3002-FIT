@@ -70,7 +70,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220312',
+    'expiry': '20220315',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -90,12 +90,21 @@ class FoodInventory extends StatefulWidget {
 class _FoodInventoryState extends State<FoodInventory> with SingleTickerProviderStateMixin {
   int numCompartments = 5;
   late TabController controller;
+  var hasSoonExpire = List.filled(foodList.length, false);
+  late var countSoonExpire = 0;
 
   @override
   void initState() {
     super.initState();
     controller = TabController(length: numCompartments + 1, vsync: this);
-
+    for( int i=0;i<foodList.length;i++)
+    {
+      if(DateTime.now().difference(DateTime.parse(foodList[i]["expiry"])).inDays==0)
+      {
+        hasSoonExpire[i]=true;
+        countSoonExpire++;
+      }
+    }
   }
   bool editBtn = false;
   Widget build(BuildContext context) {
@@ -111,16 +120,8 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
       numOfCompartments: numCompartments,
     );
 
-    var hasSoonExpire = List.filled(foodList.length, false);
-    var countSoonExpire = 0;
-    for( int i=0;i<foodList.length;i++)
-      {
-        if(DateTime.now().difference(DateTime.parse(foodList[i]["expiry"])).inDays==0)
-          {
-            hasSoonExpire[i]=true;
-            countSoonExpire++;
-          }
-      }
+
+
 
     return DefaultTabController(
       length: numCompartments + 1,
@@ -185,8 +186,16 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                               color: Colors.black87)),
                           trailing: Wrap(
                             children: <Widget>[
-                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {  },), // icon-1
-                              IconButton(icon: Icon(Icons.close), onPressed: () {  },),// icon-2
+                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
+                                //display thrown dialog
+                                setState(() {
+                                    countSoonExpire = 0;
+                                });
+                              },), // icon-1
+                              IconButton(icon: Icon(Icons.close),
+                                onPressed: () { setState(() {
+                                countSoonExpire = 0;
+                              }); },),// icon-2
                             ],
                           ),
                         ),
