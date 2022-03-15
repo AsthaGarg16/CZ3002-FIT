@@ -41,7 +41,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   final GlobalKey _accKey = GlobalKey();
   DateTime selectedDate = DateTime.now();
   TextEditingController _date = new TextEditingController();
-  final dateFormatter = DateFormat('dd-MM-yy');
+  final dateFormatter = DateFormat('yyyy-MM-dd');
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -52,7 +52,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        _date.text = DateFormat.yMd().format(picked);
+        _date.text = dateFormatter.format(picked);
       });
     }
   }
@@ -369,8 +369,8 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
   Widget setupAlertDialoadContainer(addingList) {
     return Container(
-      height: 300.0, // Change as per your requirement
-      width: 300.0, // Change as per your requirement
+      height: 600.0, // Change as per your requirement
+      width: 400.0, // Change as per your requirement
       child: ListView.builder(
         controller: ScrollController(),
         shrinkWrap: true,

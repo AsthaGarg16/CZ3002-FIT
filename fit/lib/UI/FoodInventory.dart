@@ -7,7 +7,7 @@ import 'FoodInventoryUtils.dart';
 List<Map<String, dynamic>> foodList = [
   {
     'title': 'Apple',
-    'expiry': '20220510',
+    'expiry': '2022-05-10',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -16,7 +16,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'Grape',
-    'expiry': '20220510',
+    'expiry': '2022-05-10',
     'image': 'assets/images/grape.jpg',
     'quantity': "1",
     'unit': '',
@@ -25,7 +25,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'Pear',
-    'expiry': '20220510',
+    'expiry': '2022-05-10',
     'image': 'assets/images/pear.jpg',
     'quantity': "1",
     'unit': '',
@@ -34,7 +34,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220510',
+    'expiry': '2022-05-10',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -43,7 +43,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'banana',
-    'expiry': '20220313',
+    'expiry': '2022-03-13',
     'image': 'assets/images/banana.jpg',
     'quantity': "1",
     'unit': '',
@@ -52,7 +52,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220320',
+    'expiry': '2022-03-20',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -61,7 +61,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220318',
+    'expiry': '2022-03-18',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -70,7 +70,7 @@ List<Map<String, dynamic>> foodList = [
   },
   {
     'title': 'apple',
-    'expiry': '20220315',
+    'expiry': '2022-03-15',
     'image': 'assets/images/apple.jpg',
     'quantity': "1",
     'unit': '',
@@ -211,8 +211,10 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                   Container(
                     height: MediaQuery.of(context).size.height,
                     width: double.infinity,
-                    child: GridView.builder(
+                      child: GridView.builder(
                       shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      scrollDirection: Axis.vertical,
                       padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       itemCount: filteredData.length,

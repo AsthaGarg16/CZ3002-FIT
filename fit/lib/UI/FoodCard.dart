@@ -49,7 +49,7 @@ class FoodCardState extends State<FoodCard> {
     bool _isSelected = false;
     return Center(
       child: Container(
-        margin:EdgeInsets.all(5.0),
+        margin:EdgeInsets.all(2.5),
         height: 300,
         foregroundDecoration: BoxDecoration(
           color: expired ? Colors.grey:Colors.transparent,
@@ -70,8 +70,8 @@ class FoodCardState extends State<FoodCard> {
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 1.5, // changes position of shadow
+              spreadRadius: 1.5,
+              blurRadius: 1.0, // changes position of shadow
             ),
           ],
         ),
@@ -206,15 +206,15 @@ class FoodCardState extends State<FoodCard> {
                             Center(
                               child: Text(widget.foodName,
                                   style: TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 13.0,
                                       fontWeight: FontWeight.bold,
                                       color: expired?Colors.black38:Colors.black87,
                                       letterSpacing: 1.5),),
                             ),
-                            Center(
+                            if(expiryColor != Colors.white)Center(
                               child: Text(widget.foodExpiry,
                                   style: TextStyle(
-                                      fontSize: 13.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.normal,
                                       color: expired?Colors.black45:Colors.black87)),
                             ),
