@@ -50,7 +50,6 @@ class Inventory {
     for(var fR in _inventoryItems){
       if (fR.name==name && fR.expiryDate==expiryDate){
         fR.quantity=quantity;
-        fR.expiryDate=expiryDate;
         fR.compNum=compNumber;
 
       }

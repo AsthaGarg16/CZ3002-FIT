@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../Entity/Inventory.dart';
 import '../../Entity/FoodRecord.dart';
+import 'UserController.dart';
 
 import 'dart:convert';
 
@@ -69,6 +70,8 @@ class InventoryController{
     //     beforeMeal: beforeMeal,
     //   ),
     // );
+
+    UserController.addInventoryRecord(name, quantity, unit, expiryDate, compNum, imageUrl);
     return FirebaseFirestore.instance
         .collection('Inventory')
         .doc(email)
@@ -154,6 +157,8 @@ class InventoryController{
       DateTime expiryDate,
       int compNum) async{
 
+    UserController.updateInventoryRecord(name, quantity, unit, compNum, expiryDate);
+
     await FirebaseFirestore.instance
         .collection('Inventory')
         .doc(email)
@@ -183,6 +188,8 @@ class InventoryController{
       String email,
       String name,
       DateTime expiryDate) async{
+
+    UserController.deleteInventoryRecord(name, expiryDate);
 
     await FirebaseFirestore.instance
         .collection('Inventory')

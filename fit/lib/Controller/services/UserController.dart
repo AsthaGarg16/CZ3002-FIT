@@ -123,4 +123,15 @@ class UserController{
   }
 
 
+  static void addInventoryRecord(String name, int quantity, String unit, DateTime expiryDate, int compNumber, String imageUrl){
+    user!.inv.addRecord(name, quantity, unit, expiryDate, compNumber, imageUrl);
+  }
+
+  static void deleteInventoryRecord(String name, DateTime expiryDate){
+    user!.inv.deleteRecord(name, expiryDate);
+  }
+
+  static void updateInventoryRecord(String name, int quantity, String unit, int compNumber,DateTime expiryDate){
+    user!.inv.updateRecord(name, quantity, unit, expiryDate, compNumber);
+  }
 }
