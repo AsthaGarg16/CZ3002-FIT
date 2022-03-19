@@ -56,7 +56,7 @@ class AuthService {
       // print("vegetarian: $vegetarian");
       // print("dairyFree: $dairyFree");
       // print("glutenFree: $glutenFree");
-      // print("login success");
+      print("login success");
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

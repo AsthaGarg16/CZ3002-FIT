@@ -3,9 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit/Controller/services/database.dart';
 import 'package:flutter/material.dart';
 import 'Controller/services/InventoryController.dart';
+import 'Controller/services/ShoppingListController.dart';
 import 'Controller/services/RecipeController.dart';
 import '../../Entity/Inventory.dart';
 import '../../Entity/FoodRecord.dart';
+import '../../Entity/ShoppingList.dart';
+import '../../Entity/FoodItem.dart';
 import 'UI/EntryPage.dart';
 
 void main() async{
@@ -54,6 +57,20 @@ void main() async{
   // InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com","banana",DateTime(2021,3,31));
   // String imgUrl=await InventoryController.fetchImageUrl(request);
   // print(imgUrl);
+
+// ShoppingListController Testing
+  ShoppingListController sc= ShoppingListController();
+  ShoppingList shop =await ShoppingListController.getShoppingList("nisha.rmanian@gmail.com");
+  for(FoodItem r in shop.FoodItemList)
+  {
+    print("name: "+ r.name+ " ,quan: "+ r.quantity.toString());
+  }
+  // ShoppingListController.addFoodItem("someemail@email.com","milk",5,"",true,false,false,0,"0");
+  // ShoppingListController.addFoodItem("trial2@email.com","banana",6,"",true,true,true,2,"R1");
+  // ShoppingListController.addFoodItem("trial3@email.com","apple",2,"",true,false,false,0,"0");
+  ShoppingListController.updateFoodItem("someemail@email.com","milk",3,"",true,true,false,0,"0");
+
+  ShoppingListController.deleteFoodItem("trial2@email.com","banana","R1");
 
   // Spoonacular RecipeController Testing
   // RecipeController rc= RecipeController("123456@gmail.com");

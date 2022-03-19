@@ -10,46 +10,6 @@ class ShoppingListController{
   // }
   // String? email = UserController.getCurrentUserEmail();
 
-  // static Future<void> addFoodItem(
-  // String name,
-  // int quantity,
-  // String unit,
-  // bool status,
-  // bool inventory_status,
-  // bool from_saved_recipes,
-  // int quantity_from_saved,
-  // String recipe_ID
-  // ) {
-  // String? email = UserController.getCurrentUserEmail();
-  // UserController.addFoodItem(
-  // FoodItem(
-  // name: name,
-  // quantity: quantity,
-  // unit: unit,
-  // status: status,
-  // inventory_status: inventory_status,
-  // from_saved_recipes: from_saved_recipes,
-  // quantity_from_saved: quantity_from_saved,
-  // recipe_ID: recipe_ID,
-  // ),
-  // );
-  // return FirebaseFirestore.instance
-  //     .collection('ShoppingList')
-  //     .doc(email)
-  //     .collection('FoodItem')
-  //     .add({
-  // 'name': name,
-  // 'quantity': quantity,
-  // 'unit': unit,
-  // 'status': status,
-  // 'inventory_status': inventory_status,
-  // 'from_saved_recipes': from_saved_recipes,
-  // 'quantity_from_saved': quantity_from_saved,
-  // 'recipe_ID': recipe_ID,
-  // })
-  //     .then((value) => print('Food Item added!'))
-  //     .catchError((error) => print('Failed to add record: $error'));
-  // }
 
     static Future<void> addFoodItem(
     String email,
@@ -61,7 +21,8 @@ class ShoppingListController{
     bool from_saved_recipes,
     int quantity_from_saved,
     String recipe_ID){
-  return FirebaseFirestore.instance
+    UserController.addShoppingListItem(name, quantity, unit, status, inventory_status, from_saved_recipes,quantity_from_saved,recipe_ID);
+    return FirebaseFirestore.instance
       .collection('ShoppingList')
       .doc(email)
       .collection('FoodItem')
@@ -79,42 +40,6 @@ class ShoppingListController{
       .catchError((error) => print('Failed to add Item: $error'));
   }
 
-  /// Retrieves the Data of the Shopping List
-  // static Future<ShoppingList> getShoppingList(String email) async {
-  // List<FoodItem> ItemList = [];
-  //
-  // await FirebaseFirestore.instance
-  //     .collection('ShoppingList')
-  //     .doc(email)
-  //     .collection('FoodItem')
-  //     .get()
-  //     .then((QuerySnapshot querySnapshot) => {
-  // querySnapshot.docs.forEach((doc) async {
-  // ItemList.add(
-  // FoodItem(
-  // name: doc['name'],
-  // quantity: doc['quantity'],
-  // unit: doc['unit'],
-  // status: doc['status'],
-  // inventory_status: doc['inventory_status'],
-  // from_saved_recipes: doc['from_saved_recipes'],
-  // quantity_from_saved: doc['quantity_from_saved'] ,
-  // recipe_ID: doc['recipe_ID'],
-  // ),
-  // );
-  // })
-  // })
-  //     .catchError((error) => print('Failed to get shopping list: $error'));
-  //
-  // print("shoppingList:");
-  // ItemList.forEach((record) {
-  // print(record.name);
-  // });
-  // return new ShoppingList(
-  // email: email,
-  // FoodItemslist: ItemList,
-  // );
-  // }
 
   static Future<ShoppingList> getShoppingList(String email) async {
   List<FoodItem> ItemList = [];
@@ -164,8 +89,8 @@ static Future<void> updateFoodItem (
   bool inventory_status,
   bool from_saved_recipes,
   int quantity_from_saved,
-  String recipe_ID,
-  int compNum) async{
+  String recipe_ID,) async{
+  UserController.updateShoppingListItem(name, quantity, unit, status, inventory_status, from_saved_recipes,quantity_from_saved,recipe_ID);
 
   await FirebaseFirestore.instance
       .collection('ShoppingList')
@@ -181,7 +106,7 @@ static Future<void> updateFoodItem (
       .doc(email)
       .collection('FoodItem')
       .doc(document.id)
-      .update({'quantity':quantity,'status':status,'inventory_status':inventory_status})
+      .update({'quantity':quantity,'status':status,'inventory_status':inventory_status, 'from_saved_recipes': from_saved_recipes, 'quantity_from_saved': quantity_from_saved, 'recipe_ID': recipe_ID})
       .then((value) => print("Food Item Updated"))
       .catchError((error) => print("Failed to update user: $error"));
   }
@@ -197,7 +122,7 @@ static Future<void> updateFoodItem (
   String email,
   String name,
   String recipe_ID) async{
-
+  UserController.deleteShoppingListItem(name, recipe_ID);
   await FirebaseFirestore.instance
       .collection('ShoppingList')
       .doc(email)
