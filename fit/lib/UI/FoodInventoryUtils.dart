@@ -5,7 +5,7 @@ import 'dart:core';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
-import 'ShoppingList.dart';
+import 'GroceryList.dart';
 
 
 /// My app class to display the date range picker
