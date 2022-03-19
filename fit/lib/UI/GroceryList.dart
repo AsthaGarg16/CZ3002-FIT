@@ -212,6 +212,23 @@ class _ShopListState extends State<GroceryList> {
         'isVisible' :false,
       },
     ];
+
+    // for(int i=0;i<groceryList.FoodItemList.length;i++)
+    // {
+    //   if(groceryList.FoodItemList[i].status == false)
+    //   {
+    //     Map<String, Object> obj = {
+    //       'label': groceryList.FoodItemList[i].name,
+    //       'quantity': (groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].quantity_from_saved.toString():groceryList.FoodItemList[i].quantity.toString()) + groceryList.FoodItemList[i].unit,
+    //       'recipe': groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].recipe_ID:"",
+    //       'isRecipe' : groceryList.FoodItemList[i].from_saved_recipes,
+    //       'value': false,
+    //       'alternatives': List<String>.filled(3,"alternate "),
+    //       'isVisible' :false,
+    //     };
+    //     ShopList.add(obj);
+    //   }
+    // }
     return ShopList;
 
   }
@@ -247,6 +264,20 @@ class _ShopListState extends State<GroceryList> {
         'value': true,
       },
     ];
+    // for(int i=0;i<groceryList.FoodItemList.length;i++)
+    //   {
+    //       if(groceryList.FoodItemList[i].status == true && )
+    //         {
+    //           Map<String, Object> obj = {
+    //             'label': groceryList.FoodItemList[i].name,
+    //             'quantity': (groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].quantity_from_saved.toString():groceryList.FoodItemList[i].quantity.toString()) + groceryList.FoodItemList[i].unit,
+    //             'recipe': groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].recipe_ID:"",
+    //             'isRecipe' : groceryList.FoodItemList[i].from_saved_recipes,
+    //             'value': true,
+    //           };
+    //           ShopListChecked.add(obj);
+    //         }
+    //   }
 
     return ShopListChecked;
 
@@ -255,12 +286,14 @@ class _ShopListState extends State<GroceryList> {
 
 
   late Future<ShoppingList> shoppingList;
+  late ShoppingList groceryList;
   late List<Map<String, Object>> shopList;
   late List<Map<String, Object>> shopListChecked;
   @override
   void initState(){
     super.initState();
     shoppingList = fetchShoppingList();
+    shoppingList.then((value) => groceryList = value);
     createShopList().then((value) => shopList=value);
     createShopListChecked().then((value) => shopListChecked =value);
 
@@ -398,18 +431,7 @@ class _ShopListState extends State<GroceryList> {
 
 
                       ),]),
-                // FloatingActionButton(
-                //   onPressed: () {
-                //     // showCustomDialog(context).then((valueFromDialog){
-                //     //   // use the value as you wish
-                //     //   print(valueFromDialog);
-                //     // });
-                //     showCustomDialog(context);
-                //
-                //   },
-                //
-                //   child: const Icon(Icons.add, size:30.0),
-                // )
+
 
               );
             }
