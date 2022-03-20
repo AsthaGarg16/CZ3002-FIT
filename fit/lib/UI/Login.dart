@@ -180,8 +180,8 @@ class _LoginState extends State<Login> {
                         onPressed: ()async{
                           print(email);
                           print(password);
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()));
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (BuildContext context) => HomePage()));
                           if(_formKey.currentState!.validate())
                           {
                             await _auth

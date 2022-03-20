@@ -323,9 +323,9 @@ class _ShopListState extends State<GroceryList> {
       } );
     });
     //print(groceryList);
-    ShopList = createShopList();
+    //ShopList = createShopList();
     //ShopList.then((value) => shopList=value);
-    ShopListChecked = createShopListChecked();
+    //ShopListChecked = createShopListChecked();
    // ShopListChecked.then((value) => shopListChecked =value);
     super.initState();
 
