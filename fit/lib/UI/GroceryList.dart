@@ -238,8 +238,8 @@ class _ShopListState extends State<GroceryList> {
       {
         Map<String, Object> object = {
           'label': obj.name,
-          'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + obj.unit,
-          'recipe': obj.from_saved_recipes?obj.recipe_ID:"",
+          'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + " "+obj.unit,
+          'recipe': obj.recipe_ID,
           'isRecipe' : obj.from_saved_recipes,
           'value': false,
           'alternatives': List<String>.filled(3,"alternate "),
@@ -289,8 +289,8 @@ class _ShopListState extends State<GroceryList> {
             {
               Map<String, Object> obj = {
                 'label': object.name,
-                'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) + object.unit,
-                'recipe': object.from_saved_recipes?object.recipe_ID:"",
+                'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
+                'recipe': object.from_saved_recipes?object.recipe_ID:"0",
                 'isRecipe' : object.from_saved_recipes,
                 'value': true,
               };
@@ -360,7 +360,8 @@ class _ShopListState extends State<GroceryList> {
                           child:SingleChildScrollView(
                               child: Column(
                                   children: <Widget>[
-                                    ListView.builder(
+                                    if(shopList.length>0)
+                                      ListView.builder(
                                         controller: ScrollController(),
                                         shrinkWrap: true,
                                         itemCount: shopList.length,
@@ -374,6 +375,8 @@ class _ShopListState extends State<GroceryList> {
                                                         Map<String,Object> deletedItem = shopList[index];
                                                         String deletedLabel = shopList[index]['label'].toString();
                                                         shopList.removeAt(index);
+                                                        print(deletedItem["label"].toString()+deletedItem["recipe"].toString());
+                                                        ShoppingListController.deleteFoodItem("someemail@email.com",deletedItem["label"].toString(),deletedItem["recipe"].toString());
 
                                                         ScaffoldMessenger.of(context)
                                                             .showSnackBar(SnackBar(
@@ -381,7 +384,15 @@ class _ShopListState extends State<GroceryList> {
                                                             content: Text('$deletedLabel deleted'),
                                                             action: SnackBarAction(
                                                                 label: "UNDO",
-                                                                onPressed: () => setState(() => shopList.insert(index, deletedItem),) // this is what you needed
+                                                                onPressed: () => setState(() {
+                                                                  shopList
+                                                                      .insert(
+                                                                      index,
+                                                                      deletedItem);
+
+                                                                  ShoppingListController.addFoodItem("someemail@email.com", deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["recipe"].toString()
+                                                                  );
+                                                                }) // this is what you needed
                                                             )));
                                                       }); },
                                                     background: Container(color: Colors.redAccent),
@@ -400,6 +411,9 @@ class _ShopListState extends State<GroceryList> {
                                                           Map<String, Object> shopListItem = shopList.removeAt(index);
                                                           shopListItem["value"] = true;
                                                           shopListChecked.add(shopListItem);
+                                                           print(shopListItem["quantity"].toString().split(" ")[0]);
+                                                          print(shopListItem["quantity"].toString().split(" ")[1]);
+                                                          ShoppingListController.updateFoodItem("someemail@email.com", shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["recipe"].toString());
                                                           // print(widget.shopListChecked);
                                                           // print(widget.shopList);
                                                         });
@@ -443,6 +457,7 @@ class _ShopListState extends State<GroceryList> {
                                           );
 
                                         }),
+                                    if(shopListChecked.length>0)
                                     ListView.builder(
                                         controller: ScrollController(),
                                         shrinkWrap: true,
@@ -519,18 +534,18 @@ class _ShopListState extends State<GroceryList> {
           }
 
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // showCustomDialog(context).then((valueFromDialog){
-      //     //   // use the value as you wish
-      //     //   print(valueFromDialog);
-      //     // });
-      //     showCustomDialog(context);
-      //
-      //   },
-      //
-      //   child: const Icon(Icons.add, size:30.0),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // showCustomDialog(context).then((valueFromDialog){
+          //   // use the value as you wish
+          //   print(valueFromDialog);
+          // });
+          showCustomDialog(context);
+
+        },
+
+        child: const Icon(Icons.add, size:30.0),
+      ),
 
     );
   }
@@ -549,7 +564,7 @@ class _ShopListState extends State<GroceryList> {
     bool _inventory_status=false;
     bool _from_saved_recipes=false;
     int _quantity_from_saved = 0;
-    String _recipe_ID="";
+    String _recipe_ID="0";
 
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
 
@@ -715,6 +730,7 @@ class _ShopListState extends State<GroceryList> {
                 _unit = chosenValue??Units.units[0];
               }
               newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_quantity_from_saved,_recipe_ID);
+              ShoppingListController.addFoodItem("someemail@email.com",newItem.name,newItem.quantity,newItem.unit,newItem.status,newItem.inventory_status,newItem.from_saved_recipes,newItem.quantity_from_saved,newItem.recipe_ID);
               Navigator.pop(context,newItem);
             }
 
@@ -757,7 +773,7 @@ class _ShopListState extends State<GroceryList> {
 
       Map<String,Object> newObj = {
         'label': value.name,
-        'quantity': value.quantity,
+        'quantity': value.quantity.toString() +" "+value.unit,
         'recipe': '',
         'isRecipe' : false,
         'value': false,
@@ -766,6 +782,7 @@ class _ShopListState extends State<GroceryList> {
       //add to db
       setState(() {
           shopList.add(newObj);
+
       });
 
       print(value);

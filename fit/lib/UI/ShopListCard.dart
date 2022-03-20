@@ -76,7 +76,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
 
                     const SizedBox(width: 5.0),
 
-                        Expanded(flex: 4,child: Text(text, style: TextStyle(
+                        Expanded(flex: 3,child: Text(text, style: TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.normal,
                             color: widget.value?Colors.teal:Colors.black87))),

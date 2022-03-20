@@ -59,18 +59,21 @@ void main() async{
   // print(imgUrl);
 
 // ShoppingListController Testing
-  ShoppingListController sc= ShoppingListController();
-  ShoppingList shop =await ShoppingListController.getShoppingList("nisha.rmanian@gmail.com");
-  for(FoodItem r in shop.FoodItemList)
-  {
-    print("name: "+ r.name+ " ,quan: "+ r.quantity.toString());
-  }
-  // ShoppingListController.addFoodItem("someemail@email.com","milk",5,"",true,false,false,0,"0");
-  // ShoppingListController.addFoodItem("trial2@email.com","banana",6,"",true,true,true,2,"R1");
-  // ShoppingListController.addFoodItem("trial3@email.com","apple",2,"",true,false,false,0,"0");
-  ShoppingListController.updateFoodItem("someemail@email.com","milk",3,"",true,true,false,0,"0");
-
-  ShoppingListController.deleteFoodItem("trial2@email.com","banana","R1");
+//   ShoppingListController sc= ShoppingListController();
+//   ShoppingList shop =await ShoppingListController.getShoppingList("nisha.rmanian@gmail.com");
+//   for(FoodItem r in shop.FoodItemList)
+//   {
+//     print("name: "+ r.name+ " ,quan: "+ r.quantity.toString());
+//   }
+//   ShoppingListController.addFoodItem("someemail@email.com","milk",5,"",true,false,false,0,"0");
+//   ShoppingListController.addFoodItem("someemail@email.com","orange",7,"",false,true,false,0,"0");
+//   ShoppingListController.addFoodItem("someemail@email.com","apple",2,"",true,false,false,0,"0");
+//   ShoppingListController.updateFoodItem("someemail@email.com","milk",3,"l",true,false,false,0,"0");
+//   ShoppingListController.addFoodItem("someemail@email.com","banana",3,"count",false,false,false,0,"0");
+//   ShoppingListController.addFoodItem("someemail@email.com","orange",70,"g",true,true,false,0,"0");
+//   ShoppingListController.updateFoodItem("someemail@email.com","apple",3,"count",false,false,false,0,"0");
+//
+//   ShoppingListController.deleteFoodItem("trial2@email.com","banana","R1");
 
   // Spoonacular RecipeController Testing
   // RecipeController rc= RecipeController("123456@gmail.com");
