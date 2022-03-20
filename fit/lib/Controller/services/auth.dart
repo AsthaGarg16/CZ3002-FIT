@@ -76,6 +76,11 @@ class AuthService {
       return null;
     }
   }
+
+  Future <String> getUser() async {
+    return _auth.currentUser!.email!;
+  }
+
 // User _userFromFirebaseUser(User user) {
 //   return user != null ? User(Email: User.email) : null;
 // }
