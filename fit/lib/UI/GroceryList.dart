@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../Entity/FoodItem.dart';
 import '../Entity/ShoppingList.dart';
+import '../Controller/services/ShoppingListController.dart';
 import '../Entity/Units.dart';
 import 'ShopListCard.dart';
 
@@ -165,119 +166,137 @@ class _ShopListState extends State<GroceryList> {
 
   Future<ShoppingList> fetchShoppingList() async
   {
+
+      var obj = (await ShoppingListController.getShoppingList("someemail@email.com")) ;
+      print(obj);
+      return obj;
+      //     .then((value) {
+      //   groceryList = value;
+      //   createShopList().then((value) {
+      //     shopList = value;
+      //     createShopListChecked().then((value) => shopListChecked = value);
+      //   });
+      //   return value;
+      // });
+
     //get from db
-    FoodItem fi = new FoodItem("apple", 2, "l", false, false, false, 0, "");
-    List<FoodItem> listFood = List<FoodItem>.filled(1,fi);
-    ShoppingList obj = ShoppingList(listFood);
-    return obj;
+    //print(await ShoppingListController.getShoppingList("trial3@email.com"));
+    // Future<ShoppingList> obj = (await ShoppingListController.getShoppingList("trial3@email.com"));
+    // // FoodItem fi = new FoodItem("apple", 2, "l", false, false, false, 0, "");
+    // // List<FoodItem> listFood = List<FoodItem>.filled(1,fi);
+    // // ShoppingList obj = ShoppingList(listFood);
+    // obj.then((value) => groceryList=value);
+    // print(groceryList.FoodItemList[0]);
+    // return obj;
   }
 
 
   Future<List<Map<String, Object>>> createShopList() async{
-    List<Map<String, Object>> ShopList = [
-      {
-        'label': 'Spaghetti',
-        'quantity': '200 g',
-        'recipe': 'Spaghetti Bolognese',
-        'isRecipe' : true,
-        'value': false,
-        'alternatives': List<String>.filled(3,"alternate "),
-        'isVisible' :false,
-      },
-      {
-        'label': 'Tomatoes',
-        'quantity': '200 g',
-        'recipe': '',
-        'isRecipe' : false,
-        'value': false,
-        'alternatives': List<String>.filled(3,"alternate "),
-        'isVisible' :false,
-      },
-      {
-        'label': 'Chilli Flakes',
-        'quantity': '50 g',
-        'recipe': '',
-        'isRecipe' : false,
-        'value': false,
-        'alternatives': List<String>.filled(3,"alternate "),
-        'isVisible' :false,
-      },
-      {
-        'label': 'Apples',
-        'quantity': '5',
-        'recipe': 'Fruit Bowl',
-        'isRecipe' : true,
-        'value': false,
-        'alternatives': List<String>.filled(3,"alternate "),
-        'isVisible' :false,
-      },
-    ];
 
-    // for(int i=0;i<groceryList.FoodItemList.length;i++)
-    // {
-    //   if(groceryList.FoodItemList[i].status == false)
+    List<Map<String, Object>> ShopList=[];
     //   {
-    //     Map<String, Object> obj = {
-    //       'label': groceryList.FoodItemList[i].name,
-    //       'quantity': (groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].quantity_from_saved.toString():groceryList.FoodItemList[i].quantity.toString()) + groceryList.FoodItemList[i].unit,
-    //       'recipe': groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].recipe_ID:"",
-    //       'isRecipe' : groceryList.FoodItemList[i].from_saved_recipes,
-    //       'value': false,
-    //       'alternatives': List<String>.filled(3,"alternate "),
-    //       'isVisible' :false,
-    //     };
-    //     ShopList.add(obj);
-    //   }
-    // }
+    //     'label': 'Spaghetti',
+    //     'quantity': '200 g',
+    //     'recipe': 'Spaghetti Bolognese',
+    //     'isRecipe' : true,
+    //     'value': false,
+    //     'alternatives': List<String>.filled(3,"alternate "),
+    //     'isVisible' :false,
+    //   },
+    //   {
+    //     'label': 'Tomatoes',
+    //     'quantity': '200 g',
+    //     'recipe': '',
+    //     'isRecipe' : false,
+    //     'value': false,
+    //     'alternatives': List<String>.filled(3,"alternate "),
+    //     'isVisible' :false,
+    //   },
+    //   {
+    //     'label': 'Chilli Flakes',
+    //     'quantity': '50 g',
+    //     'recipe': '',
+    //     'isRecipe' : false,
+    //     'value': false,
+    //     'alternatives': List<String>.filled(3,"alternate "),
+    //     'isVisible' :false,
+    //   },
+    //   {
+    //     'label': 'Apples',
+    //     'quantity': '5',
+    //     'recipe': 'Fruit Bowl',
+    //     'isRecipe' : true,
+    //     'value': false,
+    //     'alternatives': List<String>.filled(3,"alternate "),
+    //     'isVisible' :false,
+    //   },
+    // ];
+
+    for(var obj in groceryList.FoodItemList)
+    {
+      if(obj.status == false)
+      {
+        Map<String, Object> object = {
+          'label': obj.name,
+          'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + obj.unit,
+          'recipe': obj.from_saved_recipes?obj.recipe_ID:"",
+          'isRecipe' : obj.from_saved_recipes,
+          'value': false,
+          'alternatives': List<String>.filled(3,"alternate "),
+          'isVisible' :false,
+        };
+        ShopList.add(object);
+      }
+    }
     return ShopList;
 
   }
 
   Future<List<Map<String, Object>>> createShopListChecked() async{
-    List<Map<String, Object>> ShopListChecked = [
-      {
-        'label': 'Flour',
-        'quantity': '200 g',
-        'recipe': 'Spaghetti Bolognese',
-        'isRecipe' : true,
-        'value': true,
-      },
-      {
-        'label': 'Onion',
-        'quantity': '200 g',
-        'recipe': '',
-        'isRecipe' : false,
-        'value': true,
-      },
-      {
-        'label': 'Sunflower Oil',
-        'quantity': '5 l',
-        'recipe': '',
-        'isRecipe' : false,
-        'value': true,
-      },
-      {
-        'label': 'Oranges',
-        'quantity': '5',
-        'recipe': 'Fruit Bowl',
-        'isRecipe' : true,
-        'value': true,
-      },
-    ];
-    // for(int i=0;i<groceryList.FoodItemList.length;i++)
+    List<Map<String, Object>> ShopListChecked = [];
     //   {
-    //       if(groceryList.FoodItemList[i].status == true && )
-    //         {
-    //           Map<String, Object> obj = {
-    //             'label': groceryList.FoodItemList[i].name,
-    //             'quantity': (groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].quantity_from_saved.toString():groceryList.FoodItemList[i].quantity.toString()) + groceryList.FoodItemList[i].unit,
-    //             'recipe': groceryList.FoodItemList[i].from_saved_recipes?groceryList.FoodItemList[i].recipe_ID:"",
-    //             'isRecipe' : groceryList.FoodItemList[i].from_saved_recipes,
-    //             'value': true,
-    //           };
-    //           ShopListChecked.add(obj);
-    //         }
-    //   }
+    //     'label': 'Flour',
+    //     'quantity': '200 g',
+    //     'recipe': 'Spaghetti Bolognese',
+    //     'isRecipe' : true,
+    //     'value': true,
+    //   },
+    //   {
+    //     'label': 'Onion',
+    //     'quantity': '200 g',
+    //     'recipe': '',
+    //     'isRecipe' : false,
+    //     'value': true,
+    //   },
+    //   {
+    //     'label': 'Sunflower Oil',
+    //     'quantity': '5 l',
+    //     'recipe': '',
+    //     'isRecipe' : false,
+    //     'value': true,
+    //   },
+    //   {
+    //     'label': 'Oranges',
+    //     'quantity': '5',
+    //     'recipe': 'Fruit Bowl',
+    //     'isRecipe' : true,
+    //     'value': true,
+    //   },
+    // ];
+    for(var object in groceryList.FoodItemList)
+      {
+          if(object.status == true && object.inventory_status == false)
+            {
+              Map<String, Object> obj = {
+                'label': object.name,
+                'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) + object.unit,
+                'recipe': object.from_saved_recipes?object.recipe_ID:"",
+                'isRecipe' : object.from_saved_recipes,
+                'value': true,
+              };
+              ShopListChecked.add(obj);
+            }
+      }
 
     return ShopListChecked;
 
@@ -287,15 +306,28 @@ class _ShopListState extends State<GroceryList> {
 
   late Future<ShoppingList> shoppingList;
   late ShoppingList groceryList;
+  late Future<List<Map<String, Object>>> ShopList;
+  late Future<List<Map<String, Object>>> ShopListChecked;
   late List<Map<String, Object>> shopList;
   late List<Map<String, Object>> shopListChecked;
   @override
   void initState(){
+
+    shoppingList = fetchShoppingList() ;
+    shoppingList.then((value) {
+      groceryList = value;
+      print(groceryList.FoodItemList);
+      createShopList().then((value) {
+        shopList=value;
+        createShopListChecked().then((value) => shopListChecked =value);
+      } );
+    });
+    //print(groceryList);
+    ShopList = createShopList();
+    //ShopList.then((value) => shopList=value);
+    ShopListChecked = createShopListChecked();
+   // ShopListChecked.then((value) => shopListChecked =value);
     super.initState();
-    shoppingList = fetchShoppingList();
-    shoppingList.then((value) => groceryList = value);
-    createShopList().then((value) => shopList=value);
-    createShopListChecked().then((value) => shopListChecked =value);
 
   }
 
@@ -308,10 +340,17 @@ class _ShopListState extends State<GroceryList> {
       resizeToAvoidBottomInset: false,
 
       body: FutureBuilder(
-          future: shoppingList,
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if(snapshot.hasData)
+          future: Future.wait([shoppingList]),
+          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot){
+            if(snapshot.connectionState==ConnectionState.done && snapshot.hasData)
             {
+              // List<FoodItem> blah=[];
+              // List<Map<String, Object>> blah2=[];
+              // List<Map<String, Object>> blah3=[];
+              // snapshot.data![0].then((value) => blah=value.FoodItemList);
+              // snapshot.data![1].then((value) => blah2=value);
+              // snapshot.data![2].then((value) => blah3=value);
+
               return Container(
                 //height: MediaQuery.of(context).size.height,
                 width: double.infinity,
@@ -448,7 +487,11 @@ class _ShopListState extends State<GroceryList> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
-                        child: Text('Error: ${snapshot.error}'),
+                        child: Text('Error: ${snapshot.error}',style:const TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            letterSpacing: 1.5)),
                       )
                     ]
                 ),
@@ -476,18 +519,18 @@ class _ShopListState extends State<GroceryList> {
           }
 
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // showCustomDialog(context).then((valueFromDialog){
-          //   // use the value as you wish
-          //   print(valueFromDialog);
-          // });
-          showCustomDialog(context);
-
-        },
-
-        child: const Icon(Icons.add, size:30.0),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // showCustomDialog(context).then((valueFromDialog){
+      //     //   // use the value as you wish
+      //     //   print(valueFromDialog);
+      //     // });
+      //     showCustomDialog(context);
+      //
+      //   },
+      //
+      //   child: const Icon(Icons.add, size:30.0),
+      // ),
 
     );
   }
