@@ -34,6 +34,26 @@ class RecipeController {
     return growableList;
   }
 
+  Future <List<int>> searchRecipes(String query, String number) async {
+    Map<String, dynamic> request = {
+      "query": query,
+      "number": number,
+      "apiKey": apiKey
+    };
+    final response = await http.get(
+      Uri.https(url, 'recipes/complexSearch', request),
+    );
+    var growableList = <int>[];
+    var num = int.parse(number);
+    if (response.statusCode == 200) {
+      var res = json.decode(response.body)['results'];
+      for(int i=0;i<num;i++){
+        growableList.add(res[i]['id']);
+      }
+    }
+    return growableList;
+  }
+
   Future <Map<String, dynamic>> fetchDisplayRecipeInfo(int recipeID) async {
     Map<String, dynamic> request = {
       "apiKey": apiKey,
