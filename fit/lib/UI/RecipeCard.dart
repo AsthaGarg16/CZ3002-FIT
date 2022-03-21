@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RecipeCard extends StatelessWidget {
   final int recipeID;
   final String recipeName;
-  final String recipeDescription;
+  //final String recipeDescription;
   final String recipeImage;
   final Function(int) onRecipeSelected;
 
@@ -11,7 +11,7 @@ class RecipeCard extends StatelessWidget {
     Key? key,
     required this.recipeID,
     required this.recipeName,
-    required this.recipeDescription,
+    //required this.recipeDescription,
     required this.recipeImage,
     required this.onRecipeSelected,
   }) : super(key: key);
@@ -44,8 +44,8 @@ class RecipeCard extends StatelessWidget {
               ),
               title: Text(recipeName,
                   style: Theme.of(context).textTheme.subtitle2),
-              subtitle: Text(recipeDescription,
-                  style: Theme.of(context).textTheme.bodyText1),
+              // subtitle: Text(recipeDescription,
+              //     style: Theme.of(context).textTheme.bodyText1),
             ),
           ),
         ]),

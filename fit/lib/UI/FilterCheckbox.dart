@@ -30,6 +30,24 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     {"pref": "High Calorie", "isChecked": false, "text": "High"},
   ];
 
+  List<FoodPreference> preferenceList = [
+    FoodPreference("Low Carb", false, "Low"),
+    FoodPreference("Medium Carb", false, "Medium"),
+    FoodPreference("High Carb", false, "High"),
+    FoodPreference("Low Protein", false, "Low"),
+    FoodPreference("Medium Protein", false, "Medium"),
+    FoodPreference("High Protein", false, "High"),
+    FoodPreference("Low Calorie", false, "Low"),
+    FoodPreference("Medium Calorie", false, "Medium"),
+    FoodPreference("High Calorie", false, "High"),
+    FoodPreference("Vegetarian", false, "Vegetarian"),
+    FoodPreference("Vegan", false, "Vegan"),
+    FoodPreference("Dairy Free", false, "Dairy Free"),
+    FoodPreference("Gluten Free", false, "Gluten Free")
+  ];
+
+  List<FoodPreference> finalPref = [];
+
   @override
   Widget build(BuildContext context) {
     Color getColor(Set<MaterialState> states) {
@@ -161,7 +179,6 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
   }
 }
 
-
 // CheckboxListTile(
 //                       value: preferenceList[index]["isChecked"],
 //                       contentPadding: EdgeInsets.all(0),
@@ -176,3 +193,14 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
 //                         });
 //                       },
 //                     )
+
+class FoodPreference {
+  late String pref;
+  late bool isChecked;
+  late String text;
+  FoodPreference(String pref, bool isChecked, String text) {
+    this.pref = pref;
+    this.isChecked = isChecked;
+    this.text = text;
+  }
+}

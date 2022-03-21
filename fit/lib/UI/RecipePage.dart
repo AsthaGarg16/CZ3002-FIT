@@ -4,13 +4,28 @@ import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
 
-class RecipePage extends StatelessWidget {
+class RecipePage extends StatefulWidget {
+  RecipePage({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return _RecipePage();
+  }
+}
+
+class _RecipePage extends State<StatefulWidget> {
   RecipeController recipeController = new RecipeController("123456@gmail.com");
   List<Map<String, dynamic>> recipeList = [];
   @override
-  initState() async {
-    recipeList = await getRecipeList("pasta,tuna,apple,chicken", "10");
+  initState() {
+    getRecipeList("pasta,tuna,apple,chicken", "10").then((value) {
+      recipeList = value;
+      print("Initialiser");
+      print(value);
+    });
+    print(recipeList);
+    super.initState();
   }
+
   // [
   //   {
   //     'id': 1,
@@ -62,8 +77,6 @@ class RecipePage extends StatelessWidget {
   //   }
   // ];
 
-  RecipePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,8 +96,6 @@ class RecipePage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return RecipeCard(
                               recipeName: recipeList[index]['title'].toString(),
-                              recipeDescription:
-                                  recipeList[index]['description'].toString(),
                               recipeImage:
                                   recipeList[index]['image'].toString(),
                               recipeID: (recipeList[index]['id']) ?? -1,
@@ -118,13 +129,19 @@ class RecipePage extends StatelessWidget {
     );
   }
 
-  Future <List<Map<String, dynamic>>> getRecipeList(String includeIngredients, String number) async {
-    var recipeList = <Map<String, dynamic>> [];
-    List<int> recipeIDs = await recipeController.fetchRecipeIDs(includeIngredients, number);
-    for(int i=0; i<recipeIDs.length; i++){
-      Map<String, dynamic> recipeInfo = await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
+  Future<List<Map<String, dynamic>>> getRecipeList(
+      String includeIngredients, String number) async {
+    var recipeList = <Map<String, dynamic>>[];
+    List<int> recipeIDs =
+        await recipeController.fetchRecipeIDs(includeIngredients, number);
+    print("Function IDs: ");
+    print(recipeIDs);
+    for (int i = 0; i < recipeIDs.length; i++) {
+      Map<String, dynamic> recipeInfo =
+          await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
       recipeList.add(recipeInfo);
     }
+    print("Function List: ");
     print(recipeList);
     return recipeList;
   }
