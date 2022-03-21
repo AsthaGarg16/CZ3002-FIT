@@ -9,7 +9,7 @@ class RecipeInstructionsPage extends StatefulWidget {
 }
 
 class _RecipeInstructionsPage extends State<StatefulWidget> {
-  bool _isClicked = false;
+  bool _isStarred = false;
   IconData _starIcon = Icons.star_border_outlined;
   final int recipeID = 1;
   final String recipeName = "Spaghetti bolognese";
@@ -40,6 +40,21 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
     "2-3 sprigs rosemary leaves picked and finely chopped",
     "500g beef mince"
   ];
+  void addIngredientToShopList() {
+    return;
+  }
+
+  // void _onIsStarredChanged(bool newValue) => setState(() {
+  //       _isStarred = newValue;
+
+  //       if (_isStarred) {
+  //         //TODO: add recipe into user database
+  //         print("Added");
+  //       } else {
+  //         // TODO: remove the revcipe
+  //       }
+  //     });
+
   // const RecipeInstructionPage({
   //   Key? key,
   //   required this.recipeID,
@@ -58,10 +73,14 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
     List<Widget> ingredientsWidgetList = ingredientsList
         .map((name) => new Container(
             padding: EdgeInsets.all(10),
-            child: Text(
-              name,
-              style: Theme.of(context).textTheme.bodyText1,
-            )))
+            child: InkWell(
+                onTap: () {
+                  print("MOve ingredients to shopping list");
+                },
+                child: Text(
+                  name,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ))))
         .toList();
     List<Widget> recipeInstructionWidgetList = instructions
         .map((name) => new Container(
@@ -78,12 +97,14 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
           IconButton(
             onPressed: () {
               setState(() {
-                if (_isClicked) {
-                  _isClicked = false;
+                if (_isStarred) {
+                  _isStarred = false;
                   _starIcon = Icons.star_border_outlined;
+                  //remove from db
                 } else {
-                  _isClicked = true;
+                  _isStarred = true;
                   _starIcon = Icons.star;
+                  //add into db
                 }
               });
             },

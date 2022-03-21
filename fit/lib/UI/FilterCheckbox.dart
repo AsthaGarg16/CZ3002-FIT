@@ -135,19 +135,23 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int index) {
-                  return CheckboxListTile(
-                    value: dietaryPrefList[index]["isChecked"],
-                    contentPadding: EdgeInsets.zero,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    subtitle: Text(
-                      dietaryPrefList[index]["text"],
-                      style: Theme.of(context).textTheme.bodyText1,
+                  return SizedBox(
+                    height: 10,
+                    width: 30,
+                    child: CheckboxListTile(
+                      value: dietaryPrefList[index]["isChecked"],
+                      contentPadding: EdgeInsets.zero,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      subtitle: Text(
+                        dietaryPrefList[index]["text"],
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      onChanged: (newValue) {
+                        setState(() {
+                          dietaryPrefList[index]["isChecked"] = newValue;
+                        });
+                      },
                     ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        dietaryPrefList[index]["isChecked"] = newValue;
-                      });
-                    },
                   );
                 },
               )),
@@ -156,6 +160,8 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     ]);
   }
 }
+
+
 // CheckboxListTile(
 //                       value: preferenceList[index]["isChecked"],
 //                       contentPadding: EdgeInsets.all(0),
@@ -165,7 +171,7 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
 //                         style: Theme.of(context).textTheme.bodyText1,
 //                       ),
 //                       onChanged: (newValue) {
-//                         setState(() {
+//                   8      setState(() {
 //                           preferenceList[index]["isChecked"] = newValue;
 //                         });
 //                       },
