@@ -34,6 +34,25 @@ class RecipeController {
     return growableList;
   }
 
+  Future <Map<String, dynamic>> fetchDisplayRecipeInfo(int recipeID) async {
+    Map<String, dynamic> request = {
+      "apiKey": apiKey,
+      "includeNutrition": "false"
+    };
+    String recipeId = recipeID.toString();
+    final response = await http.get(
+      Uri.https(url, 'recipes/'+recipeId+'/information', request),
+    );
+    Map<String, dynamic> details = {};
+    if (response.statusCode == 200) {
+      var res = json.decode(response.body);
+      details['id'] = res['id'];
+      details['title'] = res['title'];
+      details['image'] = res['image'];
+    }
+    return details;
+  }
+
   Future <Map<String, dynamic>> fetchRecipeInfo(int recipeID) async {
     Map<String, dynamic> request = {
       "apiKey": apiKey,
@@ -48,6 +67,7 @@ class RecipeController {
       var res = json.decode(response.body);
       details['id'] = res['id'];
       details['title'] = res['title'];
+      details['image'] = res['image'];
       details['servings'] = res['servings'];
       details['time to prepare (in min)'] = res['readyInMinutes'];
       var ingredientList = res['extendedIngredients'];
