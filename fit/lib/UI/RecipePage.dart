@@ -4,6 +4,7 @@ import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
 
+
 class RecipePage extends StatefulWidget {
   RecipePage({Key? key}) : super(key: key);
   @override
@@ -17,7 +18,7 @@ class _RecipePage extends State<StatefulWidget> {
   List<Map<String, dynamic>> recipeList = [];
   @override
   initState() {
-    getRecipeList("pasta,tuna,apple,chicken", "10").then((value) {
+    getRecipeList("pasta,tuna,apple,chicken", "10", recipeController).then((value) {
       recipeList = value;
       print("Initialiser");
       print(value);
@@ -116,32 +117,118 @@ class _RecipePage extends State<StatefulWidget> {
                           })))
             ],
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return FilterCheckbox();
-              });
-        },
-        child: const Icon(Icons.filter_alt, size: 30.0),
-      ),
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                  onPressed: (){
+                    showSearch(context: context, delegate: RecipeSearch(recipeController));
+                    },
+                  child: const Icon(Icons.search)
+              ),
+              const SizedBox(height:10),
+              FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FilterCheckbox();
+                      }
+                  );
+                },
+
+                child: const Icon(Icons.filter_alt, size: 30.0),
+              ),
+            ]
+        ),
     );
   }
 
-  // Function to Call Backend
+
+}
+
   Future<List<Map<String, dynamic>>> getRecipeList(
       String includeIngredients, String number) async {
     var recipeList = <Map<String, dynamic>>[];
     List<int> recipeIDs =
         await recipeController.fetchRecipeIDs(includeIngredients, number);
+    print("Function IDs: ");
     print(recipeIDs);
     for (int i = 0; i < recipeIDs.length; i++) {
       Map<String, dynamic> recipeInfo =
           await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
       recipeList.add(recipeInfo);
     }
+    print("Function List: ");
     print(recipeList);
     return recipeList;
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+          close(context, "");
+        },
+        // child: const Icon(Icons.filter_alt, size: 30.0),
+        icon: AnimatedIcon(
+            icon: AnimatedIcons.menu_arrow,
+            progress: transitionAnimation
+        )
+    );
+  }
+
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: getRecipeList("pasta,tuna,apple,chicken", "3", recipeController),
+      builder: (context, snapshot){
+        if(snapshot.hasError){
+          print("You have an error");
+          return const Text("Something went wrong");
+        }else if (snapshot.hasData){
+          recipeList = snapshot.data!;
+          print(snapshot.data);
+          return ListView.builder(
+              padding: const EdgeInsets.all(10),
+              shrinkWrap: true,
+              itemCount: recipeList.length,
+              itemBuilder: (context, index) {
+                return RecipeCard(
+                  recipeName: recipeList[index]['title'].toString(),
+                  recipeImage:
+                  recipeList[index]['image'].toString(),
+                  recipeID: (recipeList[index]['id']) ?? -1,
+                  onRecipeSelected: (int ID) {
+                    print(ID);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            RecipeInstructionsPage()));
+                  },
+
+                  //
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
+
+                  //     ))
+                  // },
+                );
+              });
+        }else{
+          return Center( child: CircularProgressIndicator());
+        }
+      },
+    );
+
+
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const SizedBox.shrink();
+    // TODO: implement buildSuggestions
+    throw UnimplementedError();
   }
 }

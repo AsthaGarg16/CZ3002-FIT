@@ -193,7 +193,8 @@ class _LoginState extends State<Login> {
                               }
                             });
                           }
-                          UserController.retrieveDetails(email);
+                          //need to change to email, for now hardcoded
+                          UserController.retrieveDetails("someemail@email.com");
                           UserController.setData();
 
                         },

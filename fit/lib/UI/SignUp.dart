@@ -7,6 +7,9 @@ import 'dart:developer' as developer;
 import '../Controller/services/UserController.dart';
 import './Login.dart';
 
+String globalEmail="";
+String globalName="";
+
 class CustomPageRoute extends PageRouteBuilder {
   final Widget newScreen;
   final Widget oldScreen;
@@ -290,7 +293,7 @@ class _PreferencePageState extends State<PreferencePage>{
                     minWidth: double.infinity,
                     height:60,
                     onPressed: () async {
-                    UserController.addUseronSignup("someemail@email.com" , "somename",_numCompartmentsInt,_dairyFree,_glutenFree,_vegetarian,_vegan);
+                    UserController.addUseronSignup(globalEmail , globalName,_numCompartmentsInt,_dairyFree,_glutenFree,_vegetarian,_vegan);
                     },
                     color: Colors.redAccent,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -405,6 +408,7 @@ class _SignupPageState extends State<SignupPage> {
                                   },
                                   onChanged: (val) {
                                     setState(() => name = val);
+                                    globalName=val;
                                   },
                                 ),
                                 const SizedBox(
@@ -449,6 +453,7 @@ class _SignupPageState extends State<SignupPage> {
                                       },
                                       onChanged: (val) {
                                         setState(() => email = val);
+                                        globalEmail=val;
                                       },
                                     ),
                                     const SizedBox(
