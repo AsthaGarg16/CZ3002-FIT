@@ -76,17 +76,17 @@ void main() async{
 //   ShoppingListController.deleteFoodItem("trial2@email.com","banana","R1");
 
   // Spoonacular RecipeController Testing
-  // RecipeController rc= RecipeController("123456@gmail.com");
-  // List<int> recipeIDs = await rc.fetchRecipeIDs("pasta,tuna,apple,chicken", "3");
-  // print(recipeIDs);
-  //
-  // for(int i=0; i<recipeIDs.length; i++){
-  //   Map<String, dynamic> recipeInfo = await rc.fetchRecipeInfo(recipeIDs[i]);
-  //   print(recipeInfo);
-  //   Map<String, dynamic> recipeInstructions = await rc.fetchRecipeInstructions(recipeIDs[i]);
-  //   print(recipeInstructions);
+  RecipeController rc= RecipeController("123456@gmail.com");
+  List<int> recipeIDs = await rc.fetchRecipeIDs("pasta,tuna,apple,chicken", "3");
+  print(recipeIDs);
+
+  for(int i=0; i<recipeIDs.length; i++){
+    Map<String, dynamic> recipeInfo = await rc.fetchRecipeInfo(recipeIDs[i]);
+    print(recipeInfo);
+    Map<String, dynamic> recipeInstructions = await rc.fetchRecipeInstructions(recipeIDs[i]);
+    print(recipeInstructions);
   //   rc.storeInFirestore(recipeInfo, recipeInstructions);
-  // }
+  }
   // rc.readFromFirestore(633538);
 
   runApp(MyApp());

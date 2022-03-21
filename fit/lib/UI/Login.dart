@@ -193,6 +193,8 @@ class _LoginState extends State<Login> {
                               }
                             });
                           }
+                          UserController.retrieveDetails(email);
+                          UserController.setData();
 
                         },
                         color: Theme

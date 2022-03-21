@@ -41,21 +41,6 @@ class AuthService {
           email: email,
           password: password
       );
-      await UserController.retrieveDetails(email);
-      await UserController.setData();
-      // print("something");
-      // await UserController.readUserDetails(email);
-      // print("blabla");
-      // int fridgeDetails = UserController.userDetails.fridgeDetails;
-      // bool vegan = UserController.userDetails.vegan;
-      // bool vegetarian = UserController.userDetails.vegetarian;
-      // bool dairyFree = UserController.userDetails.dairyFree;
-      // bool glutenFree = UserController.userDetails.glutenFree;
-      // print("fridgeDetails: $fridgeDetails");
-      // print("Vegan: $vegan");
-      // print("vegetarian: $vegetarian");
-      // print("dairyFree: $dairyFree");
-      // print("glutenFree: $glutenFree");
       print("login success");
       return true;
     } on FirebaseAuthException catch (e) {
