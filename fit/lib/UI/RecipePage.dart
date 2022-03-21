@@ -129,19 +129,18 @@ class _RecipePage extends State<StatefulWidget> {
     );
   }
 
+  // Function to Call Backend
   Future<List<Map<String, dynamic>>> getRecipeList(
       String includeIngredients, String number) async {
     var recipeList = <Map<String, dynamic>>[];
     List<int> recipeIDs =
         await recipeController.fetchRecipeIDs(includeIngredients, number);
-    print("Function IDs: ");
     print(recipeIDs);
     for (int i = 0; i < recipeIDs.length; i++) {
       Map<String, dynamic> recipeInfo =
           await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
       recipeList.add(recipeInfo);
     }
-    print("Function List: ");
     print(recipeList);
     return recipeList;
   }

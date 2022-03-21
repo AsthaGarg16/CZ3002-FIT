@@ -78,25 +78,25 @@ void main() async{
 
   // Spoonacular RecipeController Testing
   RecipeController rc= RecipeController("123456@gmail.com");
-  // List<int> recipeIDs = await rc.fetchRecipeIDs("pasta,tuna,apple,chicken", "3");
-  // print(recipeIDs);
-  //
-  // for(int i=0; i<recipeIDs.length; i++){
-  //   Map<String, dynamic> recipeInfo = await rc.fetchRecipeInfo(recipeIDs[i]);
-  //   print(recipeInfo);
-  //   Map<String, dynamic> recipeInstructions = await rc.fetchRecipeInstructions(recipeIDs[i]);
-  //   print(recipeInstructions);
-  //   rc.storeInFirestore(recipeInfo, recipeInstructions);
-  // }
-  // rc.readFromFirestore(633538);
-  List<int> recipeIDs = await rc.searchRecipes("tuna pasta", "3");
+  List<int> recipeIDs = await rc.fetchRecipeIDs("pasta,tuna,apple,chicken", "3");
   print(recipeIDs);
-  var recipeList = <Map<String, dynamic>> [];
+  //
   for(int i=0; i<recipeIDs.length; i++){
-    Map<String, dynamic> recipeInfo = await rc.fetchDisplayRecipeInfo(recipeIDs[i]);
-    recipeList.add(recipeInfo);
+    Map<String, dynamic> recipeInfo = await rc.fetchRecipeInfo(recipeIDs[i]);
+    // print(recipeInfo);
+    List<String> recipeInstructions = await rc.fetchRecipeInstructions(recipeIDs[i]);
+    // print(recipeInstructions);
+    rc.storeInFirestore(recipeInfo, recipeInstructions);
   }
-  print(recipeList);
+  // rc.readFromFirestore(633538);
+  // List<int> recipeIDs = await rc.searchRecipes("tuna pasta", "3");
+  // print(recipeIDs);
+  // var recipeList = <Map<String, dynamic>> [];
+  // for(int i=0; i<recipeIDs.length; i++){
+  //   Map<String, dynamic> recipeInfo = await rc.fetchDisplayRecipeInfo(recipeIDs[i]);
+  //   recipeList.add(recipeInfo);
+  // }
+  // print(recipeList);
 
   runApp(MyApp());
 

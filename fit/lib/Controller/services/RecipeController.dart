@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class RecipeController {
   String url = 'api.spoonacular.com';
-  String apiKey = '7df62bdc1ad34570b6ab05269bbef6bd';
+  String apiKey = '2ff3f52b4e4e4cfb97b323e7b993a7c5';
   String email;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = new DatabaseService();
@@ -89,22 +89,18 @@ class RecipeController {
       details['title'] = res['title'];
       details['image'] = res['image'];
       details['servings'] = res['servings'];
-      details['time to prepare (in min)'] = res['readyInMinutes'];
+      details['readyInMinutes'] = res['readyInMinutes'];
       var ingredientList = res['extendedIngredients'];
-      var growableList = <Map>[];
+      var growableList = <String>[];
       for(int i=0; i<ingredientList.length;i++){
-        Map<String, dynamic> temp = {};
-        temp['name'] = ingredientList[i]['name'];
-        temp['amount'] = ingredientList[i]['amount'];
-        temp['unit'] = ingredientList[i]['unit'];
-        growableList.add(temp);
+        growableList.add(ingredientList[i]['original']);
       }
       details['ingredients'] = growableList;
     }
     return details;
   }
 
-  Future <Map<String, dynamic>> fetchRecipeInstructions(int recipeID) async {
+  Future <List<String>> fetchRecipeInstructions(int recipeID) async {
     Map<String, dynamic> request = {
       "apiKey": apiKey
     };
@@ -112,17 +108,17 @@ class RecipeController {
     final response = await http.get(
       Uri.https(url, 'recipes/'+recipeId+'/analyzedInstructions', request),
     );
-    Map<String, dynamic> instructions = {};
+    var instructions = <String>[];
     if (response.statusCode == 200) {
       var res = json.decode(response.body)[0]['steps'];
       for(int i=0; i<res.length;i++){
-        instructions[(i+1).toString()] = res[i]['step'];
+        instructions.add(res[i]['step']);
       }
     }
     return instructions;
   }
 
-  Future <void> storeInFirestore(Map<String, dynamic> recipeInfo, Map<String, dynamic> recipeInstructions) async {
+  Future <void> storeInFirestore(Map<String, dynamic> recipeInfo, List<String> recipeInstructions) async {
     recipeInfo['instructions'] = recipeInstructions;
     DocumentReference documentReference = firestore.collection("fit").doc(email)
         .collection("SavedRecipes").doc(recipeInfo['id'].toString());

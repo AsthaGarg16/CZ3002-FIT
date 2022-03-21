@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Controller/services/database.dart';
+import '../Controller/services/RecipeController.dart';
 
 class RecipeInstructionsPage extends StatefulWidget {
   RecipeInstructionsPage({Key? key}) : super(key: key);
@@ -9,6 +12,9 @@ class RecipeInstructionsPage extends StatefulWidget {
 }
 
 class _RecipeInstructionsPage extends State<StatefulWidget> {
+  RecipeController recipeController = new RecipeController("123456@gmail.com");
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  DatabaseService databaseService = new DatabaseService();
   bool _isStarred = false;
   IconData _starIcon = Icons.star_border_outlined;
   final int recipeID = 1;
@@ -16,10 +22,10 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
   final String recipeImage = "assets/images/pasta.jpg";
   final int servings = 4;
   final int readyInMinutes = 40;
-  final String sourceName = 'BBC good food';
-  final String sourceUrl =
-      'https://www.bbcgoodfood.com/recipes/best-spaghetti-bolognese-recipe';
-  final int aggregateLikes = 808;
+  // final String sourceName = 'BBC good food';
+  // final String sourceUrl =
+  //     'https://www.bbcgoodfood.com/recipes/best-spaghetti-bolognese-recipe';
+  // final int aggregateLikes = 808;
   final List<String> instructions = [
     "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
     "Add 4 finely chopped bacon rashers and fry for 10 mins until golden and crisp.",
@@ -46,12 +52,19 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
 
   // void _onIsStarredChanged(bool newValue) => setState(() {
   //       _isStarred = newValue;
-
+  //
   //       if (_isStarred) {
   //         //TODO: add recipe into user database
+  //         // recipeInfo should be a map with all recipe details
+  //         // recipeInstructions should be a list of strings containing all the instructions
+  //         recipeController.storeInFirestore(recipeInfo, recipeInstructions);
   //         print("Added");
   //       } else {
-  //         // TODO: remove the revcipe
+  //         // TODO: remove the recipe
+  //         // need the recipeID and email of user
+  //         DocumentReference documentReference = firestore.collection("fit").doc(email)
+  //             .collection("SavedRecipes").doc(recipeID);
+  //         databaseService.deleteDocument(documentReference);
   //       }
   //     });
 
@@ -161,5 +174,23 @@ class _RecipeInstructionsPage extends State<StatefulWidget> {
         )));
     // TODO: implement build
     throw UnimplementedError();
+  }
+
+  // Function to Call Backend for all recipe details (excluding instructions)
+  // Returns map containing ID, title, ingredients etc
+  Future<Map<String, dynamic>> getRecipeDetails(int recipeID) async {
+    Map<String, dynamic> recipeDetails =
+    await recipeController.fetchRecipeInfo(recipeID);
+    print(recipeDetails);
+    return recipeDetails;
+  }
+
+  // Function to Call Backend for recipe instructions
+  // Returns list of instructions
+  Future<List<String>> getRecipeInstructions(int recipeID) async {
+    var recipeInstructions = <String>[];
+    recipeInstructions = await recipeController.fetchRecipeInstructions(recipeID);
+    print(recipeInstructions);
+    return recipeInstructions;
   }
 }
