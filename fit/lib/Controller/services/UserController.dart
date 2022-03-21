@@ -44,6 +44,8 @@ class UserController{
     })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add  new user: $error"));
+
+    // instantiateCollecOnSignup(email);
   }
 
   //to make entry to other tables with new email
@@ -61,7 +63,7 @@ class UserController{
       if (documentSnapshot.exists) {
         print(documentSnapshot.data());
         UserController.user = new FitUser(
-            email: documentSnapshot['Email'],
+            email: documentSnapshot['email'],
             name: documentSnapshot['name'],
             fridgeDetails: documentSnapshot['fridgeDetails'],
             dairyFree: documentSnapshot['dairyFree'],

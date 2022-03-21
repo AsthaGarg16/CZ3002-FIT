@@ -98,7 +98,7 @@ class _RecipePage extends State<StatefulWidget> {
                             return RecipeCard(
                               recipeName: recipeList[index]['title'].toString(),
                               recipeImage:
-                                  recipeList[index]['image'].toString(),
+                              recipeList[index]['image'].toString(),
                               recipeID: (recipeList[index]['id']) ?? -1,
                               onRecipeSelected: (int ID) {
                                 print(ID);
@@ -117,30 +117,30 @@ class _RecipePage extends State<StatefulWidget> {
                           })))
             ],
           )),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                  onPressed: (){
-                    showSearch(context: context, delegate: RecipeSearch(recipeController));
-                    },
-                  child: const Icon(Icons.search)
-              ),
-              const SizedBox(height:10),
-              FloatingActionButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return FilterCheckbox();
-                      }
-                  );
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+                onPressed: (){
+                  showSearch(context: context, delegate: RecipeSearch(recipeController));
                 },
+                child: const Icon(Icons.search)
+            ),
+            const SizedBox(height:10),
+            FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return FilterCheckbox();
+                    }
+                );
+              },
 
-                child: const Icon(Icons.filter_alt, size: 30.0),
-              ),
-            ]
-        ),
+              child: const Icon(Icons.filter_alt, size: 30.0),
+            ),
+          ]
+      ),
     );
   }
 

@@ -7,6 +7,9 @@ import 'dart:developer' as developer;
 import '../Controller/services/UserController.dart';
 import './Login.dart';
 
+String globalEmail = "";
+String globalName = "";
+
 class CustomPageRoute extends PageRouteBuilder {
   final Widget newScreen;
   final Widget oldScreen;
@@ -143,7 +146,6 @@ class _PreferencePageState extends State<PreferencePage> {
         ListTile(
           title: Text("Diet", style: Theme.of(context).textTheme.headline3),
         ),
-
         RadioListTile<Diet>(
             toggleable: true,
             title: Text(
@@ -163,9 +165,7 @@ class _PreferencePageState extends State<PreferencePage> {
               });
             },
             controlAffinity: ListTileControlAffinity.trailing),
-
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
-
         RadioListTile<Diet>(
             toggleable: true,
             title: Text(
@@ -185,14 +185,11 @@ class _PreferencePageState extends State<PreferencePage> {
               });
             },
             controlAffinity: ListTileControlAffinity.trailing),
-
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
-
         ListTile(
           title:
               Text("Allergens", style: Theme.of(context).textTheme.headline3),
         ),
-
         CheckboxListTile(
           title:
               Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
@@ -204,9 +201,7 @@ class _PreferencePageState extends State<PreferencePage> {
             });
           },
         ),
-
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
-
         CheckboxListTile(
           title:
               Text('Dairy Free', style: Theme.of(context).textTheme.bodyText1),
@@ -218,7 +213,6 @@ class _PreferencePageState extends State<PreferencePage> {
             });
           },
         ),
-
         const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
       ],
     );

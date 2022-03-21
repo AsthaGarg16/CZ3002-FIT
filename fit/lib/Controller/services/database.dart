@@ -68,6 +68,12 @@ class DatabaseService{
         print('List of Documents: $documents');
       });
   }
+
+  Future<void> deleteDocument(DocumentReference docRef) async {
+    return docRef.delete()
+        .then((value) => print("User Deleted"))
+        .catchError((error) => print("Failed to delete user: $error"));
+  }
 }
 
 
