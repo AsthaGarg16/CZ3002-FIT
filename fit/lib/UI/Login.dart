@@ -188,14 +188,25 @@ class _LoginState extends State<Login> {
                                 .signIn(
                                 email, password).then((loginSuccess) async =>{
                               if(loginSuccess){
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) => HomePage()))
+                                await UserController.retrieveDetails(email).then((value) async =>
+                                {
+                                   UserController.setData().then((value) =>{
+                                  print(UserController.user!.inv.inventoryItems.length),
+                                  print(UserController.user!.shop.FoodItemList.length),
+                                     Navigator.of(context).push(MaterialPageRoute(
+                                         builder: (BuildContext context) => HomePage()))
+
+                                   })
+                                })
+
                               }
                             });
                           }
                           //need to change to email, for now hardcoded
-                          UserController.retrieveDetails("someemail@email.com");
-                          UserController.setData();
+                          // await UserController.retrieveDetails(email);
+                          // await UserController.setData();
+
+
 
                         },
                         color: Theme

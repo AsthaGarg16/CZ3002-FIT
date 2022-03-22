@@ -287,13 +287,14 @@ class _PreferencePageState extends State<PreferencePage> {
                       height: 60,
                       onPressed: () async {
                         UserController.addUseronSignup(
-                            "someemail@email.com",
-                            "somename",
+                            globalEmail,
+                            globalName,
                             _numCompartmentsInt,
                             _dairyFree,
                             _glutenFree,
                             _vegetarian,
                             _vegan);
+                        UserController.instantiateCollecOnSignup(globalEmail);
                       },
                       color: Colors.redAccent,
                       shape: RoundedRectangleBorder(
@@ -419,6 +420,7 @@ class _SignupPageState extends State<SignupPage> {
                                       },
                                       onChanged: (val) {
                                         setState(() => name = val);
+                                        globalName=val;
                                       },
                                     ),
                                     const SizedBox(
@@ -471,6 +473,7 @@ class _SignupPageState extends State<SignupPage> {
                                           },
                                           onChanged: (val) {
                                             setState(() => email = val);
+                                            globalEmail=email;
                                           },
                                         ),
                                         const SizedBox(
