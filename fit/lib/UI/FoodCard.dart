@@ -201,7 +201,7 @@ class FoodCardState extends State<FoodCard> {
                           children: [
                             AspectRatio(
                               aspectRatio: 18.0 / 13.0,
-                              child: Image.asset(widget.foodImage, height: 70, fit: BoxFit.contain),
+                              child: Image(image: NetworkImage(widget.foodImage), height: 70, fit: BoxFit.contain),
                             ),
                             Center(
                               child: Text(widget.foodName,
