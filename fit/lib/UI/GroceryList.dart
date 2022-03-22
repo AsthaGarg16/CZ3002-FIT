@@ -240,7 +240,7 @@ class _ShopListState extends State<GroceryList> {
         Map<String, Object> object = {
           'label': obj.name,
           'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + " "+obj.unit,
-          'recipe': obj.recipe_ID,
+          'recipe': obj.from_saved_recipes?obj.recipe_ID:"0",
           'isRecipe' : obj.from_saved_recipes,
           'value': false,
           'alternatives': List<String>.filled(3,"alternate "),
@@ -377,9 +377,10 @@ class _ShopListState extends State<GroceryList> {
                                                         Map<String,Object> deletedItem = shopList[index];
                                                         String deletedLabel = shopList[index]['label'].toString();
                                                         shopList.removeAt(index);
+                                                        String recipe_id = deletedItem['isRecipe']==true?deletedItem['recipe'].toString():"0";
                                                         print("here");
-                                                        print(deletedItem["label"].toString()+deletedItem["recipe"].toString());
-                                                        ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedItem["label"].toString(),deletedItem["recipe"].toString());
+                                                        print(deletedLabel +" "+ recipe_id);
+                                                        ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedLabel,recipe_id);
 
                                                         ScaffoldMessenger.of(context)
                                                             .showSnackBar(SnackBar(
@@ -412,11 +413,12 @@ class _ShopListState extends State<GroceryList> {
                                                       onValueChanged: (){
                                                         setState((){
                                                           Map<String, Object> shopListItem = shopList.removeAt(index);
+                                                          String recipe_id = shopListItem['isRecipe']==true?shopListItem['recipe'].toString():"0";
                                                           shopListItem["value"] = true;
                                                           shopListChecked.add(shopListItem);
                                                            print(shopListItem["quantity"].toString().split(" ")[0]);
                                                           print(shopListItem["quantity"].toString().split(" ")[1]);
-                                                          ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["recipe"].toString());
+                                                          ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), recipe_id);
                                                           // print(widget.shopListChecked);
                                                           // print(widget.shopList);
                                                         });
