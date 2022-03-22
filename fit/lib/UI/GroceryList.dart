@@ -361,6 +361,7 @@ class _ShopListState extends State<GroceryList> {
                               child: Column(
                                   children: <Widget>[
                                     if(shopList.length>0)
+
                                       ListView.builder(
                                         controller: ScrollController(),
                                         shrinkWrap: true,
@@ -457,6 +458,19 @@ class _ShopListState extends State<GroceryList> {
                                           );
 
                                         }),
+                                    if(shopList.length<=0 && shopListChecked.length<=0 )
+                                      Container(
+                                        height:600,
+                                        padding:const EdgeInsets.all(10.0),
+                                        margin:const EdgeInsets.all(20.0),
+                                        alignment: Alignment.center ,
+                                        child: const Text("The list is empty. Add an item using the button below.", style: TextStyle(
+                                            fontSize: 30.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black87),
+                                          textAlign: TextAlign.center,),
+                                      ),
+
                                     if(shopListChecked.length>0)
                                     ListView.builder(
                                         controller: ScrollController(),

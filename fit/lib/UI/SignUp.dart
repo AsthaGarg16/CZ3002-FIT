@@ -6,6 +6,7 @@ import 'dart:developer' as developer;
 
 import '../Controller/services/UserController.dart';
 import './Login.dart';
+import 'HomePage.dart';
 
 String globalEmail = "";
 String globalName = "";
@@ -295,6 +296,8 @@ class _PreferencePageState extends State<PreferencePage> {
                             _vegetarian,
                             _vegan);
                         UserController.instantiateCollecOnSignup(globalEmail);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => HomePage()));
                       },
                       color: Colors.redAccent,
                       shape: RoundedRectangleBorder(

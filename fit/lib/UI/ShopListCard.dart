@@ -56,11 +56,12 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
 
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 3.0),
                 child: Row(
                   //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Expanded(
+                      flex:1,
                       child: Checkbox(
                         value: widget.value,
                         onChanged: (bool? newValue) {
@@ -74,15 +75,16 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                       ),
                     ),
 
-                    const SizedBox(width: 5.0),
+                    const SizedBox(width: 3.0),
 
-                        Expanded(flex: 3,child: Text(text, style: TextStyle(
+                        Expanded(flex: 4,child: Text(text, style: TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.normal,
                             color: widget.value?Colors.teal:Colors.black87))),
 
 
                     Expanded(
+                      flex:2,
                         child: Container(
                           alignment: Alignment.centerRight,
                           child: Text(widget.quantity, style: TextStyle(
@@ -94,6 +96,7 @@ class _MyStatefulWidgetState extends State<ShopListWidget> {
                     ),
                     //const SizedBox(width: 2.0),
                     Expanded(
+                      flex:1,
                       child: widget.value?Container():IconButton(icon: widget.visible?const Icon(Icons.arrow_drop_up_rounded):const Icon(Icons.arrow_drop_down_rounded),
                         color: widget.visible?Colors.teal:Colors.black87,
                         onPressed: () { widget.onButtonPress(); },),
