@@ -94,8 +94,8 @@ class UserController{
   }
 
   /// Gets the user's emailID
-  static String? getCurrentUserEmail() {
-    return user?.email;
+  static String getCurrentUserEmail() {
+    return user!.email;
   }
 
   //setting user data on login

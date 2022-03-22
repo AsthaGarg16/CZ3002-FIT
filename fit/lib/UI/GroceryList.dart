@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import '../Controller/services/UserController.dart';
 import '../Entity/FoodItem.dart';
 import '../Entity/ShoppingList.dart';
 import '../Controller/services/ShoppingListController.dart';
@@ -167,7 +168,7 @@ class _ShopListState extends State<GroceryList> {
   Future<ShoppingList> fetchShoppingList() async
   {
 
-      var obj = (await ShoppingListController.getShoppingList("someemail@email.com")) ;
+      var obj = (await ShoppingListController.getShoppingList(UserController.getCurrentUserEmail())) ;
       print(obj);
       return obj;
       //     .then((value) {
@@ -377,7 +378,7 @@ class _ShopListState extends State<GroceryList> {
                                                         String deletedLabel = shopList[index]['label'].toString();
                                                         shopList.removeAt(index);
                                                         print(deletedItem["label"].toString()+deletedItem["recipe"].toString());
-                                                        ShoppingListController.deleteFoodItem("someemail@email.com",deletedItem["label"].toString(),deletedItem["recipe"].toString());
+                                                        ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedItem["label"].toString(),deletedItem["recipe"].toString());
 
                                                         ScaffoldMessenger.of(context)
                                                             .showSnackBar(SnackBar(
@@ -391,7 +392,7 @@ class _ShopListState extends State<GroceryList> {
                                                                       index,
                                                                       deletedItem);
 
-                                                                  ShoppingListController.addFoodItem("someemail@email.com", deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["recipe"].toString()
+                                                                  ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["recipe"].toString()
                                                                   );
                                                                 }) // this is what you needed
                                                             )));
@@ -414,7 +415,7 @@ class _ShopListState extends State<GroceryList> {
                                                           shopListChecked.add(shopListItem);
                                                            print(shopListItem["quantity"].toString().split(" ")[0]);
                                                           print(shopListItem["quantity"].toString().split(" ")[1]);
-                                                          ShoppingListController.updateFoodItem("someemail@email.com", shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["recipe"].toString());
+                                                          ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["recipe"].toString());
                                                           // print(widget.shopListChecked);
                                                           // print(widget.shopList);
                                                         });
@@ -744,7 +745,7 @@ class _ShopListState extends State<GroceryList> {
                 _unit = chosenValue??Units.units[0];
               }
               newItem = FoodItem(_name,_quantity,_unit,_status,_inventory_status,_from_saved_recipes,_quantity_from_saved,_recipe_ID);
-              ShoppingListController.addFoodItem("someemail@email.com",newItem.name,newItem.quantity,newItem.unit,newItem.status,newItem.inventory_status,newItem.from_saved_recipes,newItem.quantity_from_saved,newItem.recipe_ID);
+              ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(),newItem.name,newItem.quantity,newItem.unit,newItem.status,newItem.inventory_status,newItem.from_saved_recipes,newItem.quantity_from_saved,newItem.recipe_ID);
               Navigator.pop(context,newItem);
             }
 
