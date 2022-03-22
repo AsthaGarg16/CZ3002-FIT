@@ -4,7 +4,6 @@ import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
 
-
 class RecipePage extends StatefulWidget {
   RecipePage({Key? key}) : super(key: key);
   @override
@@ -14,11 +13,14 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePage extends State<StatefulWidget> {
-  RecipeController recipeController = new RecipeController("123456@gmail.com");
+  RecipeController recipeController = new RecipeController();
+  late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
   @override
   initState() {
-    getRecipeList("pasta,tuna,apple,chicken", "10", recipeController).then((value) {
+    RecipeList =
+        getRecipeList("pasta,tuna,apple,chicken", "2", recipeController);
+    RecipeList.then((value) {
       recipeList = value;
       print("Initialiser");
       print(value);
@@ -85,12 +87,17 @@ class _RecipePage extends State<StatefulWidget> {
       body: Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: Scrollbar(
-                      isAlwaysShown: true,
-                      child: ListView.builder(
+          child: Column(children: <Widget>[
+            Expanded(
+                child: Scrollbar(
+              isAlwaysShown: true,
+              child: FutureBuilder(
+                  future: Future.wait([RecipeList]),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<dynamic>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return ListView.builder(
                           padding: const EdgeInsets.all(10),
                           shrinkWrap: true,
                           itemCount: recipeList.length,
@@ -98,13 +105,15 @@ class _RecipePage extends State<StatefulWidget> {
                             return RecipeCard(
                               recipeName: recipeList[index]['title'].toString(),
                               recipeImage:
-                              recipeList[index]['image'].toString(),
+                                  recipeList[index]['image'].toString(),
                               recipeID: (recipeList[index]['id']) ?? -1,
                               onRecipeSelected: (int ID) {
                                 print(ID);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
-                                        RecipeInstructionsPage()));
+                                        RecipeInstructionsPage(
+                                          recipeID: ID,
+                                        )));
                               },
 
                               //
@@ -114,49 +123,82 @@ class _RecipePage extends State<StatefulWidget> {
                               //     ))
                               // },
                             );
-                          })))
-            ],
-          )),
-      floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-                onPressed: (){
-                  showSearch(context: context, delegate: RecipeSearch(recipeController));
-                },
-                child: const Icon(Icons.search)
-            ),
-            const SizedBox(height:10),
-            FloatingActionButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return FilterCheckbox();
+                          });
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 60,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Text('Error: ${snapshot.error}',
+                                    style: const TextStyle(
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                        letterSpacing: 1.5)),
+                              )
+                            ]),
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 16),
+                                child: Text('Awaiting result...'),
+                              )
+                            ]),
+                      );
                     }
-                );
-              },
-
-              child: const Icon(Icons.filter_alt, size: 30.0),
-            ),
-          ]
-      ),
+                  }),
+            ))
+          ])),
+      floatingActionButton:
+          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+        FloatingActionButton(
+            onPressed: () {
+              showSearch(
+                  context: context, delegate: RecipeSearch(recipeController));
+            },
+            child: const Icon(Icons.search)),
+        const SizedBox(height: 10),
+        FloatingActionButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return FilterCheckbox();
+                });
+          },
+          child: const Icon(Icons.filter_alt, size: 30.0),
+        ),
+      ]),
     );
   }
-
-
 }
 
-Future<List<Map<String, dynamic>>> getRecipeList(
-    String includeIngredients, String number, RecipeController recipeController) async {
+Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,
+    String number, RecipeController recipeController) async {
   var recipeList = <Map<String, dynamic>>[];
   List<int> recipeIDs =
-  await recipeController.fetchRecipeIDs(includeIngredients, number);
+      await recipeController.fetchRecipeIDs(includeIngredients, number);
   print("Function IDs: ");
   print(recipeIDs);
   for (int i = 0; i < recipeIDs.length; i++) {
     Map<String, dynamic> recipeInfo =
-    await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
+        await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
     recipeList.add(recipeInfo);
   }
   print("Function List: ");
@@ -167,13 +209,12 @@ Future<List<Map<String, dynamic>>> getRecipeList(
 Future<List<Map<String, dynamic>>> getSearchResult(
     String query, RecipeController recipeController) async {
   var recipeList = <Map<String, dynamic>>[];
-  List<int> recipeIDs =
-  await recipeController.searchRecipes(query);
+  List<int> recipeIDs = await recipeController.searchRecipes(query);
   print("Function IDs: ");
   print(recipeIDs);
   for (int i = 0; i < recipeIDs.length; i++) {
     Map<String, dynamic> recipeInfo =
-    await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
+        await recipeController.fetchDisplayRecipeInfo(recipeIDs[i]);
     recipeList.add(recipeInfo);
   }
   print("Function List: ");
@@ -189,39 +230,36 @@ class RecipeSearch extends SearchDelegate<String> {
 
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(
-        onPressed: (){
-          query = "";
-        },
-        icon: const Icon(Icons.clear)
-    )];
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: const Icon(Icons.clear))
+    ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-        onPressed: (){
+        onPressed: () {
           close(context, "");
         },
         // child: const Icon(Icons.filter_alt, size: 30.0),
         icon: AnimatedIcon(
-            icon: AnimatedIcons.menu_arrow,
-            progress: transitionAnimation
-        )
-    );
+            icon: AnimatedIcons.menu_arrow, progress: transitionAnimation));
   }
-
 
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildSuggestions
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: getSearchResult("tuna pasta", recipeController),
-      builder: (context, snapshot){
-        if(snapshot.hasError){
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
           print("You have an error");
           return const Text("Something went wrong");
-        }else if (snapshot.hasData){
+        } else if (snapshot.hasData) {
           recipeList = snapshot.data!;
           print(snapshot.data);
           return ListView.builder(
@@ -231,14 +269,14 @@ class RecipeSearch extends SearchDelegate<String> {
               itemBuilder: (context, index) {
                 return RecipeCard(
                   recipeName: recipeList[index]['title'].toString(),
-                  recipeImage:
-                  recipeList[index]['image'].toString(),
+                  recipeImage: recipeList[index]['image'].toString(),
                   recipeID: (recipeList[index]['id']) ?? -1,
                   onRecipeSelected: (int ID) {
                     print(ID);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            RecipeInstructionsPage()));
+                        builder: (context) => RecipeInstructionsPage(
+                              recipeID: ID,
+                            )));
                   },
 
                   //
@@ -249,13 +287,11 @@ class RecipeSearch extends SearchDelegate<String> {
                   // },
                 );
               });
-        }else{
-          return Center( child: CircularProgressIndicator());
+        } else {
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
-
-
   }
 
   @override
