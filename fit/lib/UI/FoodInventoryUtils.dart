@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'dart:core';
+
+import '../Controller/services/InventoryController.dart';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
@@ -32,18 +34,28 @@ class FoodInventorryUtils extends StatefulWidget {
 
 /// State for MyApp
 class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
+  TextEditingController _textEditingController = new TextEditingController();
+  final GlobalKey _accKey = GlobalKey();
+  DateTime selectedDate = DateTime.now();
+  TextEditingController _date = new TextEditingController();
+  final dateFormatter = DateFormat('yyyy-MM-dd');
+  List<Map<String, dynamic>> addingList = [];
+
 
   @override
   void initState() {
     super.initState();
   }
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    _textEditingController.dispose();
+    _date.dispose();
+    super.dispose();
+  }
 
-  final GlobalKey _accKey = GlobalKey();
-  DateTime selectedDate = DateTime.now();
-  TextEditingController _date = new TextEditingController();
-  final dateFormatter = DateFormat('yyyy-MM-dd');
-
-  Future<Null> _selectDate(BuildContext context) async {
+  Future<Null> _selectDate(BuildContext context, textController) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -52,7 +64,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        _date.text = dateFormatter.format(picked);
+        textController.text = dateFormatter.format(picked);
       });
     }
   }
@@ -70,7 +82,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     String? chosenValue;
     String? chosenValue2;
     DateTime _expiryDate = DateTime.now();
-    String _imageUrl='assets/images/apple.jpg';
+    String _imageUrl='';
     int _compNum = 1;
     // qr_code_scanner_rounded
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
@@ -264,7 +276,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                 //       fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
                                 // ),
                                 GestureDetector(
-                                  onTap: () => _selectDate(context),
+                                  onTap: () => _selectDate(context, _date),
                                   child: AbsorbPointer(
                                     child: TextFormField(
                                       obscureText: false,
@@ -277,7 +289,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                       style: const TextStyle(
                                           fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                       onChanged: (val) {
-                                        print(DateTime.parse(val));
                                         setState(() => _expiryDate = DateTime.parse(val));
                                       }
                                     ),
@@ -301,7 +312,10 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               }
 
               newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, _imageUrl);
-              Navigator.pop(context,newItem);
+              var newItems = InventoryController.createFoodRecord("nisha.rmanian@gmail.com",newItem.name,newItem.quantity,newItem.unit,newItem.expiryDate,newItem.name, newItem.compNum);
+              print("this is new item debug ");
+              print(newItems);
+              Navigator.pop(context,newItems);
             }
 
           },
@@ -354,7 +368,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
         Map<String,Object> newObj = {
           'title': value.name,
           'expiry': dateFormatter.format(value.expiryDate),
-          'image': 'assets/images/apple.jpg',
+          'image': value.imageUrl,
           'quantity': value.quantity.toString(),
           'compartment': value.compNum,
           'unit': value.unit,
@@ -367,7 +381,8 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
   }
 
-  Widget setupAlertDialoadContainer(addingList) {
+  setupAlertDialogContainer() {
+    String _compartment = "1";
     return Container(
       height: 600.0, // Change as per your requirement
       width: 400.0, // Change as per your requirement
@@ -376,69 +391,101 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
         shrinkWrap: true,
         itemCount: addingList.length,
         itemBuilder: (BuildContext context, int index) {
+          final GlobalKey<FormState> _itemKey = GlobalKey<FormState>();
           return Column(
+              key: _itemKey,
               crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(addingList[index]['title'], style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Quantity', style: TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
-                  Row(
-                    children: [
-                      Text(addingList[index]['quantity'], style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
-                      Text(addingList[index]['unit'], style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Text('Expiry Date', style: TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),),
+              children: <Widget>[
+                const Text("Compartment: ", style: TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                ),
+                DropdownButtonFormField<String>(
+                    value: _compartment,
+                    //elevation: 5,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
 
-                  Expanded(
-                    flex: 6,
-                    child: GestureDetector(
-                      onTap: () => _selectDate(context),
-                      child: AbsorbPointer(
-                        child: TextFormField(
-                            obscureText: false,
-                            controller: _date,
-                            keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(
-                              hintText: 'Today',
-                              prefixIcon: const Icon(Icons.calendar_today),
-                            ),
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
-                            onChanged: (val) {
-                              setState(() => addingList[index]['expiry'] = DateTime.parse(val));
-                            }
+                    items: List<String>.generate(widget.numOfCompartments, (i) => (i + 1).toString()).map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: const TextStyle(
+                            fontFamily:"mw",fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                         ),
-                      ),
+                      );
+                    }).toList(),
+                    hint: const Text(
+                      "Select compartment",
+                      style: TextStyle(
+                          fontFamily:"mw",fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                    ),
+                    onChanged: (String? val) {
+                      setState(() {
+                        addingList[index]['compartment'] = int.parse(val!);
+                      });
+
+                    }
+                ),
+                Text(addingList[index]['title'], style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Quantity', style: TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                    Row(
+                      children: [
+                        Text(addingList[index]['quantity'], style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                        Text(addingList[index]['unit'], style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
+                      ],
                     )
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ]);
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Text('Expiry Date', style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),),
+
+                    Expanded(
+                        flex: 6,
+                        child: GestureDetector(
+                          onTap: () => _selectDate(context, _textEditingController),
+                          child: AbsorbPointer(
+                            child: TextField(
+                                obscureText: false,
+                                controller: _textEditingController,
+                                keyboardType: TextInputType.datetime,
+                                decoration: InputDecoration(
+                                  hintText: 'Today',
+                                  prefixIcon: const Icon(Icons.calendar_today),
+                                ),
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                                onChanged: (val) {
+                                  setState(() => addingList[index]['expiry'] = DateTime.parse(val));
+                                }
+                            ),
+                          ),
+                        )
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ]);
         },
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -455,124 +502,127 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
             SizedBox(height: 10),
 
             SpeedDial(
-        icon: Icons.more_horiz,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        overlayOpacity: 0,
-        onOpen: (){
-          setState(() {
-            widget.showFloatingSearchButton = false;
-          });
-          },
-                onClose: (){
-          setState(() {
-            widget.showFloatingSearchButton = true;
-          });
+              icon: Icons.more_horiz,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              overlayOpacity: 0,
+              onOpen: (){
+                setState(() {
+                  widget.showFloatingSearchButton = false;
+                });
                 },
+                      onClose: (){
+                setState(() {
+                  widget.showFloatingSearchButton = true;
+                });
+                      },
 
-        children: [
-          SpeedDialChild(
-                child: const Icon(Icons.add),
-                key: _accKey,
+            children: [
+              SpeedDialChild(
+                    child: const Icon(Icons.add),
+                    key: _accKey,
 
-                onTap: ()
-                {
-                  final RenderBox renderBox =_accKey.currentContext?.findRenderObject() as RenderBox;
-                  final Size size = renderBox.size;
-                  final Offset offset = renderBox.localToGlobal(Offset.zero);
-                  showMenu(
-                      context: context,
-                      useRootNavigator: true,
-                      position: RelativeRect.fromLTRB(
-                          offset.dx + size.width,
-                          offset.dy,
-                          offset.dx - size.width/2,
-                          offset.dy + size.height),
-                      items: [
-                        PopupMenuItem(
-                          child: MaterialButton(
-                              onPressed: () {
-                                List<Map<String, dynamic>> addingList = [];
-                                for (var item in shopListDb) {
-                                  if (item['value'] == true) {
-                                    List<String> quant = item['quantity'].toString().split(' ').toList();
-                                    if (quant.length == 1) quant.add("");
-                                    Map<String, Object> newObj = {
-                                      'title': item['label'].toString(),
-                                      'expiry':
-                                          dateFormatter.format(DateTime.now()),
-                                      'image': 'assets/images/apple.jpg',
-                                      'quantity': quant[0],
-                                      'unit' :  quant[1],
-                                      'compartment': 3,
+                    onTap: ()
+                    {
+                      final RenderBox renderBox =_accKey.currentContext?.findRenderObject() as RenderBox;
+                      final Size size = renderBox.size;
+                      final Offset offset = renderBox.localToGlobal(Offset.zero);
+                      showMenu(
+                          context: context,
+                          useRootNavigator: true,
+                          position: RelativeRect.fromLTRB(
+                              offset.dx + size.width,
+                              offset.dy,
+                              offset.dx - size.width/2,
+                              offset.dy + size.height),
+                          items: [
+                            PopupMenuItem(
+                              child: MaterialButton(
+                                  onPressed: () {
+                                    addingList = [];
+                                    for (var item in shopListDb) {
+                                      if (item['value'] == true) {
+                                        List<String> quant = item['quantity'].toString().split(' ').toList();
+                                        if (quant.length == 1) quant.add("");
+                                        Map<String, Object> newObj = {
+                                          'title': item['label'].toString(),
+                                          'expiry':
+                                              dateFormatter.format(DateTime.now()),
+                                          'image': 'assets/images/apple.jpg',
+                                          'quantity': quant[0],
+                                          'unit' :  quant[1],
+                                          'compartment': 1,
+                                        };
+                                        addingList.add(newObj);
+                                      }
                                     };
-                                    addingList.add(newObj);
-                                  }
-                                };
 
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Confirm adding shopping items', style:Theme
-                                            .of(context)
-                                            .textTheme
-                                            .subtitle2,textAlign: TextAlign.center,),
-                                        content: setupAlertDialoadContainer(addingList),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            onPressed: () async {
-                                              setState(() {
-                                                widget.foodList = [...widget.foodList, ...addingList,];
-                                                widget.onFoodRecordChanged(widget.foodList);
-                                              });
-                                              Navigator.pop(context, addingList);
-                                              Navigator.pop(context);
-                                            },
-                                            color: Theme.of(context).colorScheme.primary,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10)),
-                                            child: Text("OK", style: const TextStyle(fontSize: 14.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white)),
-                                          ),
-                                        ],
-                                      );
-                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+
+                                          return AlertDialog(
+                                            title: Text('Confirm adding shopping items', style:Theme
+                                                .of(context)
+                                                .textTheme
+                                                .subtitle2,textAlign: TextAlign.center,),
+                                            content: setupAlertDialogContainer(),
+                                            actions: <Widget>[
+                                              MaterialButton(
+                                                onPressed: () async {
+                                                  setState(() {
+                                                    widget.foodList = [...widget.foodList, ...addingList,];
+                                                    widget.onFoodRecordChanged(widget.foodList);
+                                                  });
+                                                  print("hello");
+                                                  print(addingList);
+                                                  Navigator.pop(context, addingList);
+                                                  Navigator.pop(context);
+                                                },
+                                                color: Theme.of(context).colorScheme.primary,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10)),
+                                                child: Text("OK", style: const TextStyle(fontSize: 14.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                              ),
+                                            ],
+                                          );
+                                        });
 
 
-                            },
-                              child: Text('Add items from shopping list', style: Theme.of(context).textTheme.bodyText1)),
-                        ),
+                                },
+                                  child: Text('Add items from shopping list', style: Theme.of(context).textTheme.bodyText1)),
+                            ),
 
-                        PopupMenuItem(
-                          child: MaterialButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              showCustomDialog(context);
-                            },
-                            child: Text('Add new items', style: Theme.of(context).textTheme.bodyText1),
-                          ),
-                        ),
-                      ]);
-                }
-            ,
-            foregroundColor: Colors.white,
-            backgroundColor: Theme.of(context).colorScheme.primary,
+                            PopupMenuItem(
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  showCustomDialog(context);
+                                },
+                                child: Text('Add new items', style: Theme.of(context).textTheme.bodyText1),
+                              ),
+                            ),
+                          ]);
+                    }
+                ,
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
 
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.mode_edit_outline_outlined ),
-            foregroundColor: Colors.white,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            onTap: () {
-              setState(() {
-                bool hide = true;
-                widget.onEdit(hide);
-              });
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.mode_edit_outline_outlined ),
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                onTap: () {
+                  setState(() {
+                    bool hide = true;
+                    widget.onEdit(hide);
+                  });
 
-            },
-          ),
+                },
+              ),
 
-        ])]);
-  }
+            ])]);
+      }
 }

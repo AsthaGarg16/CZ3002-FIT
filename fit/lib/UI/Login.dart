@@ -206,8 +206,6 @@ class _LoginState extends State<Login> {
                           // await UserController.retrieveDetails(email);
                           // await UserController.setData();
 
-
-
                         },
                         color: Theme
                             .of(context)
