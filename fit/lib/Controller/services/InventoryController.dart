@@ -13,7 +13,7 @@ class InventoryController{
 
   static CollectionReference foodImages = FirebaseFirestore.instance.collection('FoodImagesTable');
   static Future<String> fetchImageUrl(Map<String, dynamic> request) async {
-    request['apiKey'] = '7df62bdc1ad34570b6ab05269bbef6bd';
+    request['apiKey'] = '3051078340c946528e21870b7c2c5fc2';
     print(request);
     final response = await http.get(
       Uri.https('api.spoonacular.com', 'food/ingredients/search', request),
@@ -131,7 +131,25 @@ class InventoryController{
   //
   // }
 
-  static Future<void> createFoodRecord (
+  // static Future<void> createFoodRecord (
+  //     String email,
+  //     String name,
+  //     int quantity,
+  //     String unit,
+  //     DateTime expiryDate,
+  //     String imageUrlQuery,
+  //     int compNum) async{
+  //   Map<String, dynamic> request = {
+  //       "query": imageUrlQuery,
+  //       "number": "1"
+  //     };
+  //
+  //   String imgUrl=await fetchImageUrl(request);
+  //   await addFoodRecord(email,name,quantity,unit,expiryDate,imgUrl,compNum);
+  //
+  // }
+
+  static Future<String> createFoodRecord (
       String email,
       String name,
       int quantity,
@@ -140,12 +158,13 @@ class InventoryController{
       String imageUrlQuery,
       int compNum) async{
     Map<String, dynamic> request = {
-        "query": imageUrlQuery,
-        "number": "1"
-      };
+      "query": imageUrlQuery,
+      "number": "1"
+    };
 
     String imgUrl=await fetchImageUrl(request);
     await addFoodRecord(email,name,quantity,unit,expiryDate,imgUrl,compNum);
+    return imgUrl;
 
   }
 

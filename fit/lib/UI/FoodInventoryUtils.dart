@@ -279,18 +279,18 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                   onTap: () => _selectDate(context, _date),
                                   child: AbsorbPointer(
                                     child: TextFormField(
-                                      obscureText: false,
-                                      controller: _date,
-                                      keyboardType: TextInputType.datetime,
-                                      decoration: InputDecoration(
-                                        hintText: 'Food Expiry',
+                                        obscureText: false,
+                                        controller: _date,
+                                        keyboardType: TextInputType.datetime,
+                                        decoration: InputDecoration(
+                                          hintText: 'Food Expiry',
                                           prefixIcon: const Icon(Icons.calendar_today),
-                                      ),
-                                      style: const TextStyle(
-                                          fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
-                                      onChanged: (val) {
-                                        setState(() => _expiryDate = DateTime.parse(val));
-                                      }
+                                        ),
+                                        style: const TextStyle(
+                                            fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                                        onChanged: (val) {
+                                          setState(() => _expiryDate = DateTime.parse(val));
+                                        }
                                     ),
                                   ),
                                 ) //
@@ -311,11 +311,17 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 _unit = chosenValue??Units.units[0];
               }
 
-              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, _imageUrl);
-              var newItems = InventoryController.createFoodRecord("nisha.rmanian@gmail.com",newItem.name,newItem.quantity,newItem.unit,newItem.expiryDate,newItem.name, newItem.compNum);
-              print("this is new item debug ");
-              print(newItems);
-              Navigator.pop(context,newItems);
+              var date = dateFormatter.format(selectedDate).split('-').toList();
+              print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+
+              String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
+
+              setState(() {
+                _imageUrl = imgUrl;
+              });
+
+              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
+              Navigator.pop(context,newItem);
             }
 
           },
@@ -338,7 +344,16 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 _unit = chosenValue??Units.units[0];
               }
 
-              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, _imageUrl);
+              var date = dateFormatter.format(selectedDate).split('-').toList();
+              print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+
+              String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
+
+              setState(() {
+                _imageUrl = imgUrl;
+              });
+
+              newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
               Navigator.pop(context,newItem);
             };
 
@@ -491,17 +506,17 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   Widget build(BuildContext context) {
 
     // return StatefulBuilder(builder: (context, StateSetter setState){
-      return Column(
+    return Column(
         mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+        children: [
 
-            widget.showFloatingSearchButton ? FloatingActionButton(onPressed: (){
-              showSearch(context: context, delegate: InventorySearch(widget.InventoryTabController));
-            }, child: Icon(Icons.search)) : SizedBox(),
+          widget.showFloatingSearchButton ? FloatingActionButton(onPressed: (){
+            showSearch(context: context, delegate: InventorySearch(widget.InventoryTabController));
+          }, child: Icon(Icons.search)) : SizedBox(),
 
-            SizedBox(height: 10),
+          SizedBox(height: 10),
 
-            SpeedDial(
+          SpeedDial(
               icon: Icons.more_horiz,
               backgroundColor: Theme.of(context).colorScheme.primary,
               overlayOpacity: 0,
@@ -509,120 +524,123 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 setState(() {
                   widget.showFloatingSearchButton = false;
                 });
-                },
-                      onClose: (){
+              },
+              onClose: (){
                 setState(() {
                   widget.showFloatingSearchButton = true;
                 });
-                      },
+              },
 
-            children: [
-              SpeedDialChild(
-                    child: const Icon(Icons.add),
-                    key: _accKey,
+              children: [
+                SpeedDialChild(
+                  child: const Icon(Icons.add),
+                  key: _accKey,
 
-                    onTap: ()
-                    {
-                      final RenderBox renderBox =_accKey.currentContext?.findRenderObject() as RenderBox;
-                      final Size size = renderBox.size;
-                      final Offset offset = renderBox.localToGlobal(Offset.zero);
-                      showMenu(
-                          context: context,
-                          useRootNavigator: true,
-                          position: RelativeRect.fromLTRB(
-                              offset.dx + size.width,
-                              offset.dy,
-                              offset.dx - size.width/2,
-                              offset.dy + size.height),
-                          items: [
-                            PopupMenuItem(
-                              child: MaterialButton(
-                                  onPressed: () {
-                                    addingList = [];
-                                    for (var item in shopListDb) {
-                                      if (item['value'] == true) {
-                                        List<String> quant = item['quantity'].toString().split(' ').toList();
-                                        if (quant.length == 1) quant.add("");
-                                        Map<String, Object> newObj = {
-                                          'title': item['label'].toString(),
-                                          'expiry':
-                                              dateFormatter.format(DateTime.now()),
-                                          'image': 'assets/images/apple.jpg',
-                                          'quantity': quant[0],
-                                          'unit' :  quant[1],
-                                          'compartment': 1,
-                                        };
-                                        addingList.add(newObj);
-                                      }
-                                    };
-
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-
-                                          return AlertDialog(
-                                            title: Text('Confirm adding shopping items', style:Theme
-                                                .of(context)
-                                                .textTheme
-                                                .subtitle2,textAlign: TextAlign.center,),
-                                            content: setupAlertDialogContainer(),
-                                            actions: <Widget>[
-                                              MaterialButton(
-                                                onPressed: () async {
-                                                  setState(() {
-                                                    widget.foodList = [...widget.foodList, ...addingList,];
-                                                    widget.onFoodRecordChanged(widget.foodList);
-                                                  });
-                                                  print("hello");
-                                                  print(addingList);
-                                                  Navigator.pop(context, addingList);
-                                                  Navigator.pop(context);
-                                                },
-                                                color: Theme.of(context).colorScheme.primary,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10)),
-                                                child: Text("OK", style: const TextStyle(fontSize: 14.0,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white)),
-                                              ),
-                                            ],
-                                          );
-                                        });
-
-
-                                },
-                                  child: Text('Add items from shopping list', style: Theme.of(context).textTheme.bodyText1)),
-                            ),
-
-                            PopupMenuItem(
-                              child: MaterialButton(
+                  onTap: ()
+                  {
+                    final RenderBox renderBox =_accKey.currentContext?.findRenderObject() as RenderBox;
+                    final Size size = renderBox.size;
+                    final Offset offset = renderBox.localToGlobal(Offset.zero);
+                    showMenu(
+                        context: context,
+                        useRootNavigator: true,
+                        position: RelativeRect.fromLTRB(
+                            offset.dx + size.width,
+                            offset.dy,
+                            offset.dx - size.width/2,
+                            offset.dy + size.height),
+                        items: [
+                          PopupMenuItem(
+                            child: MaterialButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
-                                  showCustomDialog(context);
+                                  addingList = [];
+                                  for (var item in shopListDb) {
+                                    if (item['value'] == true) {
+                                      List<String> quant = item['quantity'].toString().split(' ').toList();
+                                      if (quant.length == 1) quant.add("");
+                                      Map<String, Object> newObj = {
+                                        'title': item['label'].toString(),
+                                        'expiry':
+                                        dateFormatter.format(DateTime.now()),
+                                        'image': 'assets/images/apple.jpg',
+                                        'quantity': quant[0],
+                                        'unit' :  quant[1],
+                                        'compartment': 1,
+                                      };
+                                      addingList.add(newObj);
+                                    }
+                                  };
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+
+                                        return AlertDialog(
+                                          title: Text('Confirm adding shopping items', style:Theme
+                                              .of(context)
+                                              .textTheme
+                                              .subtitle2,textAlign: TextAlign.center,),
+                                          content: setupAlertDialogContainer(),
+                                          actions: <Widget>[
+                                            MaterialButton(
+                                              onPressed: () async {
+                                                setState(() {
+                                                  widget.foodList = [...widget.foodList, ...addingList,];
+                                                  widget.onFoodRecordChanged(widget.foodList);
+                                                });
+                                                print("hello");
+                                                print(addingList);
+                                                Navigator.pop(context, addingList);
+                                                Navigator.pop(context);
+                                              },
+                                              color: Theme.of(context).colorScheme.primary,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(10)),
+                                              child: Text("OK", style: const TextStyle(fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white)),
+                                            ),
+                                          ],
+                                        );
+                                      });
+
+
                                 },
-                                child: Text('Add new items', style: Theme.of(context).textTheme.bodyText1),
-                              ),
+                                child: Text('Add items from shopping list', style: Theme.of(context).textTheme.bodyText1)),
+                          ),
+
+                          PopupMenuItem(
+                            child: MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showCustomDialog(context);
+                              },
+                              child: Text('Add new items', style: Theme.of(context).textTheme.bodyText1),
                             ),
-                          ]);
-                    }
-                ,
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                          ),
+                        ]);
+                  }
+                  ,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
 
-              ),
-              SpeedDialChild(
-                child: const Icon(Icons.mode_edit_outline_outlined ),
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                onTap: () {
-                  setState(() {
-                    bool hide = true;
-                    widget.onEdit(hide);
-                  });
+                ),
+                SpeedDialChild(
+                  child: const Icon(Icons.mode_edit_outline_outlined ),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  onTap: () {
+                    setState(() {
+                      bool hide = true;
+                      widget.onEdit(hide);
+                    });
 
-                },
-              ),
+                  },
+                ),
+              ]),
 
-            ])]);
-      }
+
+        ]
+    );
+  }
 }

@@ -96,12 +96,12 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
   late TabController controller;
   var hasSoonExpire;
   late var countSoonExpire = 0;
+  late FoodInventorryUtils fabMenu;
+
   Future<Inventory> fetchInventory() async
   {
 
     var obj = (await InventoryController.getInventory("nisha.rmanian@gmail.com")) ;
-    print("in fetching");
-    print(obj);
     return obj;
   }
 
@@ -110,17 +110,17 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
     List<Map<String, dynamic>> FoodList = [];
     for(var obj in inventoryList.inventoryItems)
     {
-        Map<String, Object> object = {
-          'title': obj.name,
-          'expiry': dateFormatter.format(obj.expiryDate),
-          'image': obj.imageUrl,
-          'quantity': obj.quantity.toString(),
-          'unit': obj.unit,
-          'compartment': obj.compNum,
-          'value': false,
+      Map<String, Object> object = {
+        'title': obj.name,
+        'expiry': dateFormatter.format(obj.expiryDate),
+        'image': obj.imageUrl,
+        'quantity': obj.quantity.toString(),
+        'unit': obj.unit,
+        'compartment': obj.compNum,
+        'value': false,
 
-        };
-        FoodList.add(object);
+      };
+      FoodList.add(object);
 
     }
     return FoodList;
@@ -156,6 +156,18 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
         setState(() {
           globalFoodList = value;
         });
+
+        fabMenu = FoodInventorryUtils(
+          foodList: value,
+          onFoodRecordChanged: (List<Map<String, dynamic>> val) {
+            setState(() => value = val);
+          },
+          onEdit: (bool val) {
+            setState(() => editBtn = val);
+          },
+          InventoryTabController: controller,
+          numOfCompartments: numCompartments,
+        );
       } );
     });
 
@@ -174,21 +186,6 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
           if(snapshot.hasData)
           {
-            FoodInventorryUtils fabMenu = FoodInventorryUtils(
-              foodList: foodList,
-              onFoodRecordChanged: (List<Map<String, dynamic>> val) {
-                setState(() => foodList = val);
-              },
-              onEdit: (bool val) {
-                setState(() => editBtn = val);
-              },
-              InventoryTabController: controller,
-              numOfCompartments: numCompartments,
-            );
-
-
-
-
             return DefaultTabController(
               length: numCompartments + 1,
               // initialIndex: widget.showPage,
@@ -359,8 +356,6 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                           showDialog(
                                                               context: context,
                                                               builder: (BuildContext ctx) {
-                                                                print("hello");
-
                                                                 return AlertDialog(
                                                                   title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
                                                                   content: Image.asset('assets/images/food_disposal.jpg', ),
@@ -369,10 +364,20 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                                         onPressed: () async {
                                                                           // Close the dialog
                                                                           setState(() {
+                                                                            var deletedItem = filteredData.where((item) => item['value']==true).toList();
                                                                             filteredData.removeWhere((item) {
                                                                               return item['value']==true;
                                                                             });
+                                                                            print("this is deletedItem");
+                                                                            print(deletedItem);
+                                                                            for (var item in deletedItem) {
+                                                                              var date = item['expiry'].split('-').toList();
+                                                                              InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com",item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                            }
+
                                                                           });
+
+
                                                                           // pop up 2 times to come back main page
                                                                           Navigator.pop(context);
                                                                           Navigator.pop(context);
