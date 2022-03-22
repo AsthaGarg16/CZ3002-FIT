@@ -165,10 +165,10 @@ Future<List<Map<String, dynamic>>> getRecipeList(
 }
 
 Future<List<Map<String, dynamic>>> getSearchResult(
-    String query, String number, RecipeController recipeController) async {
+    String query, RecipeController recipeController) async {
   var recipeList = <Map<String, dynamic>>[];
   List<int> recipeIDs =
-  await recipeController.searchRecipes(query, number);
+  await recipeController.searchRecipes(query);
   print("Function IDs: ");
   print(recipeIDs);
   for (int i = 0; i < recipeIDs.length; i++) {
@@ -180,8 +180,6 @@ Future<List<Map<String, dynamic>>> getSearchResult(
   print(recipeList);
   return recipeList;
 }
-
-
 
 class RecipeSearch extends SearchDelegate<String> {
   List<Map<String, dynamic>> recipeList = [];
@@ -218,7 +216,7 @@ class RecipeSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // TODO: implement buildSuggestions
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: getSearchResult("tuna pasta", "10", recipeController),
+      future: getSearchResult("tuna pasta", recipeController),
       builder: (context, snapshot){
         if(snapshot.hasError){
           print("You have an error");

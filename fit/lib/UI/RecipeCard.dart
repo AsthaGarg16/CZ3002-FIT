@@ -40,7 +40,7 @@ class RecipeCard extends StatelessWidget {
                   maxWidth: 64,
                   maxHeight: 64,
                 ),
-                child: Image.asset(recipeImage),
+                child: Image.network(recipeImage),
               ),
               title: Text(recipeName,
                   style: Theme.of(context).textTheme.subtitle2),
