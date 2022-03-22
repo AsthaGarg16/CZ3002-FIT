@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'FoodInventory.dart';
 import 'RecipePage.dart';
 import 'GroceryList.dart';
-// import 'FoodWaste.dart';
+import 'FoodWastagePage.dart';
 
 class HomePage extends StatefulWidget {
   // int foodInventoryInitPage = 0;
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void initState() {
-    _pages = [FoodInventory(), RecipePage(), GroceryList(), FoodInventory()];
+    _pages = [FoodInventory(), RecipePage(), GroceryList(), const FoodWastagePage()];
   }
 
   // Icon customIcon = const Icon(Icons.search, size: 20.0,);

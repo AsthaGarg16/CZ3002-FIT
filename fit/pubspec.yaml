@@ -41,6 +41,8 @@ dependencies:
   flutter_speed_dial: ^5.0.0+1
   http: ^0.13.4
   html: ^0.15.0
+  fl_chart: ^0.46.0
+  random_color: ^1.0.6-nullsafety
 
 dev_dependencies:
   flutter_test:
