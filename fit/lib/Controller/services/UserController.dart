@@ -125,15 +125,15 @@ class UserController{
   }
 
   static void addShoppingListItem(String name, int quantity, String unit, bool status, bool inventory_status,bool from_saved_recipes,int quantity_from_saved,String recipe_ID){
-    user?.shop.addRecord(name, quantity, unit, status, inventory_status, from_saved_recipes,quantity_from_saved,recipe_ID);
+    user?.shop?.addRecord(name, quantity, unit, status, inventory_status, from_saved_recipes,quantity_from_saved,recipe_ID);
   }
 
   static void deleteShoppingListItem(String name, String recipe_ID){
-    user?.shop.deleteRecord(name, recipe_ID);
+    user?.shop?.deleteRecord(name, recipe_ID);
   }
 
   static void updateShoppingListItem(String name, int quantity, String unit, bool status, bool inventory_status,bool from_saved_recipes,int quantity_from_saved,String recipe_ID){
-    user?.shop.updateRecord(name, quantity, unit, status, inventory_status,from_saved_recipes,quantity_from_saved,recipe_ID);
+    user?.shop?.updateRecord(name, quantity, unit, status, inventory_status,from_saved_recipes,quantity_from_saved,recipe_ID);
   }
 
 

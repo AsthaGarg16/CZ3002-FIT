@@ -14,7 +14,7 @@ class FitUser {
   bool _vegetarian;
   bool _vegan;
   late Inventory _inv;
-  late ShoppingList _shop;
+  ShoppingList? _shop;
 
   Inventory get inv => _inv;
 
@@ -22,9 +22,9 @@ class FitUser {
     _inv = value;
   }
 
-  ShoppingList get shop => _shop;
+  ShoppingList? get shop => _shop;
 
-  set shop(ShoppingList value) {
+  set shop(ShoppingList? value) {
     _shop = value;
   }
 

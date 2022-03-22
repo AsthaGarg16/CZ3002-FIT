@@ -377,6 +377,7 @@ class _ShopListState extends State<GroceryList> {
                                                         Map<String,Object> deletedItem = shopList[index];
                                                         String deletedLabel = shopList[index]['label'].toString();
                                                         shopList.removeAt(index);
+                                                        print("here");
                                                         print(deletedItem["label"].toString()+deletedItem["recipe"].toString());
                                                         ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedItem["label"].toString(),deletedItem["recipe"].toString());
 

@@ -192,7 +192,7 @@ class _LoginState extends State<Login> {
                                 {
                                    UserController.setData().then((value) =>{
                                   print(UserController.user!.inv.inventoryItems.length),
-                                  print(UserController.user!.shop.FoodItemList.length),
+                                  print(UserController.user!.shop?.FoodItemList.length),
                                      Navigator.of(context).push(MaterialPageRoute(
                                          builder: (BuildContext context) => HomePage()))
 
