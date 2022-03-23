@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:core';
 
 import '../Controller/services/InventoryController.dart';
+import '../Controller/services/ShoppingListController.dart';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
@@ -424,15 +425,17 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   setupAlertDialogContainer() {
     String _compartment = "1";
     return Container(
-      height: 600.0, // Change as per your requirement
+      height: MediaQuery.of(context).size.height*0.8, // Change as per your requirement
       width: 400.0, // Change as per your requirement
-      child: ListView.builder(
+      child:
+        ListView.builder(
         controller: ScrollController(),
         shrinkWrap: true,
         itemCount: addingList.length,
         itemBuilder: (BuildContext context, int index) {
           final GlobalKey<FormState> _itemKey = GlobalKey<FormState>();
-          return Column(
+
+            return Column(
               key: _itemKey,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -473,13 +476,13 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Quantity', style: TextStyle(
+                    const Text('Quantity', style: TextStyle(
                         fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
                     Row(
                       children: [
-                        Text(addingList[index]['quantity'], style: TextStyle(
+                        Text(addingList[index]['quantity'], style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
-                        Text(addingList[index]['unit'], style: TextStyle(
+                        Text(addingList[index]['unit'], style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87)),
                       ],
                     )
@@ -522,6 +525,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                   height: 20,
                 ),
               ]);
+
         },
       ),
     );
@@ -615,6 +619,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                                   print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
 
                                                   String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
+                                                  ShoppingListController.updateFoodItem("nisha.rmanian@gmail.com", item['title'], int.parse(item['quantity']), item['unit'], true, true, false, int.parse(item['quantity']), "0");
                                                   setState(() {
                                                     item['image'] = imgUrl;
                                                   });
@@ -622,6 +627,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
                                                 setState(() {
                                                   widget.foodList = [...widget.foodList, ...addingList,];
+
                                                   widget.onFoodRecordChanged(widget.foodList);
                                                 });
                                                 print("hello");

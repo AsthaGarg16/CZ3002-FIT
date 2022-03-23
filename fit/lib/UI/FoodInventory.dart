@@ -147,7 +147,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
 
     for(var obj in groceryList.FoodItemList)
     {
-      if(obj.status == false)
+      if(obj.status == false && obj.inventory_status==false)
       {
         Map<String, Object> object = {
           'label': obj.name,
