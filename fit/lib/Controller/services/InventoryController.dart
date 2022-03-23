@@ -126,6 +126,24 @@ class InventoryController{
     );
   }
 
+  static Future<String> getFoodItems(String email) async {
+    var recordsList = <String>[];
+    await FirebaseFirestore.instance
+        .collection('Inventory')
+        .doc(email)
+        .collection('FoodItems')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.docs.forEach((doc) async {
+        recordsList.add(doc['name']);
+      })
+    })
+        .catchError((error) => print('Failed to get inventory: $error'));
+    String result = recordsList.join(',');
+    print(result);
+    return result;
+  }
+
   // static Future<void> deleteFoodRecord(String email,String name, DateTime expiryDate) {
   //   //Query fooditemdel_query = FirebaseFirestore.instance.collection('Inventory').doc(email).collection("FoodItems").where("name",isNotEqualTo: false);
   //
