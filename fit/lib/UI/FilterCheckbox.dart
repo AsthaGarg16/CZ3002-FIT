@@ -31,6 +31,7 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
   ];
 
   List<FoodPreference> preferenceList = [
+    FoodPreference("Saved Recipes", false, "Saved Recipes"),
     FoodPreference("Low Carb", false, "Low"),
     FoodPreference("Medium Carb", false, "Medium"),
     FoodPreference("High Carb", false, "High"),

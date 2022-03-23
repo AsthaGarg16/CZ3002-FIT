@@ -86,8 +86,6 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
               recipeDetails, recipeInstructions, email);
           print("Added");
         } else {
-          // TODO: remove the recipe
-          // need the recipeID and email of user
           DocumentReference documentReference = firestore
               .collection("fit")
               .doc(email)

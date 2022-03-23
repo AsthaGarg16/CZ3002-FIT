@@ -19,7 +19,7 @@ class _RecipePage extends State<StatefulWidget> {
   @override
   initState() {
     RecipeList =
-        getRecipeList("pasta,tuna,apple,chicken", "2", recipeController);
+        getRecipeList("pasta,tuna,apple,chicken", "8", recipeController);
     RecipeList.then((value) {
       recipeList = value;
       print("Initialiser");
