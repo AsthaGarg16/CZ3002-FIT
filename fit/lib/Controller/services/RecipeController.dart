@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit/Controller/services/database.dart';
+import 'package:flutter/cupertino.dart';
+import '../../Entity/Preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RecipeController {
   String url = 'api.spoonacular.com';
-  String apiKey = 'a712f0ddb1a64b67888a41d2a88f65da';
+  String apiKey = '7df62bdc1ad34570b6ab05269bbef6bd';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = new DatabaseService();
 
   RecipeController();
 
   Future<List<int>> fetchRecipeIDs(
-      String includeIngredients, String number) async {
+      String includeIngredients, String number, Preferences preferences) async {
     Map<String, dynamic> request = {
       "includeIngredients": includeIngredients,
       "number": number,
@@ -20,6 +22,81 @@ class RecipeController {
       "sortDirection": "desc",
       "apiKey": apiKey
     };
+
+    if (preferences.vegan && preferences.vegetarian){
+      request["diet"] = "vegan";
+      print("I am vegan and vegetarian");
+    } else if (preferences.vegetarian) {
+      request["diet"] = "vegetarian";
+      print("I am vegetarian");
+    } else if (preferences.vegan) {
+      request["diet"] = "vegan";
+      print("I am vegan");
+    }
+
+    if (preferences.dairyFree && preferences.glutenFree) {
+      request["intolerances"] = "dairy,gluten";
+      print("I am dairy and gluten free");
+    } else if (preferences.dairyFree) {
+      request["intolerances"] = "dairy";
+      print("I am dairy free");
+    } else if (preferences.glutenFree) {
+      request["intolerances"] = "gluten";
+      print("I am gluten free");
+    }
+
+    switch (preferences.carbs) {
+      case "Any":
+        break;
+      case "Low":
+        request["minCarbs"] = "";
+        request["maxCarbs"] = "";
+        break;
+      case "Medium":
+        request["minCarbs"] = "";
+        request["maxCarbs"] = "";
+        break;
+      case "High":
+        request["minCarbs"] = "";
+        request["maxCarbs"] = "";
+        break;
+    }
+
+    switch (preferences.protein){
+      case "Any":
+        break;
+      case "Low":
+        request["minProtein"] = "";
+        request["maxProtein"] = "";
+        break;
+      case "Medium":
+        request["minProtein"] = "";
+        request["maxProtein"] = "";
+        break;
+      case "High":
+        request["minProtein"] = "";
+        request["maxProtein"] = "";
+        break;
+    }
+
+    switch (preferences.calories){
+      case "Any":
+        break;
+      case "Low":
+        request["minCalories"] = "50";
+        request["maxCalories"] = "500";
+        print("I am low calories");
+        break;
+      case "Medium":
+        request["minCalories"] = "";
+        request["maxCalories"] = "";
+        break;
+      case "High":
+        request["minCalories"] = "";
+        request["maxCalories"] = "";
+        break;
+    }
+
     final response = await http.get(
       Uri.https(url, 'recipes/complexSearch', request),
     );
@@ -122,12 +199,81 @@ class RecipeController {
     databaseService.updateDocument(documentReference, recipeInfo, false);
   }
 
-  Future<void> readFromFirestore(int recipeID, String email) async {
-    DocumentReference documentReference = firestore
+  Future<List<int>> getSavedRecipesIDs(String email) async {
+    var recipeIDs = <int>[];
+    await FirebaseFirestore.instance
         .collection("fit")
         .doc(email)
         .collection("SavedRecipes")
-        .doc(recipeID.toString());
-    databaseService.getDocument(documentReference);
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) async {
+            recipeIDs.add(doc["id"]);
+          })
+    }).catchError((error) => print('Failed to get saved recipes: $error'));
+    print(recipeIDs);
+    return recipeIDs;
   }
+
+  Future<Map<String, dynamic>> getSavedRecipeDisplayInfo(String email, int recipeID) async {
+    Map<String, dynamic> details = {};
+    await FirebaseFirestore.instance
+        .collection("fit")
+        .doc(email)
+        .collection("SavedRecipes")
+        .doc(recipeID.toString())
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            details['id'] = documentSnapshot['id'];
+            details['title'] = documentSnapshot['title'];
+            details['image'] = documentSnapshot['image'];
+          } else {
+            print('Document does not exist on the database');
+          }
+      });
+    return details;
+  }
+
+  Future<Map<String, dynamic>> getSavedRecipeInfo(String email, int recipeID) async {
+    Map<String, dynamic> details = {};
+    await FirebaseFirestore.instance
+        .collection("fit")
+        .doc(email)
+        .collection("SavedRecipes")
+        .doc(recipeID.toString())
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        details['id'] = documentSnapshot['id'];
+        details['title'] = documentSnapshot['title'];
+        details['image'] = documentSnapshot['image'];
+        details['servings'] = documentSnapshot['servings'];
+        details['readyInMinutes'] = documentSnapshot['readyInMinutes'];
+        details['ingredients'] = documentSnapshot['ingredients'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    return details;
+  }
+
+  Future<List<String>> getSavedRecipeInstructions(String email, int recipeID) async {
+    var instructions = <String>[];
+    await FirebaseFirestore.instance
+        .collection("fit")
+        .doc(email)
+        .collection("SavedRecipes")
+        .doc(recipeID.toString())
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        instructions = documentSnapshot['instructions'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    return instructions;
+  }
+
 }

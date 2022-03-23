@@ -5,6 +5,7 @@ import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
 import '../Controller/services/auth.dart';
+import '../../Entity/Preferences.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({Key? key}) : super(key: key);
@@ -20,28 +21,22 @@ class _RecipePage extends State<StatefulWidget> {
   AuthService authService = new AuthService();
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
-  late Future<String> InventoryList;
-  String inventoryList = "";
-  late Future<String> Email;
-  String email = "";
+
   @override
   initState() {
-    // Email = getEmail(authService);
-    // Email.then((value) => email = value);
-    // print("Initialiser Email: ");
-    // print(email);
-    // InventoryList = getInventoryList(email, inventoryController);
-    // InventoryList.then((value) => inventoryList = value);
-    // print("Initialiser Inventory: ");
-    // print(inventoryList);
-    RecipeList =
-        getRecipeList("apple,tuna,chicken,pasta", "8", recipeController);
-    RecipeList.then((value) {
+    RecipeList = asyncMethod();
+    RecipeList.then((value){
       recipeList = value;
     });
-    print("Initialiser List: ");
-    print(recipeList);
     super.initState();
+  }
+
+  Future<List<Map<String, dynamic>>> asyncMethod() async {
+    String email = await authService.getUser();
+    print(email);
+    String inventoryList = await inventoryController.getFoodItems(email);
+    print(inventoryList);
+    return getRecipeList(inventoryList, "2", recipeController);
   }
 
   @override
@@ -79,13 +74,6 @@ class _RecipePage extends State<StatefulWidget> {
                                           recipeID: ID,
                                         )));
                               },
-
-                              //
-                              //     context,
-                              //     MaterialPageRoute(builder: (context) => RecipeInstructionPage(
-
-                              //     ))
-                              // },
                             );
                           });
                     } else if (snapshot.hasError) {
@@ -169,10 +157,11 @@ Future<String> getEmail(AuthService authService) async {
 }
 
 Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,
-    String number, RecipeController recipeController) async {
+String number, RecipeController recipeController) async {
   var recipeList = <Map<String, dynamic>>[];
+  Preferences preferences = Preferences(true, false, false, false, "Any", "Any", "Any");
   List<int> recipeIDs =
-      await recipeController.fetchRecipeIDs(includeIngredients, number);
+      await recipeController.fetchRecipeIDs(includeIngredients, number, preferences);
   print("Function IDs: ");
   print(recipeIDs);
   for (int i = 0; i < recipeIDs.length; i++) {
