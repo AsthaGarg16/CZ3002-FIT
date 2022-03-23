@@ -394,7 +394,7 @@ class _ShopListState extends State<GroceryList> {
                                                                       index,
                                                                       deletedItem);
 
-                                                                  ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["recipe"].toString()
+                                                                  ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["isRecipe"]==true?deletedItem["recipe"].toString():"0"
                                                                   );
                                                                 }) // this is what you needed
                                                             )));
