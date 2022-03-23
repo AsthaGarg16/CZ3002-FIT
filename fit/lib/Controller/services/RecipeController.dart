@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class RecipeController {
   String url = 'api.spoonacular.com';
-  String apiKey = '5e64e69dc6c845c28202241998acc275';
+  String apiKey = 'a712f0ddb1a64b67888a41d2a88f65da';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = new DatabaseService();
 

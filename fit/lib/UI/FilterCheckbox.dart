@@ -32,6 +32,10 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
 
   List<FoodPreference> preferenceList = [
     FoodPreference("Saved Recipes", false, "Saved Recipes"),
+    FoodPreference("Vegetarian", false, "Vegetarian"),
+    FoodPreference("Vegan", false, "Vegan"),
+    FoodPreference("Dairy Free", false, "Dairy Free"),
+    FoodPreference("Gluten Free", false, "Gluten Free"),
     FoodPreference("Low Carb", false, "Low"),
     FoodPreference("Medium Carb", false, "Medium"),
     FoodPreference("High Carb", false, "High"),
@@ -41,10 +45,6 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     FoodPreference("Low Calorie", false, "Low"),
     FoodPreference("Medium Calorie", false, "Medium"),
     FoodPreference("High Calorie", false, "High"),
-    FoodPreference("Vegetarian", false, "Vegetarian"),
-    FoodPreference("Vegan", false, "Vegan"),
-    FoodPreference("Dairy Free", false, "Dairy Free"),
-    FoodPreference("Gluten Free", false, "Gluten Free")
   ];
 
   List<FoodPreference> finalPref = [];

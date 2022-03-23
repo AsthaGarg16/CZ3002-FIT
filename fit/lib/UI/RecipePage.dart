@@ -26,15 +26,20 @@ class _RecipePage extends State<StatefulWidget> {
   String email = "";
   @override
   initState() {
-    Email = getEmail(authService);
-    Email.then((value) => email = value);
-    InventoryList = getInventoryList(email, inventoryController);
-    InventoryList.then((value) => inventoryList = value);
+    // Email = getEmail(authService);
+    // Email.then((value) => email = value);
+    // print("Initialiser Email: ");
+    // print(email);
+    // InventoryList = getInventoryList(email, inventoryController);
+    // InventoryList.then((value) => inventoryList = value);
+    // print("Initialiser Inventory: ");
+    // print(inventoryList);
     RecipeList =
-        getRecipeList(inventoryList, "8", recipeController);
+        getRecipeList("apple,tuna,chicken,pasta", "8", recipeController);
     RecipeList.then((value) {
       recipeList = value;
     });
+    print("Initialiser List: ");
     print(recipeList);
     super.initState();
   }
@@ -147,13 +152,19 @@ class _RecipePage extends State<StatefulWidget> {
     );
   }
 }
-Future<String> getInventoryList(String email, InventoryController inventoryController) async {
+
+Future<String> getInventoryList(
+    String email, InventoryController inventoryController) async {
   String inventoryList = await inventoryController.getFoodItems(email);
+  print("Function Inventory: ");
+  print(inventoryList);
   return inventoryList;
 }
 
 Future<String> getEmail(AuthService authService) async {
   String email = await authService.getUser();
+  print("Function Email: ");
+  print(email);
   return email;
 }
 
