@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'FoodCard.dart';
 import 'FoodInventoryUtils.dart';
 import '../Entity/Inventory.dart';
+import '../Entity/ShoppingList.dart';
+import '../Controller/services/UserController.dart';
+import '../Controller/services/ShoppingListController.dart';
 import '../Controller/services/InventoryController.dart';
+
+
 import 'package:intl/intl.dart';
 import 'dart:core';
 
@@ -97,11 +102,12 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
   var hasSoonExpire;
   late var countSoonExpire = 0;
   late FoodInventorryUtils fabMenu;
+  List<Map<String, Object>> shopListDb = [];
 
   Future<Inventory> fetchInventory() async
   {
 
-    var obj = (await InventoryController.getInventory("nisha.rmanian@gmail.com")) ;
+    var obj = (await InventoryController.getInventory(UserController.getCurrentUserEmail())) ;
     return obj;
   }
 
@@ -126,10 +132,75 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
     return FoodList;
   }
 
+  Future<ShoppingList> fetchShoppingList() async
+  {
+
+    var obj = (await ShoppingListController.getShoppingList(UserController.getCurrentUserEmail())) ;
+    print(obj);
+    return obj;
+  }
+
+
+  Future<List<Map<String, Object>>> createShopList() async{
+
+    List<Map<String, Object>> ShopList=[];
+
+    for(var obj in groceryList.FoodItemList)
+    {
+      if(obj.status == false)
+      {
+        Map<String, Object> object = {
+          'label': obj.name,
+          'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + " "+obj.unit,
+          'recipe': obj.from_saved_recipes?obj.recipe_ID:"0",
+          'isRecipe' : obj.from_saved_recipes,
+          'value': false,
+          'alternatives': List<String>.filled(3,"alternate "),
+          'isVisible' :false,
+        };
+        ShopList.add(object);
+      }
+    }
+    return ShopList;
+
+  }
+
+  Future<List<Map<String, Object>>> createShopListChecked() async{
+    List<Map<String, Object>> ShopListChecked = [];
+
+    for(var object in groceryList.FoodItemList)
+    {
+      if(object.status == true && object.inventory_status == false)
+      {
+        Map<String, Object> obj = {
+          'label': object.name,
+          'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
+          'recipe': object.from_saved_recipes?object.recipe_ID:"0",
+          'isRecipe' : object.from_saved_recipes,
+          'value': true,
+        };
+        ShopListChecked.add(obj);
+      }
+    }
+
+    return ShopListChecked;
+
+  }
+
+
+
+  late Future<ShoppingList> shoppingList;
+  late ShoppingList groceryList;
+  late Future<List<Map<String, Object>>> ShopList;
+  late Future<List<Map<String, Object>>> ShopListChecked;
+  late List<Map<String, Object>> shopList;
+  late List<Map<String, Object>> shopListChecked;
+
   late Future<Inventory> foodInventoryList;
   late Inventory inventoryList;
   late Future<List<Map<String, dynamic>>> FoodList;
   late List<Map<String, dynamic>> foodList;
+
 
 
   @override
@@ -156,26 +227,20 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
         setState(() {
           globalFoodList = value;
         });
+        shoppingList = fetchShoppingList() ;
+        shoppingList.then((value) {
+          groceryList = value;
+          print(groceryList.FoodItemList);
+          createShopList().then((value) {
+            shopList=value;
+            createShopListChecked().then((value) => shopListChecked =value);
+          } );
+        });
 
-        fabMenu = FoodInventorryUtils(
-          foodList: value,
-          onFoodRecordChanged: (List<Map<String, dynamic>> val) {
-            setState(() => value = val);
-          },
-          onEdit: (bool val) {
-            setState(() => editBtn = val);
-          },
-          InventoryTabController: controller,
-          numOfCompartments: numCompartments,
-        );
       } );
     });
-
     super.initState();
     controller = TabController(length: numCompartments + 1, vsync: this);
-
-
-
   }
   bool editBtn = false;
   Widget build(BuildContext context) {
@@ -183,236 +248,296 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
     return FutureBuilder(
         future: Future.wait([foodInventoryList]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot){
-
-          if(snapshot.hasData)
+          if(snapshot.hasData )
           {
-            return DefaultTabController(
-              length: numCompartments + 1,
-              // initialIndex: widget.showPage,
-              child: Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    // actions: <Widget>[
-                    //   IconButton(
-                    //       onPressed: (){
-                    //         showSearch(context: context, delegate: InventorySearch(controller));
-                    //       },
-                    //       icon: const Icon(Icons.search)
-                    //   )
-                    // ],
-                    flexibleSpace: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TabBar(
-                          controller: controller,
-                          isScrollable: true,
-                          tabs: List<Widget>.generate(numCompartments + 1, (int index) {
-                            return Tab(
-                                child: Text(
-                                    index > 0
-                                        ? "Compartment " + (index).toString()
-                                        : "All",
-                                    style: Theme.of(context).textTheme.bodyText2));
-                          }),
-                        )
-                      ],
-                    ),
-                  ),
-                  body: TabBarView(
-                    controller: controller,
-                    children: List<Widget>.generate(numCompartments + 1, (int index) {
-
-                      List<Map<String, dynamic>> filteredData = foodList;
-
-                      if (index > 0) {
-                        filteredData = foodList
-                            .where((item) => item["compartment"] == index)
-                            .toList();
-                      }
-
-                      return Stack(
-                        children: [
-                          if(countSoonExpire>0)Positioned(
-                            top:0,
-                            left:0,
-                            width:MediaQuery.of(context).size.width,
-                            height:60,
-                            child: Card(
-                              margin: const EdgeInsets.all(2.0),
-                              child: SafeArea(
-                                child: ListTile(
-                                  leading: const Icon(Icons.warning, color: Colors.red,),
-                                  title: const Text('Some items are expiring soon!', style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black87)),
-                                  trailing: Wrap(
-                                    children: <Widget>[
-                                      IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
-                                        //display thrown dialog
-                                        setState(() {
-                                          countSoonExpire = 0;
-                                        });
-                                      },), // icon-1
-                                      IconButton(icon: Icon(Icons.close),
-                                        onPressed: () { setState(() {
-                                          countSoonExpire = 0;
-                                        }); },),// icon-2
-                                    ],
-                                  ),
-                                ),
-                              ),
+            return FutureBuilder(
+                future: Future.wait([shoppingList]),
+                builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot){
+                  if(snapshot.hasData) {
+                    fabMenu = FoodInventorryUtils(
+                      foodList: foodList,
+                      shopListDb: shopListChecked,
+                      onFoodRecordChanged: (List<Map<String, dynamic>> val) {
+                        setState(() => foodList = val);
+                      },
+                      onEdit: (bool val) {
+                        setState(() => editBtn = val);
+                      },
+                      InventoryTabController: controller,
+                      numOfCompartments: numCompartments,
+                    );
+                    return DefaultTabController(
+                      length: numCompartments + 1,
+                      // initialIndex: widget.showPage,
+                      child: Scaffold(
+                          resizeToAvoidBottomInset: false,
+                          appBar: AppBar(
+                            automaticallyImplyLeading: false,
+                            // actions: <Widget>[
+                            //   IconButton(
+                            //       onPressed: (){
+                            //         showSearch(context: context, delegate: InventorySearch(controller));
+                            //       },
+                            //       icon: const Icon(Icons.search)
+                            //   )
+                            // ],
+                            flexibleSpace: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TabBar(
+                                  controller: controller,
+                                  isScrollable: true,
+                                  tabs: List<Widget>.generate(numCompartments + 1, (int index) {
+                                    return Tab(
+                                        child: Text(
+                                            index > 0
+                                                ? "Compartment " + (index).toString()
+                                                : "All",
+                                            style: Theme.of(context).textTheme.bodyText2));
+                                  }),
+                                )
+                              ],
                             ),
-
                           ),
-                          Positioned(
-                              top:countSoonExpire>0?55:0,
-                              left: 0,
-                              width:MediaQuery.of(context).size.width,
-                              child:
-                              Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: double.infinity,
-                                child: GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  itemCount: filteredData.length,
-                                  itemBuilder: (ctx, int i) {
-                                    return FoodCard(
-                                      foodName: filteredData[i]['title'].toString(),
-                                      foodExpiry: filteredData[i]['expiry'].toString(),
-                                      foodImage: filteredData[i]['image'].toString(),
-                                      foodQuantity: int.parse(filteredData[i]['quantity']),
-                                      unit: filteredData[i]['unit'].toString(),
-                                      value: filteredData[i]['value'] == true,
-                                      visible: editBtn,
-                                      onQuantityChanged: (int val) {
-                                        setState(() => filteredData[i]['quantity'] =  val.toString());
-                                      },
-                                      labelColor: Colors.black87,
-                                      onValueChanged: (bool val){
-                                        setState((){
-                                          Map<String, dynamic> foodListItem =  foodList[i];
-                                          foodListItem["value"] = val;
-                                        });
-                                      },
-                                    );
-                                  },
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    childAspectRatio: 0.75,
-                                    crossAxisSpacing: 1.0,
-                                    mainAxisSpacing: 10,
-                                    mainAxisExtent: 145,
+                          body: TabBarView(
+                            controller: controller,
+                            children: List<Widget>.generate(numCompartments + 1, (int index) {
+
+                              List<Map<String, dynamic>> filteredData = foodList;
+
+                              if (index > 0) {
+                                filteredData = foodList
+                                    .where((item) => item["compartment"] == index)
+                                    .toList();
+                              }
+
+                              return Stack(
+                                children: [
+                                  if(countSoonExpire>0)Positioned(
+                                    top:0,
+                                    left:0,
+                                    width:MediaQuery.of(context).size.width,
+                                    height:60,
+                                    child: Card(
+                                      margin: const EdgeInsets.all(2.0),
+                                      child: SafeArea(
+                                        child: ListTile(
+                                          leading: const Icon(Icons.warning, color: Colors.red,),
+                                          title: const Text('Some items are expiring soon!', style: TextStyle(
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.black87)),
+                                          trailing: Wrap(
+                                            children: <Widget>[
+                                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
+                                                //display thrown dialog
+                                                setState(() {
+                                                  countSoonExpire = 0;
+                                                });
+                                              },), // icon-1
+                                              IconButton(icon: Icon(Icons.close),
+                                                onPressed: () { setState(() {
+                                                  countSoonExpire = 0;
+                                                }); },),// icon-2
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
                                   ),
-                                ),
-                              )),
-                          if (editBtn) Positioned(
-                              bottom: 30,
-                              left: 20,
-                              child:  Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    FlatButton(
-                                      child: Icon(Icons.check_circle_outline),
-                                      onPressed: () {
-                                        setState(() {
-                                          editBtn = !editBtn;
-                                          for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
+                                  Positioned(
+                                      top:countSoonExpire>0?55:0,
+                                      left: 0,
+                                      width:MediaQuery.of(context).size.width,
+                                      child:
+                                      Container(
+                                        height: MediaQuery.of(context).size.height,
+                                        width: double.infinity,
+                                        child: GridView.builder(
+                                          shrinkWrap: true,
+                                          physics: ScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          padding:
+                                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                          itemCount: filteredData.length,
+                                          itemBuilder: (ctx, int i) {
+                                            return FoodCard(
+                                              foodName: filteredData[i]['title'].toString(),
+                                              foodExpiry: filteredData[i]['expiry'].toString(),
+                                              foodImage: filteredData[i]['image'].toString(),
+                                              foodQuantity: int.parse(filteredData[i]['quantity']),
+                                              unit: filteredData[i]['unit'].toString(),
+                                              value: filteredData[i]['value'] == true,
+                                              visible: editBtn,
+                                              onQuantityChanged: (int val) {
+                                                setState(() => filteredData[i]['quantity'] =  val.toString());
+                                              },
+                                              labelColor: Colors.black87,
+                                              onValueChanged: (bool val){
+                                                setState((){
+                                                  Map<String, dynamic> foodListItem =  foodList[i];
+                                                  foodListItem["value"] = val;
+                                                });
+                                              },
+                                            );
+                                          },
+                                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 4,
+                                            childAspectRatio: 0.75,
+                                            crossAxisSpacing: 1.0,
+                                            mainAxisSpacing: 10,
+                                            mainAxisExtent: 145,
+                                          ),
+                                        ),
+                                      )),
+                                  if (editBtn) Positioned(
+                                      bottom: 30,
+                                      left: 20,
+                                      child:  Column(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            FlatButton(
+                                              child: Icon(Icons.check_circle_outline),
+                                              onPressed: () {
+                                                setState(() {
+                                                  editBtn = !editBtn;
+                                                  for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
 
-                                        });
+                                                });
 
-                                      },
-                                      shape: CircleBorder(),
-                                      color: Theme.of(context).colorScheme.primary,
-                                      textColor: Color.fromRGBO(255, 255, 255, 1.0),
-                                      height: 45,
+                                              },
+                                              shape: CircleBorder(),
+                                              color: Theme.of(context).colorScheme.primary,
+                                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                                              height: 45,
 
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    FlatButton(
-                                      child: Icon(Icons.delete_rounded),
-                                      shape: CircleBorder(),
-                                      color: Theme.of(context).colorScheme.primary,
-                                      textColor: Color.fromRGBO(255, 255, 255, 1.0),
-                                      height: 45,
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext ctx) {
-                                              return AlertDialog(
-                                                title: Text('Please Confirm', style: Theme.of(context).textTheme.subtitle2,),
-                                                content: Text('Are you sure to remove the items?', style:Theme.of(context).textTheme.bodyText1),
-                                                actions: [
-                                                  // The "Yes" button
-                                                  TextButton(
-                                                      onPressed: () =>
-                                                          showDialog(
-                                                              context: context,
-                                                              builder: (BuildContext ctx) {
-                                                                return AlertDialog(
-                                                                  title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
-                                                                  content: Image.asset('assets/images/food_disposal.jpg', ),
-                                                                  actions: [
-                                                                    TextButton(
-                                                                        onPressed: () async {
-                                                                          // Close the dialog
-                                                                          setState(() {
-                                                                            var deletedItem = filteredData.where((item) => item['value']==true).toList();
-                                                                            filteredData.removeWhere((item) {
-                                                                              return item['value']==true;
-                                                                            });
-                                                                            print("this is deletedItem");
-                                                                            print(deletedItem);
-                                                                            for (var item in deletedItem) {
-                                                                              var date = item['expiry'].split('-').toList();
-                                                                              InventoryController.deleteFoodRecord("nisha.rmanian@gmail.com",item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
-                                                                            }
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            FlatButton(
+                                              child: Icon(Icons.delete_rounded),
+                                              shape: CircleBorder(),
+                                              color: Theme.of(context).colorScheme.primary,
+                                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                                              height: 45,
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext ctx) {
+                                                      return AlertDialog(
+                                                        title: Text('Please Confirm', style: Theme.of(context).textTheme.subtitle2,),
+                                                        content: Text('Are you sure to remove the items?', style:Theme.of(context).textTheme.bodyText1),
+                                                        actions: [
+                                                          // The "Yes" button
+                                                          TextButton(
+                                                              onPressed: () =>
+                                                                  showDialog(
+                                                                      context: context,
+                                                                      builder: (BuildContext ctx) {
+                                                                        return AlertDialog(
+                                                                          title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
+                                                                          content: Image.asset('assets/images/food_disposal.jpg', ),
+                                                                          actions: [
+                                                                            TextButton(
+                                                                                onPressed: () async {
+                                                                                  // Close the dialog
+                                                                                  setState(() {
+                                                                                    var deletedItem = filteredData.where((item) => item['value']==true).toList();
+                                                                                    filteredData.removeWhere((item) {
+                                                                                      return item['value']==true;
+                                                                                    });
+                                                                                    print("this is deletedItem");
+                                                                                    print(deletedItem);
+                                                                                    for (var item in deletedItem) {
+                                                                                      var date = item['expiry'].split('-').toList();
+                                                                                      InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                                    }
 
-                                                                          });
+                                                                                  });
 
 
-                                                                          // pop up 2 times to come back main page
-                                                                          Navigator.pop(context);
-                                                                          Navigator.pop(context);
+                                                                                  // pop up 2 times to come back main page
+                                                                                  Navigator.pop(context);
+                                                                                  Navigator.pop(context);
 
-                                                                        },
-                                                                        child: const Text('OK'))
-                                                                  ],
-                                                                );
-                                                              }),
-                                                      child: const Text('Thrown')),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          filteredData.removeWhere((item) {
-                                                            return item['value']==true;
-                                                          } );
-                                                        });
-                                                        // Close the dialog
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: const Text('Consume'))
-                                                ],
-                                              );});
+                                                                                },
+                                                                                child: const Text('OK'))
+                                                                          ],
+                                                                        );
+                                                                      }),
+                                                              child: const Text('Thrown')),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  filteredData.removeWhere((item) {
+                                                                    return item['value']==true;
+                                                                  } );
+                                                                });
+                                                                // Close the dialog
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                              child: const Text('Consume'))
+                                                        ],
+                                                      );});
 
-                                      },
-                                    ),
-                                  ]
-                              )
-                          )
-                        ],
-                      );
-                    }),
-                  ),
-                  floatingActionButton:  fabMenu
-              ),
+                                              },
+                                            ),
+                                          ]
+                                      )
+                                  )
+                                ],
+                              );
+                            }),
+                          ),
+                          floatingActionButton:  fabMenu
+                      ),
+                    );
+
+                  } else if(snapshot.hasError)
+                  {
+                    return Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 60,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Text('Error: ${snapshot.error}',style:const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                  letterSpacing: 1.5)),
+                            )
+                          ]
+                      ),
+                    );
+                  }
+                  else
+                  {
+                    return Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Awaiting result...'),
+                            )
+                          ]
+                      ),
+                    );
+                  }
+                }
             );
 
           }

@@ -7,7 +7,7 @@ import '../Controller/services/InventoryController.dart';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
-import 'GroceryList.dart';
+
 
 
 /// My app class to display the date range picker
@@ -15,6 +15,7 @@ class FoodInventorryUtils extends StatefulWidget {
   FoodInventorryUtils(
       {Key? key,
         required this.foodList,
+        required this.shopListDb,
         required this.onFoodRecordChanged,
         required this.onEdit,
         required this.InventoryTabController,
@@ -22,6 +23,7 @@ class FoodInventorryUtils extends StatefulWidget {
       })
       : super(key: key);
   List<Map<String, dynamic>> foodList;
+  List<Map<String, Object>> shopListDb;
   int numOfCompartments;
   final Function(List<Map<String, dynamic>>) onFoodRecordChanged;
   final Function(bool) onEdit;
@@ -34,17 +36,23 @@ class FoodInventorryUtils extends StatefulWidget {
 
 /// State for MyApp
 class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
-  TextEditingController _textEditingController = new TextEditingController();
+  final TextEditingController _textEditingController = new TextEditingController();
+  final TextEditingController _date = new TextEditingController();
   final GlobalKey _accKey = GlobalKey();
   DateTime selectedDate = DateTime.now();
-  TextEditingController _date = new TextEditingController();
+
   final dateFormatter = DateFormat('yyyy-MM-dd');
   List<Map<String, dynamic>> addingList = [];
 
 
   @override
   void initState() {
+    // Start listening to changes.
+    _date.addListener(_printLatestValue);
     super.initState();
+  }
+  void _printLatestValue() {
+    print('Second text field: ${_date.text}');
   }
   @override
   void dispose() {
@@ -55,7 +63,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     super.dispose();
   }
 
-  Future<Null> _selectDate(BuildContext context, textController) async {
+  Future<void> _selectDate(BuildContext context, textController) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -69,6 +77,11 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     }
   }
 
+  clearTextInput(){
+    print("why not clear???");
+    _date.clear();
+
+  }
   showCustomDialog(BuildContext context,
       {String title = "Add item",
         String okBtnText = "Done",
@@ -290,6 +303,9 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                             fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                         onChanged: (val) {
                                           setState(() => _expiryDate = DateTime.parse(val));
+                                          clearTextInput();
+                                          print("why not clear???");
+                                          _date.clear();
                                         }
                                     ),
                                   ),
@@ -318,9 +334,15 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
               setState(() {
                 _imageUrl = imgUrl;
-              });
+                _date.text = '';
 
+              });
+              // _date.clear();
+              // _date.dispose();
               newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
+              clearTextInput();
+              print("why not clear???");
+              _date.clear();
               Navigator.pop(context,newItem);
             }
 
@@ -352,6 +374,9 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               setState(() {
                 _imageUrl = imgUrl;
               });
+              clearTextInput();
+              print("why not clear???");
+              _date.clear();
 
               newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
               Navigator.pop(context,newItem);
@@ -485,6 +510,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                     fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                 onChanged: (val) {
                                   setState(() => addingList[index]['expiry'] = DateTime.parse(val));
+
                                 }
                             ),
                           ),
@@ -554,7 +580,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                             child: MaterialButton(
                                 onPressed: () {
                                   addingList = [];
-                                  for (var item in shopListDb) {
+                                  for (var item in widget.shopListDb) {
                                     if (item['value'] == true) {
                                       List<String> quant = item['quantity'].toString().split(' ').toList();
                                       if (quant.length == 1) quant.add("");
@@ -584,12 +610,23 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                           actions: <Widget>[
                                             MaterialButton(
                                               onPressed: () async {
+                                                for (var item in addingList) {
+                                                  var date = item['expiry'].split('-').toList();
+                                                  print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+
+                                                  String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
+                                                  setState(() {
+                                                    item['image'] = imgUrl;
+                                                  });
+                                                };
+
                                                 setState(() {
                                                   widget.foodList = [...widget.foodList, ...addingList,];
                                                   widget.onFoodRecordChanged(widget.foodList);
                                                 });
                                                 print("hello");
                                                 print(addingList);
+
                                                 Navigator.pop(context, addingList);
                                                 Navigator.pop(context);
                                               },
