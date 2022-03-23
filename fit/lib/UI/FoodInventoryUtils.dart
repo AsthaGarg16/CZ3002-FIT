@@ -37,8 +37,8 @@ class FoodInventorryUtils extends StatefulWidget {
 
 /// State for MyApp
 class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
-  final TextEditingController _textEditingController = new TextEditingController();
-  final TextEditingController _date = new TextEditingController();
+
+
   final GlobalKey _accKey = GlobalKey();
   DateTime selectedDate = DateTime.now();
 
@@ -49,20 +49,10 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
   @override
   void initState() {
     // Start listening to changes.
-    _date.addListener(_printLatestValue);
     super.initState();
   }
-  void _printLatestValue() {
-    print('Second text field: ${_date.text}');
-  }
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
-    // This also removes the _printLatestValue listener.
-    _textEditingController.dispose();
-    _date.dispose();
-    super.dispose();
-  }
+
+
 
   Future<void> _selectDate(BuildContext context, textController) async {
     final DateTime? picked = await showDatePicker(
@@ -78,11 +68,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     }
   }
 
-  clearTextInput(){
-    print("why not clear???");
-    _date.clear();
-
-  }
   showCustomDialog(BuildContext context,
       {String title = "Add item",
         String okBtnText = "Done",
@@ -100,6 +85,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
     int _compNum = 1;
     // qr_code_scanner_rounded
     final GlobalKey<FormState> _dialogformKey = GlobalKey<FormState>();
+    final TextEditingController _date = new TextEditingController();
 
     AlertDialog AddItemDialog = AlertDialog(
       title: Text(title, style:Theme
@@ -304,8 +290,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                             fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                         onChanged: (val) {
                                           setState(() => _expiryDate = DateTime.parse(val));
-                                          clearTextInput();
-                                          print("why not clear???");
                                           _date.clear();
                                         }
                                     ),
@@ -341,8 +325,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               // _date.clear();
               // _date.dispose();
               newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
-              clearTextInput();
-              print("why not clear???");
               _date.clear();
               Navigator.pop(context,newItem);
             }
@@ -375,8 +357,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               setState(() {
                 _imageUrl = imgUrl;
               });
-              clearTextInput();
-              print("why not clear???");
               _date.clear();
 
               newItem = FoodRecord(_name,_quantity,_unit,selectedDate,_compNum, imgUrl);
@@ -424,6 +404,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
   setupAlertDialogContainer() {
     String _compartment = "1";
+
     return Container(
       height: MediaQuery.of(context).size.height*0.8, // Change as per your requirement
       width: 400.0, // Change as per your requirement
@@ -434,6 +415,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
         itemCount: addingList.length,
         itemBuilder: (BuildContext context, int index) {
           final GlobalKey<FormState> _itemKey = GlobalKey<FormState>();
+          final TextEditingController _textEditingController = new TextEditingController();
 
             return Column(
               key: _itemKey,
@@ -513,7 +495,6 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                     fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                 onChanged: (val) {
                                   setState(() => addingList[index]['expiry'] = DateTime.parse(val));
-
                                 }
                             ),
                           ),
