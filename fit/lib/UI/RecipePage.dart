@@ -1,8 +1,10 @@
+import 'package:fit/Controller/services/InventoryController.dart';
 import 'package:fit/UI/FilterCheckbox.dart';
 import 'package:flutter/material.dart';
 import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
+import '../Controller/services/auth.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({Key? key}) : super(key: key);
@@ -14,71 +16,28 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePage extends State<StatefulWidget> {
   RecipeController recipeController = new RecipeController();
+  InventoryController inventoryController = new InventoryController();
+  AuthService authService = new AuthService();
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
+  late Future<String> InventoryList;
+  String inventoryList = "";
+  late Future<String> Email;
+  String email = "";
   @override
   initState() {
+    Email = getEmail(authService);
+    Email.then((value) => email = value);
+    InventoryList = getInventoryList(email, inventoryController);
+    InventoryList.then((value) => inventoryList = value);
     RecipeList =
-        getRecipeList("pasta,tuna,apple,chicken", "8", recipeController);
+        getRecipeList(inventoryList, "8", recipeController);
     RecipeList.then((value) {
       recipeList = value;
-      print("Initialiser");
-      print(value);
     });
     print(recipeList);
     super.initState();
   }
-
-  // [
-  //   {
-  //     'id': 1,
-  //     'title': 'Sphagetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   },
-  //   {
-  //     'id': 2,
-  //     'title': 'Salad',
-  //     'description': 'Healthy bowl of greens',
-  //     'image': 'assets/images/salad.jpg'
-  //   },
-  //   {
-  //     'id': 3,
-  //     'title': 'Spaghetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   },
-  //   {
-  //     'id': 4,
-  //     'title': 'Sphagetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   },
-  //   {
-  //     'id': 5,
-  //     'title': 'Sphagetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   },
-  //   {
-  //     'id': 6,
-  //     'title': 'Salad',
-  //     'description': 'Healthy bowl of greens',
-  //     'image': 'assets/images/salad.jpg'
-  //   },
-  //   {
-  //     'id': 7,
-  //     'title': 'Sphagetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   },
-  //   {
-  //     'id': 8,
-  //     'title': 'Sphagetti Bolognese',
-  //     'description': 'Meat and tomato based pasta',
-  //     'image': 'assets/images/pasta.jpg'
-  //   }
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +146,15 @@ class _RecipePage extends State<StatefulWidget> {
       ]),
     );
   }
+}
+Future<String> getInventoryList(String email, InventoryController inventoryController) async {
+  String inventoryList = await inventoryController.getFoodItems(email);
+  return inventoryList;
+}
+
+Future<String> getEmail(AuthService authService) async {
+  String email = await authService.getUser();
+  return email;
 }
 
 Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,

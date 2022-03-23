@@ -126,7 +126,7 @@ class InventoryController{
     );
   }
 
-  static Future<String> getFoodItems(String email) async {
+  Future<String> getFoodItems(String email) async {
     var recordsList = <String>[];
     await FirebaseFirestore.instance
         .collection('Inventory')
