@@ -27,6 +27,7 @@ class _LoginState extends State<Login> {
             .of(context)
             .textTheme
             .subtitle1),
+        centerTitle: true,
         titleSpacing: 0,
         leading: IconButton(
             onPressed: () {
@@ -35,7 +36,7 @@ class _LoginState extends State<Login> {
             icon: const Icon(
               Icons.arrow_back_ios,
               size: 20,
-              color: Colors.white70,
+              color: Colors.white,
             )),
       ),
       body: Container(

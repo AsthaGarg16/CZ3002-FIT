@@ -18,6 +18,7 @@ class _EntryPageState extends State<EntryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title, style: Theme.of(context).textTheme.subtitle1),
+        centerTitle: true,
       ),
       body: Center(
           // Center is a layout widget. It takes a single child and positions it

@@ -4,6 +4,7 @@ import 'FoodInventory.dart';
 import 'RecipePage.dart';
 import 'GroceryList.dart';
 import 'FoodWastagePage.dart';
+import 'UserProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   // int foodInventoryInitPage = 0;
@@ -79,6 +80,25 @@ class _HomePageState extends State<HomePage> {
         // title: customSearchBar,
         // centerTitle: centerTitle,
         centerTitle: true,
+        actions:<Widget>[
+          IconButton(
+            icon: const Icon(Icons.portrait_rounded,size: 40,
+              color: Colors.white,),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => UserProfilePage()));
+            },
+          )
+        ],
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Colors.white,
+            )),
         // actions: _currentIndex == 0 ? <Widget>[
         //   IconButton(
         //       onPressed: (){
@@ -136,3 +156,4 @@ class _HomePageState extends State<HomePage> {
     });
   }
 }
+
