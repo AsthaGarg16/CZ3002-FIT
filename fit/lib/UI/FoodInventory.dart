@@ -629,7 +629,7 @@ class InventorySearch extends SearchDelegate<String>{
       itemBuilder: (context, index) => ListTile(
         onTap: (){
           close(context, "");
-          controller.animateTo(globalFoodList[index]["compartment"]);
+          controller.animateTo(suggestionList[index]["compartment"]);
         },
         leading: const Icon(Icons.free_breakfast),
         title: RichText(
