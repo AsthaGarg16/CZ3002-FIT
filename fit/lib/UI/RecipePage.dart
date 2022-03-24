@@ -25,7 +25,7 @@ class _RecipePage extends State<StatefulWidget> {
   @override
   initState() {
     RecipeList = asyncMethod();
-    RecipeList.then((value){
+    RecipeList.then((value) {
       recipeList = value;
     });
     super.initState();
@@ -127,12 +127,13 @@ class _RecipePage extends State<StatefulWidget> {
             child: const Icon(Icons.search)),
         const SizedBox(height: 10),
         FloatingActionButton(
-          onPressed: () {
-            showDialog(
+          onPressed: () async {
+            var foodPref = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return FilterCheckbox();
                 });
+            print(foodPref);
           },
           child: const Icon(Icons.filter_alt, size: 30.0),
         ),
@@ -157,11 +158,12 @@ Future<String> getEmail(AuthService authService) async {
 }
 
 Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,
-String number, RecipeController recipeController) async {
+    String number, RecipeController recipeController) async {
   var recipeList = <Map<String, dynamic>>[];
-  Preferences preferences = Preferences(true, false, false, false, "Any", "Any", "Any");
-  List<int> recipeIDs =
-      await recipeController.fetchRecipeIDs(includeIngredients, number, preferences);
+  Preferences preferences =
+      Preferences(true, false, false, false, "Any", "Any", "Any");
+  List<int> recipeIDs = await recipeController.fetchRecipeIDs(
+      includeIngredients, number, preferences);
   print("Function IDs: ");
   print(recipeIDs);
   for (int i = 0; i < recipeIDs.length; i++) {

@@ -110,6 +110,7 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                             padding: const EdgeInsets.all(10),
                             child: InkWell(
                                 onTap: () {
+                                  print(name);
                                   print("MOve ingredients to shopping list");
                                 },
                                 child: Text(
