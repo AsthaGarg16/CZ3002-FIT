@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 class RecipeController {
   String url = 'api.spoonacular.com';
-  String apiKey = '7df62bdc1ad34570b6ab05269bbef6bd';
+  String apiKey = 'a712f0ddb1a64b67888a41d2a88f65da';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = new DatabaseService();
 
@@ -173,12 +173,13 @@ class RecipeController {
       var ingredientList = res['extendedIngredients'];
       var growableList = <String>[];
       for (int i = 0; i < ingredientList.length; i++) {
-        double _amount = double.parse(ingredientList[i]['amount'].toStringAsFixed(3));
+        double _amount =
+            double.parse(ingredientList[i]['amount'].toStringAsFixed(3));
         RegExp regex = RegExp(r"([.]*0+)(?!.*\d)");
         String amount = _amount.toString().replaceAll(regex, '');
         String unit = ingredientList[i]['unit'];
         String name = ingredientList[i]['name'];
-        String ingredient = amount+' '+unit+' '+name;
+        String ingredient = amount + ' ' + unit + ' ' + name;
         growableList.add(ingredient);
       }
       details['ingredients'] = growableList;

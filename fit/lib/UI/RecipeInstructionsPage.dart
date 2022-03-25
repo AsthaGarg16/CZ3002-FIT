@@ -103,24 +103,24 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
     return;
   }
 
-  void _onIsStarredChanged(bool newValue) => setState(() async {
-        _isStarred = newValue;
-        AuthService authService = new AuthService();
-        String email = await authService.getUser();
+  void _onIsStarredChanged(bool newValue) async {
+    _isStarred = newValue;
+    AuthService authService = new AuthService();
+    String email = await authService.getUser();
 
-        if (_isStarred) {
-          recipeController.storeInFirestore(
-              recipeDetails, recipeInstructions, email);
-          print("Added");
-        } else {
-          DocumentReference documentReference = firestore
-              .collection("fit")
-              .doc(email)
-              .collection("SavedRecipes")
-              .doc(widget.recipeID.toString());
-          databaseService.deleteDocument(documentReference);
-        }
-      });
+    if (_isStarred) {
+      recipeController.storeInFirestore(
+          recipeDetails, recipeInstructions, email);
+      print("Added");
+    } else {
+      DocumentReference documentReference = firestore
+          .collection("fit")
+          .doc(email)
+          .collection("SavedRecipes")
+          .doc(widget.recipeID.toString());
+      databaseService.deleteDocument(documentReference);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,10 +143,11 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                                   var parts = name.split(' ');
                                   String amount = parts[0].trim();
                                   String unit = parts[1].trim();
-                                  String ingredient = parts.sublist(2).join(' ').trim();
-                                  print("amount: "+amount);
-                                  print("unit: "+unit);
-                                  print("ingredient: "+ingredient);
+                                  String ingredient =
+                                      parts.sublist(2).join(' ').trim();
+                                  print("amount: " + amount);
+                                  print("unit: " + unit);
+                                  print("ingredient: " + ingredient);
                                 },
                                 child: Text(
                                   name,

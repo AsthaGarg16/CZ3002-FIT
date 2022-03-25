@@ -53,7 +53,7 @@ class _RecipePage extends State<StatefulWidget> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.star,
+              Icons.star_border_outlined,
               size: 40,
               color: Colors.white,
             ),

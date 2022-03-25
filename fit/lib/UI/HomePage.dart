@@ -27,7 +27,12 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void initState() {
-    _pages = [FoodInventory(), RecipePage(), GroceryList(), const FoodWastagePage()];
+    _pages = [
+      FoodInventory(),
+      RecipePage(),
+      GroceryList(),
+      const FoodWastagePage()
+    ];
   }
 
   // Icon customIcon = const Icon(Icons.search, size: 20.0,);
@@ -74,16 +79,20 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: _currentIndex == 1 ? 0 : 56,
         title: Text(titles[_currentIndex],
             style: Theme.of(context).textTheme.subtitle1),
         // automaticallyImplyLeading: showBackButton,
         // title: customSearchBar,
         // centerTitle: centerTitle,
         centerTitle: true,
-        actions:<Widget>[
+        actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.portrait_rounded,size: 40,
-              color: Colors.white,),
+            icon: const Icon(
+              Icons.portrait_rounded,
+              size: 40,
+              color: Colors.white,
+            ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => UserProfilePage()));
@@ -156,4 +165,3 @@ class _HomePageState extends State<HomePage> {
     });
   }
 }
-
