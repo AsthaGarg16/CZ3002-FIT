@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Controller/services/auth.dart';
 import '../Controller/services/database.dart';
 import '../Controller/services/RecipeController.dart';
+import 'AddRecipeIngredientDialog.dart';
 
 class RecipeInstructionsPage extends StatefulWidget {
   final int recipeID;
@@ -73,34 +74,24 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   bool _isStarred = false;
   IconData _starIcon = Icons.star_border_outlined;
 
-  // final int recipeID = 1;
-  // final String recipeName = "Spaghetti bolognese";
-  // final String recipeImage = "assets/images/pasta.jpg";
-  // final int servings = 4;
-  // final int readyInMinutes = 40;
-
-  // final List<String> instructions = [
-  //   "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
-  //   "Add 4 finely chopped bacon rashers and fry for 10 mins until golden and crisp.",
-  //   "Reduce the heat and add the 2 onions, 2 carrots, 2 celery sticks, 2 garlic cloves and the leaves from 2-3 sprigs rosemary, all finely chopped, then fry for 10 mins. Stir the veg often until it softens.",
-  //   "Increase the heat to medium-high, add 500g beef mince and cook stirring for 3-4 mins until the meat is browned all over.",
-  //   "Add 2 tins plum tomatoes, the finely chopped leaves from ¾ small pack basil, 1 tsp dried oregano, 2 bay leaves, 2 tbsp tomato purée, 1 beef stock cube, 1 deseeded and finely chopped red chilli (if using), 125ml red wine and 6 halved cherry tomatoes. Stir with a wooden spoon, breaking up the plum tomatoes.",
-  //   "Bring to the boil, reduce to a gentle simmer and cover with a lid. Cook for 1 hr 15 mins stirring occasionally, until you have a rich, thick sauce.",
-  //   "Add the 75g grated parmesan, check the seasoning and stir."
-  //       "Cook 400g of spaghetti following the pack instructions and stir into bolognese sauce."
-  // ];
-  // final List<String> ingredientsList = [
-  //   "1 tbsp olive oil",
-  //   "4 rashers smoked streaky bacon, finely chopped",
-  //   "2 medium onions, finely chopped",
-  //   "2 carrots, trimmed and finely chopped",
-  //   "2 celery sticks, finely chopped",
-  //   "2 garlic cloves finely chopped",
-  //   "2-3 sprigs rosemary leaves picked and finely chopped",
-  //   "500g beef mince"
-  // ];
   void addIngredientToShopList() {
     return;
+  }
+
+  void showAlertDialog(
+      BuildContext context, String name, String quantity, String unit) {
+    AddRecipeIngredientDialog alert = AddRecipeIngredientDialog(
+      name: name,
+      quantity: quantity,
+      unit: unit,
+      recipeID: widget.recipeID,
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   void _onIsStarredChanged(bool newValue) async {
@@ -135,7 +126,7 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                 int cookTime = recipeDetails['readyInMinutes'];
                 List<Widget> ingredientsWidgetList =
                     recipeDetails['ingredients']
-                        .map<Widget>((name) => new Container(
+                        .map<Widget>((name) => Container(
                             padding: const EdgeInsets.all(10),
                             child: InkWell(
                                 onTap: () {
@@ -148,6 +139,8 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                                   print("amount: " + amount);
                                   print("unit: " + unit);
                                   print("ingredient: " + ingredient);
+                                  return showAlertDialog(
+                                      context, ingredient, amount, unit);
                                 },
                                 child: Text(
                                   name,
