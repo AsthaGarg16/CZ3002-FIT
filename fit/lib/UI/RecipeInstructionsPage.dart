@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Controller/services/auth.dart';
 import '../Controller/services/database.dart';
 import '../Controller/services/RecipeController.dart';
+import 'package:fit/Controller/services/InventoryController.dart';
 import 'AddRecipeIngredientDialog.dart';
 
 class RecipeInstructionsPage extends StatefulWidget {
@@ -22,10 +23,11 @@ class RecipeInstructionsPage extends StatefulWidget {
 }
 
 class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
+  InventoryController inventoryController = InventoryController();
   RecipeController recipeController = RecipeController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DatabaseService databaseService = new DatabaseService();
-  AuthService authService = new AuthService();
+  DatabaseService databaseService = DatabaseService();
+  AuthService authService = AuthService();
   late Future<Map<String, dynamic>> RecipeDetails;
   late Future<List<String>> RecipeInstructions;
   late Map<String, dynamic> recipeDetails;
@@ -303,5 +305,19 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
         await recipeController.getSavedRecipeInstructions(email, recipeID);
     print(recipeInstructions);
     return recipeInstructions;
+  }
+
+  Future<bool> checkInInventory(String name) async {
+    String email = await authService.getUser();
+    String inventory = await inventoryController.getFoodItems(email);
+    List<String> inventoryList = inventory.split(",");
+    var parts = name.split(' ');
+    String ingredient = parts.sublist(2).join(' ').trim();
+    if (inventoryList.contains(ingredient)) {
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 }

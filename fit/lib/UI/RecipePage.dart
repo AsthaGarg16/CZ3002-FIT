@@ -16,9 +16,9 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePage extends State<StatefulWidget> {
-  RecipeController recipeController = new RecipeController();
-  InventoryController inventoryController = new InventoryController();
-  AuthService authService = new AuthService();
+  RecipeController recipeController = RecipeController();
+  InventoryController inventoryController = InventoryController();
+  AuthService authService = AuthService();
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
   bool savedRecipes = false;
