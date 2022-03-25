@@ -173,7 +173,13 @@ class RecipeController {
       var ingredientList = res['extendedIngredients'];
       var growableList = <String>[];
       for (int i = 0; i < ingredientList.length; i++) {
-        growableList.add(ingredientList[i]['original']);
+        double _amount = double.parse(ingredientList[i]['amount'].toStringAsFixed(3));
+        RegExp regex = RegExp(r"([.]*0+)(?!.*\d)");
+        String amount = _amount.toString().replaceAll(regex, '');
+        String unit = ingredientList[i]['unit'];
+        String name = ingredientList[i]['name'];
+        String ingredient = amount+' '+unit+' '+name;
+        growableList.add(ingredient);
       }
       details['ingredients'] = growableList;
     }

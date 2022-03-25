@@ -139,8 +139,14 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                             padding: const EdgeInsets.all(10),
                             child: InkWell(
                                 onTap: () {
-                                  print(name);
-                                  print("MOve ingredients to shopping list");
+                                  print("Move ingredients to shopping list");
+                                  var parts = name.split(' ');
+                                  String amount = parts[0].trim();
+                                  String unit = parts[1].trim();
+                                  String ingredient = parts.sublist(2).join(' ').trim();
+                                  print("amount: "+amount);
+                                  print("unit: "+unit);
+                                  print("ingredient: "+ingredient);
                                 },
                                 child: Text(
                                   name,
