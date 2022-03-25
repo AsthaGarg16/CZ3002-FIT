@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../Controller/services/UserController.dart';
+import 'SignUp.dart';
+
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -11,43 +14,178 @@ class UserProfilePage extends StatefulWidget {
 
 class _ProfileState extends State<UserProfilePage> {
 
+  Map<String, dynamic> userDetails = UserController.getProfileDetails();
+  Diet? _diet = Diet.vegan;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Profile", style: Theme.of(context).textTheme.subtitle1),
+      appBar: AppBar(
+        title: Text("Profile", style: Theme.of(context).textTheme.subtitle1),
 
-          centerTitle: true,
+        centerTitle: true,
 
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                size: 20,
-                color: Colors.white,
-              )),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Colors.white,
+            )),
+      ),
 
-        ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children:<Widget>[
-              SizedBox(
-                height: 20,
-              ),
-                  CircleAvatar(
-                    radius: 50.0,
+      body: SafeArea(
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top:30),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage("https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"),
+                minRadius: 64,
+              )
+            ),
+
+            SizedBox(height: 15,),
+
+            Center(
+              child: Text(
+                userDetails["name"][0].toUpperCase() + userDetails["name"].substring(1),
+                style: Theme.of(context).textTheme.labelMedium,
+              )
+            ),
+
+            SizedBox(height: 5),
+
+            Center(
+              child: Text(
+                userDetails["email"],
+                style: Theme.of(context).textTheme.bodyText1,
+              )
+            ),
+
+            SizedBox(height: 30),
+
+            Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text("Fridge Details", style: Theme.of(context).textTheme.headline4),
+                  ),
+
+                  ListTile(
+                    title: Text('Compartments', style: Theme.of(context).textTheme.bodyText1),
+                    trailing: Text(userDetails["fridgeDetails"].toString(), style: Theme.of(context).textTheme.bodyText1),
                   )
-
                 ]
             ),
 
-    ),);
+            Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text("Dietary Preferences", style: Theme.of(context).textTheme.headline4),
+                  ),
+
+                  RadioListTile<Diet>(
+                      toggleable: true,
+                      title: Text(
+                        'Vegetarian',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      value: Diet.vegetarian,
+                      groupValue: _diet,
+                      onChanged: (Diet? value) {
+                        setState(() {
+
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.trailing),
+
+                  const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+                  RadioListTile<Diet>(
+                      toggleable: true,
+                      title: Text(
+                        'Vegan',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      value: Diet.vegan,
+                      groupValue: _diet,
+                      onChanged: (Diet? value) {
+                        setState(() {
+
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.trailing),
+                ]
+            ),
+
+            const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+            Column(
+                children: [ListTile(
+                  title:
+                  Text("Allergens", style: Theme.of(context).textTheme.headline4),
+                ),
+                CheckboxListTile(
+                  title:
+                  Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
+                  value: userDetails["glutenFree"] ? true : false,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      // developer.log(_glutenFree.toString());
+                    });
+                  },
+                ),
+                const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+                CheckboxListTile(
+                  title:
+                  Text('Dairy Free', style: Theme.of(context).textTheme.bodyText1),
+                  value: userDetails["dairyFree"] ? true : false,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      // developer.log(_glutenFree.toString());
+                    });
+                  },
+                ),
+                ]
+            ),
+            const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
+
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(100, 0, 100, 0),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: 50,
+                  onPressed: (){
+                    //need to change to email, for now hardcoded
+                    // await UserController.retrieveDetails(email);
+                    // await UserController.setData();
+  
+                  },
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .primary,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)),
+                  child: Text(
+                    "Update",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .subtitle1,
+                  ),
+                ),
+              ),
+            )
+          ]
+        )
+      )
+    );
   }
 
 }

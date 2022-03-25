@@ -137,6 +137,11 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.teal,
               letterSpacing: 2.0),
+          headline4: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal,
+          ),
           subtitle1: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
