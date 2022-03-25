@@ -192,9 +192,9 @@ class _ShopListState extends State<GroceryList> {
   }
 
 
-  Future<List<Map<String, dynamic>>> createShopList() async{
+  Future<List<Map<String, Object>>> createShopList() async{
 
-    List<Map<String, dynamic>> ShopList=[];
+    List<Map<String, Object>> ShopList=[];
     //   {
     //     'label': 'Spaghetti',
     //     'quantity': '200 g',
@@ -237,14 +237,13 @@ class _ShopListState extends State<GroceryList> {
     {
       if(obj.status == false)
       {
-        Map<String, dynamic> object = {
+        Map<String, Object> object = {
           'label': obj.name,
           'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + " "+obj.unit,
           'recipe': obj.from_saved_recipes?obj.recipe_ID:"0",
           'isRecipe' : obj.from_saved_recipes,
           'value': false,
           'alternatives': List<String>.filled(3,"alternate "),
-          'length':3,
           'isVisible' :false,
         };
         ShopList.add(object);
@@ -254,8 +253,8 @@ class _ShopListState extends State<GroceryList> {
 
   }
 
-  Future<List<Map<String, dynamic>>> createShopListChecked() async{
-    List<Map<String, dynamic>> ShopListChecked = [];
+  Future<List<Map<String, Object>>> createShopListChecked() async{
+    List<Map<String, Object>> ShopListChecked = [];
     //   {
     //     'label': 'Flour',
     //     'quantity': '200 g',
@@ -289,7 +288,7 @@ class _ShopListState extends State<GroceryList> {
       {
           if(object.status == true && object.inventory_status == false)
             {
-              Map<String, dynamic> obj = {
+              Map<String, Object> obj = {
                 'label': object.name,
                 'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
                 'recipe': object.from_saved_recipes?object.recipe_ID:"0",
@@ -308,11 +307,10 @@ class _ShopListState extends State<GroceryList> {
 
   late Future<ShoppingList> shoppingList;
   late ShoppingList groceryList;
-  late Future<List<Map<String, dynamic>>> ShopList;
-  late Future<List<Map<String, dynamic>>> ShopListChecked;
-  late List<Map<String, dynamic>> shopList;
-  late List<Map<String, dynamic>> shopListChecked;
-  late List<String> alternatives;
+  late Future<List<Map<String, Object>>> ShopList;
+  late Future<List<Map<String, Object>>> ShopListChecked;
+  late List<Map<String, Object>> shopList;
+  late List<Map<String, Object>> shopListChecked;
   @override
   void initState(){
 
@@ -376,7 +374,7 @@ class _ShopListState extends State<GroceryList> {
                                                     key: ValueKey(shopList[index]),
                                                     onDismissed: (direction) {
                                                       setState(() {
-                                                        Map<String,dynamic> deletedItem = shopList[index];
+                                                        Map<String,Object> deletedItem = shopList[index];
                                                         String deletedLabel = shopList[index]['label'].toString();
                                                         shopList.removeAt(index);
                                                         String recipe_id = deletedItem['isRecipe']==true?deletedItem['recipe'].toString():"0";
@@ -414,7 +412,7 @@ class _ShopListState extends State<GroceryList> {
                                                       visible:shopList[index]['isVisible']==true,
                                                       onValueChanged: (){
                                                         setState((){
-                                                          Map<String, dynamic> shopListItem = shopList.removeAt(index);
+                                                          Map<String, Object> shopListItem = shopList.removeAt(index);
                                                           String recipe_id = shopListItem['isRecipe']==true?shopListItem['recipe'].toString():"0";
                                                           shopListItem["value"] = true;
                                                           shopListChecked.add(shopListItem);
@@ -429,7 +427,6 @@ class _ShopListState extends State<GroceryList> {
                                                         setState((){
                                                           print("Changing state");
                                                           shopList[index]['isVisible'] = !(shopList[index]['isVisible']==true);
-
                                                         });
                                                       },
                                                     )),
@@ -441,12 +438,12 @@ class _ShopListState extends State<GroceryList> {
                                                         ListView.separated(
                                                           controller: ScrollController(),
                                                           shrinkWrap: true,
-                                                          itemCount: int.parse(shopList[index]['length'].toString()),
+                                                          itemCount: 2,
                                                           itemBuilder:(context, index2)
                                                           {
-                                                            return Material(
+                                                            return const Material(
                                                                 child: ListTile(
-                                                                  title: Text(shopList[index]['alternatives'][index2], style: const TextStyle(
+                                                                  title: Text("tileItem[index2]", style: TextStyle(
                                                                       fontSize: 14.0,
                                                                       fontWeight: FontWeight.normal,
                                                                       color: Colors.black87)),
