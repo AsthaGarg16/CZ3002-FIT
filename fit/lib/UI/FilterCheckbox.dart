@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Entity/Preferences.dart';
 
 class FilterCheckbox extends StatefulWidget {
   const FilterCheckbox({Key? key}) : super(key: key);
@@ -182,25 +183,38 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                       child: ElevatedButton(
                         onPressed: () {
                           Map preferenceList = {};
+                          bool vegetarianIsChecked = false;
+                          bool veganIsChecked = false;
+                          bool dairyFreeIsChecked = false;
+                          bool glutenFreeIsChecked = false;
+
                           for (Map pref in dietaryPrefList) {
                             if (pref["pref"] == "Vegetarian") {
-                              preferenceList["Vegetarian"] = pref["isChecked"];
+                              vegetarianIsChecked = pref["isChecked"];
                             }
                             if (pref["pref"] == "Vegan") {
-                              preferenceList["Vegan"] = pref["isChecked"];
+                              veganIsChecked = pref["isChecked"];
                             }
                             if (pref["pref"] == "Dairy Free") {
-                              preferenceList["Dairy Free"] = pref["isChecked"];
+                              dairyFreeIsChecked = pref["isChecked"];
                             }
                             if (pref["pref"] == "Gluten Free") {
-                              preferenceList["Gluten Free"] = pref["isChecked"];
+                              glutenFreeIsChecked = pref["isChecked"];
                             }
                           }
-                          preferenceList["Calories"] = calDropdownValue;
-                          preferenceList["Carbs"] = carbsDropdownValue;
-                          preferenceList["Protein"] = proteinDropdownValue;
+                          Preferences userPref = Preferences(
+                              vegetarianIsChecked,
+                              veganIsChecked,
+                              glutenFreeIsChecked,
+                              dairyFreeIsChecked,
+                              carbsDropdownValue,
+                              proteinDropdownValue,
+                              calDropdownValue);
+                          // preferenceList["Calories"] = calDropdownValue;
+                          // preferenceList["Carbs"] = carbsDropdownValue;
+                          // preferenceList["Protein"] = proteinDropdownValue;
                           print(preferenceList);
-                          Navigator.pop(context, preferenceList);
+                          Navigator.pop(context, userPref);
                         },
                         child: const Text("Filter"),
                       ))

@@ -21,7 +21,7 @@ class _RecipePage extends State<StatefulWidget> {
   AuthService authService = new AuthService();
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
-
+  bool savedRecipes = false;
   @override
   initState() {
     RecipeList = asyncMethod();
@@ -36,12 +36,47 @@ class _RecipePage extends State<StatefulWidget> {
     print(email);
     String inventoryList = await inventoryController.getFoodItems(email);
     print(inventoryList);
-    return getRecipeList(inventoryList, "2", recipeController);
+    Preferences preferences =
+        Preferences(false, false, false, false, "Any", "Any", "Any");
+    return getRecipeList(inventoryList, "2", recipeController, preferences);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Recipes", style: Theme.of(context).textTheme.subtitle1),
+        // automaticallyImplyLeading: showBackButton,
+        // title: customSearchBar,
+        // centerTitle: centerTitle,
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.star,
+              size: 40,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              String email = await authService.getUser();
+              recipeList = await getSavedRecipeList(email, recipeController);
+              setState(() {
+                recipeList;
+                savedRecipes = true;
+              });
+            },
+          )
+        ],
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Colors.white,
+            )),
+      ),
       resizeToAvoidBottomInset: false,
       body: Container(
           height: MediaQuery.of(context).size.height,
@@ -68,10 +103,12 @@ class _RecipePage extends State<StatefulWidget> {
                               recipeID: (recipeList[index]['id']) ?? -1,
                               onRecipeSelected: (int ID) {
                                 print(ID);
+
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         RecipeInstructionsPage(
                                           recipeID: ID,
+                                          saved: savedRecipes,
                                         )));
                               },
                             );
@@ -133,7 +170,15 @@ class _RecipePage extends State<StatefulWidget> {
                 builder: (BuildContext context) {
                   return FilterCheckbox();
                 });
-            print(foodPref);
+            String email = await authService.getUser();
+            String inventoryList =
+                await inventoryController.getFoodItems(email);
+            recipeList = await getRecipeList(
+                inventoryList, "2", recipeController, foodPref);
+            print(recipeList);
+            setState(() {
+              recipeList;
+            });
           },
           child: const Icon(Icons.filter_alt, size: 30.0),
         ),
@@ -157,11 +202,12 @@ Future<String> getEmail(AuthService authService) async {
   return email;
 }
 
-Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,
-    String number, RecipeController recipeController) async {
+Future<List<Map<String, dynamic>>> getRecipeList(
+    String includeIngredients,
+    String number,
+    RecipeController recipeController,
+    Preferences preferences) async {
   var recipeList = <Map<String, dynamic>>[];
-  Preferences preferences =
-      Preferences(true, false, false, false, "Any", "Any", "Any");
   List<int> recipeIDs = await recipeController.fetchRecipeIDs(
       includeIngredients, number, preferences);
   print("Function IDs: ");
@@ -172,6 +218,22 @@ Future<List<Map<String, dynamic>>> getRecipeList(String includeIngredients,
     recipeList.add(recipeInfo);
   }
   print("Function List: ");
+  print(recipeList);
+  return recipeList;
+}
+
+Future<List<Map<String, dynamic>>> getSavedRecipeList(
+    String email, RecipeController recipeController) async {
+  var recipeList = <Map<String, dynamic>>[];
+  List<int> recipeIDs = await recipeController.getSavedRecipesIDs(email);
+  print("Saved Recipes IDs: ");
+  print(recipeIDs);
+  for (int i = 0; i < recipeIDs.length; i++) {
+    Map<String, dynamic> recipeInfo =
+        await recipeController.getSavedRecipeDisplayInfo(email, recipeIDs[i]);
+    recipeList.add(recipeInfo);
+  }
+  print("Saved Recipes List: ");
   print(recipeList);
   return recipeList;
 }
@@ -246,6 +308,7 @@ class RecipeSearch extends SearchDelegate<String> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => RecipeInstructionsPage(
                               recipeID: ID,
+                              saved: false,
                             )));
                   },
 

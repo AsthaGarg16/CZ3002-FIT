@@ -23,7 +23,7 @@ class RecipeController {
       "apiKey": apiKey
     };
 
-    if (preferences.vegan && preferences.vegetarian){
+    if (preferences.vegan && preferences.vegetarian) {
       request["diet"] = "vegan";
       print("I am vegan and vegetarian");
     } else if (preferences.vegetarian) {
@@ -49,37 +49,43 @@ class RecipeController {
       case "Any":
         break;
       case "Low":
-        request["minCarbs"] = "";
-        request["maxCarbs"] = "";
+        request["minCarbs"] = "1";
+        request["maxCarbs"] = "20";
+        print("I am low carbs");
         break;
       case "Medium":
-        request["minCarbs"] = "";
-        request["maxCarbs"] = "";
+        request["minCarbs"] = "21";
+        request["maxCarbs"] = "50";
+        print("I am med carbs");
         break;
       case "High":
-        request["minCarbs"] = "";
-        request["maxCarbs"] = "";
+        request["minCarbs"] = "51";
+        request["maxCarbs"] = "100";
+        print("I am high carbs");
         break;
     }
 
-    switch (preferences.protein){
+    switch (preferences.protein) {
       case "Any":
         break;
       case "Low":
-        request["minProtein"] = "";
-        request["maxProtein"] = "";
+        request["minProtein"] = "1";
+        request["maxProtein"] = "10";
+        print("I am low protein");
         break;
       case "Medium":
-        request["minProtein"] = "";
-        request["maxProtein"] = "";
+        request["minProtein"] = "11";
+        request["maxProtein"] = "30";
+        print("I am med protein");
         break;
       case "High":
-        request["minProtein"] = "";
-        request["maxProtein"] = "";
+        request["minProtein"] = "31";
+        request["maxProtein"] = "100";
+        print("I am high protein");
         break;
     }
 
-    switch (preferences.calories){
+    switch (preferences.calories) {
       case "Any":
         break;
       case "Low":
@@ -88,12 +94,14 @@ class RecipeController {
         print("I am low calories");
         break;
       case "Medium":
-        request["minCalories"] = "";
-        request["maxCalories"] = "";
+        request["minCalories"] = "501";
+        request["maxCalories"] = "1000";
+        print("I am med calories");
         break;
       case "High":
-        request["minCalories"] = "";
-        request["maxCalories"] = "";
+        request["minCalories"] = "1001";
+        request["maxCalories"] = "3000";
+        print("I am high calories");
         break;
     }
 
@@ -207,15 +215,17 @@ class RecipeController {
         .collection("SavedRecipes")
         .get()
         .then((QuerySnapshot querySnapshot) => {
-          querySnapshot.docs.forEach((doc) async {
-            recipeIDs.add(doc["id"]);
-          })
-    }).catchError((error) => print('Failed to get saved recipes: $error'));
+              querySnapshot.docs.forEach((doc) async {
+                recipeIDs.add(doc["id"]);
+              })
+            })
+        .catchError((error) => print('Failed to get saved recipes: $error'));
     print(recipeIDs);
     return recipeIDs;
   }
 
-  Future<Map<String, dynamic>> getSavedRecipeDisplayInfo(String email, int recipeID) async {
+  Future<Map<String, dynamic>> getSavedRecipeDisplayInfo(
+      String email, int recipeID) async {
     Map<String, dynamic> details = {};
     await FirebaseFirestore.instance
         .collection("fit")
@@ -224,18 +234,19 @@ class RecipeController {
         .doc(recipeID.toString())
         .get()
         .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            details['id'] = documentSnapshot['id'];
-            details['title'] = documentSnapshot['title'];
-            details['image'] = documentSnapshot['image'];
-          } else {
-            print('Document does not exist on the database');
-          }
-      });
+      if (documentSnapshot.exists) {
+        details['id'] = documentSnapshot['id'];
+        details['title'] = documentSnapshot['title'];
+        details['image'] = documentSnapshot['image'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
     return details;
   }
 
-  Future<Map<String, dynamic>> getSavedRecipeInfo(String email, int recipeID) async {
+  Future<Map<String, dynamic>> getSavedRecipeInfo(
+      String email, int recipeID) async {
     Map<String, dynamic> details = {};
     await FirebaseFirestore.instance
         .collection("fit")
@@ -258,8 +269,9 @@ class RecipeController {
     return details;
   }
 
-  Future<List<String>> getSavedRecipeInstructions(String email, int recipeID) async {
-    var instructions = <String>[];
+  Future<List<String>> getSavedRecipeInstructions(
+      String email, int recipeID) async {
+    var instructions = [];
     await FirebaseFirestore.instance
         .collection("fit")
         .doc(email)
@@ -273,7 +285,8 @@ class RecipeController {
         print('Document does not exist on the database');
       }
     });
-    return instructions;
+    var newInstructions = new List<String>.from(instructions);
+    print("this is new instructions");
+    return newInstructions;
   }
-
 }

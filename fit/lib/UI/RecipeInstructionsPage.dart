@@ -6,7 +6,9 @@ import '../Controller/services/RecipeController.dart';
 
 class RecipeInstructionsPage extends StatefulWidget {
   final int recipeID;
-  const RecipeInstructionsPage({Key? key, required this.recipeID})
+  final bool saved;
+  const RecipeInstructionsPage(
+      {Key? key, required this.recipeID, required this.saved})
       : super(key: key);
   int getRecipeId() {
     return recipeID;
@@ -22,23 +24,50 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   RecipeController recipeController = RecipeController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = new DatabaseService();
+  AuthService authService = new AuthService();
   late Future<Map<String, dynamic>> RecipeDetails;
   late Future<List<String>> RecipeInstructions;
   late Map<String, dynamic> recipeDetails;
   late List<String> recipeInstructions;
 
   void initState() {
-    RecipeDetails = getRecipeDetails(widget.recipeID);
-    RecipeDetails.then((value) {
-      recipeDetails = value;
-      print(recipeDetails);
-    });
-    RecipeInstructions = getRecipeInstructions(widget.recipeID);
-    RecipeInstructions.then((value) {
-      recipeInstructions = value;
-      print(recipeInstructions);
-    });
+    if (widget.saved == false) {
+      RecipeDetails = getRecipeDetails(widget.recipeID);
+      RecipeDetails.then((value) {
+        recipeDetails = value;
+        print(recipeDetails);
+      });
+      RecipeInstructions = getRecipeInstructions(widget.recipeID);
+      RecipeInstructions.then((value) {
+        recipeInstructions = value;
+        print(recipeInstructions);
+      });
+    } else {
+      print("from db");
+      RecipeDetails = asyncMethod1();
+      RecipeDetails.then((value) {
+        recipeDetails = value;
+        print(recipeDetails);
+      });
+      RecipeInstructions = asyncMethod2();
+      RecipeInstructions.then((value) {
+        recipeInstructions = value;
+        print(recipeInstructions);
+      });
+    }
     super.initState();
+  }
+
+  Future<Map<String, dynamic>> asyncMethod1() async {
+    String email = await authService.getUser();
+    print(email);
+    return getSavedRecipeDetails(email, widget.recipeID);
+  }
+
+  Future<List<String>> asyncMethod2() async {
+    String email = await authService.getUser();
+    print(email);
+    return getSavedRecipeInstructions(email, widget.recipeID);
   }
 
   bool _isStarred = false;
@@ -249,12 +278,29 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
     return recipeDetails;
   }
 
+  Future<Map<String, dynamic>> getSavedRecipeDetails(
+      String email, int recipeID) async {
+    Map<String, dynamic> recipeDetails =
+        await recipeController.getSavedRecipeInfo(email, recipeID);
+    print(recipeDetails);
+    return recipeDetails;
+  }
+
   // Function to Call Backend for recipe instructions
   // Returns list of instructions
   Future<List<String>> getRecipeInstructions(int recipeID) async {
     var recipeInstructions = <String>[];
     recipeInstructions =
         await recipeController.fetchRecipeInstructions(recipeID);
+    print(recipeInstructions);
+    return recipeInstructions;
+  }
+
+  Future<List<String>> getSavedRecipeInstructions(
+      String email, int recipeID) async {
+    var recipeInstructions = <String>[];
+    recipeInstructions =
+        await recipeController.getSavedRecipeInstructions(email, recipeID);
     print(recipeInstructions);
     return recipeInstructions;
   }
