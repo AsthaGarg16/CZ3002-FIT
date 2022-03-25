@@ -135,7 +135,12 @@ class InventoryController{
         .get()
         .then((QuerySnapshot querySnapshot) => {
       querySnapshot.docs.forEach((doc) async {
-        recordsList.add(doc['name']);
+        String ingredient = doc['name'];
+        int expiryDate = doc['expiryDate'].millisecondsSinceEpoch;
+        int currentDate = DateTime.now().millisecondsSinceEpoch;
+        if (expiryDate > currentDate) {
+          recordsList.add(ingredient);
+        }
       })
     })
         .catchError((error) => print('Failed to get inventory: $error'));
