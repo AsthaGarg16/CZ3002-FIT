@@ -28,10 +28,20 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   DatabaseService databaseService = DatabaseService();
   AuthService authService = AuthService();
+
   late Future<Map<String, dynamic>> RecipeDetails;
   late Future<List<String>> RecipeInstructions;
+  late Future<List<String>> InventoryList;
+  late Future<List<int>> SavedRecipeIds;
   late Map<String, dynamic> recipeDetails;
   late List<String> recipeInstructions;
+  late List<String> inventoryList;
+  late List<int> savedRecipeIds;
+
+  Map<String, bool> inInventory = {};
+  bool _isStarred = false;
+  IconData _starIcon = Icons.star_border_outlined;
+
   static const Icon greenCheckIcon = Icon(
     Icons.check_circle_outline,
     color: Colors.green,
@@ -65,23 +75,15 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
         print(recipeInstructions);
       });
     }
+    InventoryList = getFoodItems();
+    InventoryList.then((value) {
+      inventoryList = value;
+    });
+    SavedRecipeIds = getSavedRecipesId();
+    SavedRecipeIds.then((value) => savedRecipeIds = value);
+
     super.initState();
   }
-
-  Future<Map<String, dynamic>> asyncMethod1() async {
-    String email = await authService.getUser();
-    print(email);
-    return getSavedRecipeDetails(email, widget.recipeID);
-  }
-
-  Future<List<String>> asyncMethod2() async {
-    String email = await authService.getUser();
-    print(email);
-    return getSavedRecipeInstructions(email, widget.recipeID);
-  }
-
-  bool _isStarred = false;
-  IconData _starIcon = Icons.star_border_outlined;
 
   void addIngredientToShopList() {
     return;
@@ -126,51 +128,69 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-            future: Future.wait([RecipeDetails, RecipeInstructions]),
+            future: Future.wait(
+                [RecipeDetails, RecipeInstructions, SavedRecipeIds]),
             builder:
                 (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
+                if (savedRecipeIds.contains(widget.recipeID)) {
+                  _isStarred = true;
+                  _starIcon = Icons.star;
+                  print("recipe exists in saved");
+                }
                 int servings = recipeDetails['servings'];
                 int cookTime = recipeDetails['readyInMinutes'];
-                List<Widget> ingredientsWidgetList =
-                    recipeDetails['ingredients']
-                        .map<Widget>((name) => Container(
-                            padding: const EdgeInsets.all(10),
-                            child: InkWell(
-                                onTap: () {
-                                  print("Move ingredients to shopping list");
-                                  var parts = name.split(' ');
-                                  String amount = parts[0].trim();
-                                  String unit = parts[1].trim();
-                                  String ingredient =
-                                      parts.sublist(2).join(' ').trim();
-                                  print("amount: " + amount);
-                                  print("unit: " + unit);
-                                  print("ingredient: " + ingredient);
-                                  return showAlertDialog(
-                                      context, ingredient, amount, unit);
-                                },
-                                child: Row(children: [
-                                  Text(
-                                    name,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  ),
-                                  Container(
-                                    child: (() {
-                                      bool notInInventory = true;
-                                      checkInInventory(name).then(
-                                          (value) => notInInventory = value);
-                                      if (notInInventory) {
-                                        return redCrossIcon;
+
+                List<Widget> ingredientsWidgetList = recipeDetails[
+                        'ingredients']
+                    .map<Widget>((name) => Container(
+                        //padding: const EdgeInsets.all(10),
+                        child: InkWell(
+                            onTap: () {
+                              print("Move ingredients to shopping list");
+                              var parts = name.split(' ');
+                              String amount = parts[0].trim();
+                              String unit = parts[1].trim();
+                              String ingredient =
+                                  parts.sublist(2).join(' ').trim();
+                              print("amount: " + amount);
+                              print("unit: " + unit);
+                              print("ingredient: " + ingredient);
+                              return showAlertDialog(
+                                  context, ingredient, amount, unit);
+                            },
+                            child: Row(children: [
+                              Text(
+                                name,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: FutureBuilder(
+                                    future: Future.wait([InventoryList]),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<List<dynamic>> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        for (String ingredient
+                                            in recipeDetails["ingredients"]) {
+                                          inInventory[ingredient] =
+                                              checkInInventory(ingredient);
+                                        }
+                                        if (inInventory[name] == true) {
+                                          return redCrossIcon;
+                                        } else {
+                                          return greenCheckIcon;
+                                        }
                                       } else {
-                                        return greenCheckIcon;
+                                        return Container();
                                       }
-                                    }()),
-                                  )
-                                ]))))
-                        .toList();
+                                    }),
+                              )
+                            ]))))
+                    .toList();
                 List<Widget> recipeInstructionWidgetList = recipeInstructions
                     .map<Widget>((name) => Container(
                         padding: const EdgeInsets.all(20),
@@ -189,6 +209,7 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                             onPressed: () {
                               setState(() {
                                 if (_isStarred) {
+                                  savedRecipeIds.remove(widget.recipeID);
                                   _isStarred = false;
                                   _starIcon = Icons.star_border_outlined;
                                   _onIsStarredChanged(_isStarred);
@@ -329,22 +350,42 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
     return recipeInstructions;
   }
 
-  Future<bool> checkInInventory(String name) async {
-    print("I am in checkInInventory");
+  Future<List<int>> getSavedRecipesId() async {
+    String email = await authService.getUser();
+    List<int> savedRecipeID = await recipeController.getSavedRecipesIDs(email);
+    return savedRecipeID;
+  }
+
+  Future<List<String>> getFoodItems() async {
+    print("I am in getfoodItems");
     String email = await authService.getUser();
     print(email);
     String inventory = await inventoryController.getFoodItems(email);
     print(inventory);
     List<String> inventoryList = inventory.split(",");
-    print(inventoryList);
+    return inventoryList;
+  }
+
+  bool checkInInventory(String name) {
     var parts = name.split(' ');
     String ingredient = parts.sublist(2).join(' ').trim();
-    print(ingredient);
     if (inventoryList.contains(ingredient)) {
       print("contains, returning false");
       return false;
     } else {
       return true;
     }
+  }
+
+  Future<Map<String, dynamic>> asyncMethod1() async {
+    String email = await authService.getUser();
+    print(email);
+    return getSavedRecipeDetails(email, widget.recipeID);
+  }
+
+  Future<List<String>> asyncMethod2() async {
+    String email = await authService.getUser();
+    print(email);
+    return getSavedRecipeInstructions(email, widget.recipeID);
   }
 }

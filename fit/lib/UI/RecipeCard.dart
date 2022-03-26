@@ -19,6 +19,8 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
+        child: Container(
+      height: 200,
       child: Card(
         elevation: 10,
         shape: RoundedRectangleBorder(
@@ -32,24 +34,27 @@ class RecipeCard extends StatelessWidget {
               onRecipeSelected(recipeID);
             },
             child: ListTile(
-              contentPadding: EdgeInsets.all(8.0),
-              leading: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                  maxWidth: 64,
-                  maxHeight: 64,
+                contentPadding: EdgeInsets.all(8.0),
+                title: Column(children: [
+                  Text(recipeName,
+                      style: Theme.of(context).textTheme.subtitle2),
+                  SizedBox(height: 4),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 100,
+                      minHeight: 100,
+                      maxWidth: 200,
+                      maxHeight: 200,
+                    ),
+                    child: Image.network(recipeImage),
+                  )
+                ])
+                // subtitle: Text(recipeDescription,
+                //     style: Theme.of(context).textTheme.bodyText1),
                 ),
-                child: Image.network(recipeImage),
-              ),
-              title: Text(recipeName,
-                  style: Theme.of(context).textTheme.subtitle2),
-              // subtitle: Text(recipeDescription,
-              //     style: Theme.of(context).textTheme.bodyText1),
-            ),
           ),
         ]),
       ),
-    );
+    ));
   }
 }

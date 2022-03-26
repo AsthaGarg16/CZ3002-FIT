@@ -22,6 +22,7 @@ class _RecipePage extends State<StatefulWidget> {
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
   bool savedRecipes = false;
+
   @override
   initState() {
     RecipeList = asyncMethod();
@@ -157,6 +158,7 @@ class _RecipePage extends State<StatefulWidget> {
       floatingActionButton:
           Column(mainAxisAlignment: MainAxisAlignment.end, children: [
         FloatingActionButton(
+            heroTag: "btn1",
             onPressed: () {
               showSearch(
                   context: context, delegate: RecipeSearch(recipeController));
@@ -164,6 +166,7 @@ class _RecipePage extends State<StatefulWidget> {
             child: const Icon(Icons.search)),
         const SizedBox(height: 10),
         FloatingActionButton(
+          heroTag: "btn2",
           onPressed: () async {
             var foodPref = await showDialog(
                 context: context,
