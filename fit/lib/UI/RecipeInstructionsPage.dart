@@ -32,7 +32,14 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   late Future<List<String>> RecipeInstructions;
   late Map<String, dynamic> recipeDetails;
   late List<String> recipeInstructions;
-
+  static const Icon greenCheckIcon = Icon(
+    Icons.check_circle_outline,
+    color: Colors.green,
+  );
+  static const Icon redCrossIcon = Icon(
+    Icons.cancel_outlined,
+    color: Colors.red,
+  );
   void initState() {
     if (widget.saved == false) {
       RecipeDetails = getRecipeDetails(widget.recipeID);
@@ -144,10 +151,25 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                                   return showAlertDialog(
                                       context, ingredient, amount, unit);
                                 },
-                                child: Text(
-                                  name,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ))))
+                                child: Row(children: [
+                                  Text(
+                                    name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  Container(
+                                    child: (() {
+                                      bool isInInventory = true;
+                                      checkInInventory(name).then(
+                                          (value) => isInInventory = value);
+                                      if (isInInventory) {
+                                        return redCrossIcon;
+                                      } else {
+                                        return greenCheckIcon;
+                                      }
+                                    }()),
+                                  )
+                                ]))))
                         .toList();
                 List<Widget> recipeInstructionWidgetList = recipeInstructions
                     .map<Widget>((name) => Container(
@@ -315,8 +337,7 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
     String ingredient = parts.sublist(2).join(' ').trim();
     if (inventoryList.contains(ingredient)) {
       return false;
-    }
-    else{
+    } else {
       return true;
     }
   }
