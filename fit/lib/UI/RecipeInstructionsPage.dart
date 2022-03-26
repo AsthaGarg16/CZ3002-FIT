@@ -159,10 +159,10 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
                                   ),
                                   Container(
                                     child: (() {
-                                      bool isInInventory = true;
+                                      bool notInInventory = true;
                                       checkInInventory(name).then(
-                                          (value) => isInInventory = value);
-                                      if (isInInventory) {
+                                          (value) => notInInventory = value);
+                                      if (notInInventory) {
                                         return redCrossIcon;
                                       } else {
                                         return greenCheckIcon;
@@ -330,12 +330,18 @@ class _RecipeInstructionsPage extends State<RecipeInstructionsPage> {
   }
 
   Future<bool> checkInInventory(String name) async {
+    print("I am in checkInInventory");
     String email = await authService.getUser();
+    print(email);
     String inventory = await inventoryController.getFoodItems(email);
+    print(inventory);
     List<String> inventoryList = inventory.split(",");
+    print(inventoryList);
     var parts = name.split(' ');
     String ingredient = parts.sublist(2).join(' ').trim();
+    print(ingredient);
     if (inventoryList.contains(ingredient)) {
+      print("contains, returning false");
       return false;
     } else {
       return true;
