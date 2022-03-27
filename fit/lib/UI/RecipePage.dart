@@ -289,7 +289,7 @@ class RecipeSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // TODO: implement buildSuggestions
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: getSearchResult("tuna pasta", recipeController),
+      future: getSearchResult(query, recipeController),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print("You have an error");
