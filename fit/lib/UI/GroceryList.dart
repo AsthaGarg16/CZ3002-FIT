@@ -8,6 +8,22 @@ import '../Controller/services/ShoppingListController.dart';
 import '../Entity/Units.dart';
 import 'ShopListCard.dart';
 
+List<Map<String,List<String>>> alternates =[
+  {
+    'bread': ['Wholemeal Bread (-12 calories)', 'Multigrain Bread (-40 calories)'],
+
+  },
+  {
+    'milk':['Low Fat Milk (-1.25% fat)', 'Full Cream Milk (+0.75% fat)'],
+  },
+  {
+    'mayonnaise':['Diet Mayonnaise (-1.4% fat)','Eggless Mayonnaise (+2% fat)'],
+  },
+  {
+    'cheese':['Low Fat Cheese (-33 calories)','Vegan Cheese (-20 calories'],
+  }
+];
+
 
 
 List<Map<String, Object>> shopListDb = [
@@ -168,17 +184,17 @@ class _ShopListState extends State<GroceryList> {
   Future<ShoppingList> fetchShoppingList() async
   {
 
-      var obj = (await ShoppingListController.getShoppingList(UserController.getCurrentUserEmail())) ;
-      print(obj);
-      return obj;
-      //     .then((value) {
-      //   groceryList = value;
-      //   createShopList().then((value) {
-      //     shopList = value;
-      //     createShopListChecked().then((value) => shopListChecked = value);
-      //   });
-      //   return value;
-      // });
+    var obj = (await ShoppingListController.getShoppingList(UserController.getCurrentUserEmail())) ;
+    print(obj);
+    return obj;
+    //     .then((value) {
+    //   groceryList = value;
+    //   createShopList().then((value) {
+    //     shopList = value;
+    //     createShopListChecked().then((value) => shopListChecked = value);
+    //   });
+    //   return value;
+    // });
 
     //get from db
     //print(await ShoppingListController.getShoppingList("trial3@email.com"));
@@ -192,9 +208,9 @@ class _ShopListState extends State<GroceryList> {
   }
 
 
-  Future<List<Map<String, Object>>> createShopList() async{
+  Future<List<Map<String, dynamic>>> createShopList() async{
 
-    List<Map<String, Object>> ShopList=[];
+    List<Map<String, dynamic>> ShopList=[];
     //   {
     //     'label': 'Spaghetti',
     //     'quantity': '200 g',
@@ -232,18 +248,51 @@ class _ShopListState extends State<GroceryList> {
     //     'isVisible' :false,
     //   },
     // ];
+    // List<Map<String,List<String>>> alternates =[
+    //   {
+    //     'bread': ['Wholemeal Bread (-12 calories)', 'Multigrain Bread (-40 calories)'],
+    //
+    //   },
+    //   {
+    //     'milk':['Low Fat Milk (-1.25% fat)', 'Full Cream Milk (+0.75% fat)'],
+    //   },
+    //   {
+    //     'mayonnaise':['Diet Mayonnaise (-1.4% fat)','Eggless Mayonnaise (+2% fat)'],
+    //   },
+    //   {
+    //     'cheese':['Low Fat Cheese (-33 calories)','Vegan Cheese (-20 calories'],
+    //   }
+    // ];
 
     for(var obj in groceryList.FoodItemList)
     {
+      List<String> alt = ["No alternatives available"];
       if(obj.status == false)
       {
-        Map<String, Object> object = {
+        if(obj.name.toLowerCase().compareTo('bread')==0)
+          {
+            alt = ['Wholemeal Bread (-12 calories)', 'Multigrain Bread (-40 calories)'];
+          }
+        else if(obj.name.toLowerCase().compareTo('milk')==0)
+          {
+            alt = ['Low Fat Milk (-1.25% fat)', 'Full Cream Milk (+0.75% fat)'];
+          }
+        else if(obj.name.toLowerCase().compareTo('mayonnaise')==0)
+          {
+            alt = ['Diet Mayonnaise (-1.4% fat)','Eggless Mayonnaise (+2% fat)'];
+          }
+        else if(obj.name.toLowerCase().compareTo('cheese')==0)
+          {
+            alt = ['Low Fat Cheese (-33 calories)','Vegan Cheese (-20 calories)'];
+          }
+        Map<String, dynamic> object = {
           'label': obj.name,
           'quantity': (obj.from_saved_recipes?obj.quantity_from_saved.toString():obj.quantity.toString()) + " "+obj.unit,
           'recipe': obj.from_saved_recipes?obj.recipe_ID:"0",
           'isRecipe' : obj.from_saved_recipes,
           'value': false,
-          'alternatives': List<String>.filled(3,"alternate "),
+          'alternatives': alt,
+          'length':alt.length,
           'isVisible' :false,
         };
         ShopList.add(object);
@@ -253,8 +302,8 @@ class _ShopListState extends State<GroceryList> {
 
   }
 
-  Future<List<Map<String, Object>>> createShopListChecked() async{
-    List<Map<String, Object>> ShopListChecked = [];
+  Future<List<Map<String, dynamic>>> createShopListChecked() async{
+    List<Map<String, dynamic>> ShopListChecked = [];
     //   {
     //     'label': 'Flour',
     //     'quantity': '200 g',
@@ -285,19 +334,19 @@ class _ShopListState extends State<GroceryList> {
     //   },
     // ];
     for(var object in groceryList.FoodItemList)
+    {
+      if(object.status == true && object.inventory_status == false)
       {
-          if(object.status == true && object.inventory_status == false)
-            {
-              Map<String, Object> obj = {
-                'label': object.name,
-                'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
-                'recipe': object.from_saved_recipes?object.recipe_ID:"0",
-                'isRecipe' : object.from_saved_recipes,
-                'value': true,
-              };
-              ShopListChecked.add(obj);
-            }
+        Map<String, dynamic> obj = {
+          'label': object.name,
+          'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
+          'recipe': object.from_saved_recipes?object.recipe_ID:"0",
+          'isRecipe' : object.from_saved_recipes,
+          'value': true,
+        };
+        ShopListChecked.add(obj);
       }
+    }
 
     return ShopListChecked;
 
@@ -307,10 +356,11 @@ class _ShopListState extends State<GroceryList> {
 
   late Future<ShoppingList> shoppingList;
   late ShoppingList groceryList;
-  late Future<List<Map<String, Object>>> ShopList;
-  late Future<List<Map<String, Object>>> ShopListChecked;
-  late List<Map<String, Object>> shopList;
-  late List<Map<String, Object>> shopListChecked;
+  late Future<List<Map<String, dynamic>>> ShopList;
+  late Future<List<Map<String, dynamic>>> ShopListChecked;
+  late List<Map<String, dynamic>> shopList;
+  late List<Map<String, dynamic>> shopListChecked;
+  late List<String> alternatives;
   @override
   void initState(){
 
@@ -327,7 +377,7 @@ class _ShopListState extends State<GroceryList> {
     //ShopList = createShopList();
     //ShopList.then((value) => shopList=value);
     //ShopListChecked = createShopListChecked();
-   // ShopListChecked.then((value) => shopListChecked =value);
+    // ShopListChecked.then((value) => shopListChecked =value);
     super.initState();
 
   }
@@ -364,104 +414,105 @@ class _ShopListState extends State<GroceryList> {
                                     if(shopList.length>0)
 
                                       ListView.builder(
-                                        controller: ScrollController(),
-                                        shrinkWrap: true,
-                                        itemCount: shopList.length,
-                                        itemBuilder: (context, index) {
-                                          return Column(
-                                              children:<Widget>[
-                                                Dismissible(
-                                                    key: ValueKey(shopList[index]),
-                                                    onDismissed: (direction) {
-                                                      setState(() {
-                                                        Map<String,Object> deletedItem = shopList[index];
-                                                        String deletedLabel = shopList[index]['label'].toString();
-                                                        shopList.removeAt(index);
-                                                        String recipe_id = deletedItem['isRecipe']==true?deletedItem['recipe'].toString():"0";
-                                                        print("here");
-                                                        print(deletedLabel +" "+ recipe_id);
-                                                        ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedLabel,recipe_id);
+                                          controller: ScrollController(),
+                                          shrinkWrap: true,
+                                          itemCount: shopList.length,
+                                          itemBuilder: (context, index) {
+                                            return Column(
+                                                children:<Widget>[
+                                                  Dismissible(
+                                                      key: ValueKey(shopList[index]),
+                                                      onDismissed: (direction) {
+                                                        setState(() {
+                                                          Map<String,dynamic> deletedItem = shopList[index];
+                                                          String deletedLabel = shopList[index]['label'].toString();
+                                                          shopList.removeAt(index);
+                                                          String recipe_id = deletedItem['isRecipe']==true?deletedItem['recipe'].toString():"0";
+                                                          print("here");
+                                                          print(deletedLabel +" "+ recipe_id);
+                                                          ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedLabel,recipe_id);
 
-                                                        ScaffoldMessenger.of(context)
-                                                            .showSnackBar(SnackBar(
-                                                            duration: const Duration(seconds: 2, milliseconds: 50),
-                                                            content: Text('$deletedLabel deleted'),
-                                                            action: SnackBarAction(
-                                                                label: "UNDO",
-                                                                onPressed: () => setState(() {
-                                                                  shopList
-                                                                      .insert(
-                                                                      index,
-                                                                      deletedItem);
+                                                          ScaffoldMessenger.of(context)
+                                                              .showSnackBar(SnackBar(
+                                                              duration: const Duration(seconds: 2, milliseconds: 50),
+                                                              content: Text('$deletedLabel deleted'),
+                                                              action: SnackBarAction(
+                                                                  label: "UNDO",
+                                                                  onPressed: () => setState(() {
+                                                                    shopList
+                                                                        .insert(
+                                                                        index,
+                                                                        deletedItem);
 
-                                                                  ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["isRecipe"]==true?deletedItem["recipe"].toString():"0"
-                                                                  );
-                                                                }) // this is what you needed
-                                                            )));
-                                                      }); },
-                                                    background: Container(color: Colors.redAccent),
-                                                    child:ShopListWidget(
-                                                      key:ValueKey(shopList[index]),
-                                                      label:
-                                                      shopList[index]['label'].toString(),
-                                                      quantity: shopList[index]['quantity'].toString(),
-                                                      recipe: shopList[index]['recipe'].toString(),
-                                                      isRecipe: shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
-                                                      value: shopList[index]['value'].toString().toLowerCase() == 'true',
-                                                      labelColor: Colors.black87,
-                                                      visible:shopList[index]['isVisible']==true,
-                                                      onValueChanged: (){
-                                                        setState((){
-                                                          Map<String, Object> shopListItem = shopList.removeAt(index);
-                                                          String recipe_id = shopListItem['isRecipe']==true?shopListItem['recipe'].toString():"0";
-                                                          shopListItem["value"] = true;
-                                                          shopListChecked.add(shopListItem);
-                                                           print(shopListItem["quantity"].toString().split(" ")[0]);
-                                                          print(shopListItem["quantity"].toString().split(" ")[1]);
-                                                          ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), recipe_id);
-                                                          // print(widget.shopListChecked);
-                                                          // print(widget.shopList);
-                                                        });
-                                                      },
-                                                      onButtonPress: (){
-                                                        setState((){
-                                                          print("Changing state");
-                                                          shopList[index]['isVisible'] = !(shopList[index]['isVisible']==true);
-                                                        });
-                                                      },
-                                                    )),
-                                                Visibility(
-                                                    visible: shopList[index]['isVisible']==true,
-                                                    replacement:Container(),
-                                                    maintainState: true,
-                                                    child:(
-                                                        ListView.separated(
-                                                          controller: ScrollController(),
-                                                          shrinkWrap: true,
-                                                          itemCount: 2,
-                                                          itemBuilder:(context, index2)
-                                                          {
-                                                            return const Material(
-                                                                child: ListTile(
-                                                                  title: Text("tileItem[index2]", style: TextStyle(
-                                                                      fontSize: 14.0,
-                                                                      fontWeight: FontWeight.normal,
-                                                                      color: Colors.black87)),
-                                                                  dense:true,
-                                                                )
-                                                            );
-                                                          },
-                                                          separatorBuilder: (context, index) {
-                                                            return const Divider();
-                                                          },
-                                                        )
-                                                    )
+                                                                    ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], false, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["isRecipe"]==true?deletedItem["recipe"].toString():"0"
+                                                                    );
+                                                                  }) // this is what you needed
+                                                              )));
+                                                        }); },
+                                                      background: Container(color: Colors.redAccent),
+                                                      child:ShopListWidget(
+                                                        key:ValueKey(shopList[index]),
+                                                        label:
+                                                        shopList[index]['label'].toString(),
+                                                        quantity: shopList[index]['quantity'].toString(),
+                                                        recipe: shopList[index]['recipe'].toString(),
+                                                        isRecipe: shopList[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                                        value: shopList[index]['value'].toString().toLowerCase() == 'true',
+                                                        labelColor: Colors.black87,
+                                                        visible:shopList[index]['isVisible']==true,
+                                                        onValueChanged: (){
+                                                          setState((){
+                                                            Map<String, dynamic> shopListItem = shopList.removeAt(index);
+                                                            String recipe_id = shopListItem['isRecipe']==true?shopListItem['recipe'].toString():"0";
+                                                            shopListItem["value"] = true;
+                                                            shopListChecked.add(shopListItem);
+                                                            print(shopListItem["quantity"].toString().split(" ")[0]);
+                                                            print(shopListItem["quantity"].toString().split(" ")[1]);
+                                                            ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], true, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), recipe_id);
+                                                            // print(widget.shopListChecked);
+                                                            // print(widget.shopList);
+                                                          });
+                                                        },
+                                                        onButtonPress: (){
+                                                          setState((){
+                                                            print("Changing state");
+                                                            shopList[index]['isVisible'] = !(shopList[index]['isVisible']==true);
 
-                                                )
-                                              ]
-                                          );
+                                                          });
+                                                        },
+                                                      )),
+                                                  Visibility(
+                                                      visible: shopList[index]['isVisible']==true,
+                                                      replacement:Container(),
+                                                      maintainState: true,
+                                                      child:(
+                                                          ListView.separated(
+                                                            controller: ScrollController(),
+                                                            shrinkWrap: true,
+                                                            itemCount: int.parse(shopList[index]['length'].toString()),
+                                                            itemBuilder:(context, index2)
+                                                            {
+                                                              return Material(
+                                                                  child: ListTile(
+                                                                    title: Text(shopList[index]['alternatives'][index2], style: const TextStyle(
+                                                                        fontSize: 14.0,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black87)),
+                                                                    dense:true,
+                                                                  )
+                                                              );
+                                                            },
+                                                            separatorBuilder: (context, index) {
+                                                              return const Divider();
+                                                            },
+                                                          )
+                                                      )
 
-                                        }),
+                                                  )
+                                                ]
+                                            );
+
+                                          }),
                                     if(shopList.length<=0 && shopListChecked.length<=0 )
                                       Container(
                                         height:600,
@@ -476,27 +527,27 @@ class _ShopListState extends State<GroceryList> {
                                       ),
 
                                     if(shopListChecked.length>0)
-                                    ListView.builder(
-                                        controller: ScrollController(),
-                                        shrinkWrap: true,
-                                        itemCount: shopListChecked.length,
-                                        itemBuilder: (context, index) {
-                                          return ShopListWidget(
-                                            key:ValueKey(shopListChecked[index]),
-                                            label:
-                                            shopListChecked[index]['label'].toString(),
-                                            quantity: shopListChecked[index]['quantity'].toString(),
-                                            recipe: shopListChecked[index]['recipe'].toString(),
-                                            isRecipe: shopListChecked[index]['isRecipe'].toString().toLowerCase() == 'true',
-                                            value: shopListChecked[index]['value'].toString().toLowerCase() == 'true',
-                                            labelColor: Colors.black87,
-                                            visible:false,
-                                            onButtonPress:(){} ,
-                                            onValueChanged: (index){
+                                      ListView.builder(
+                                          controller: ScrollController(),
+                                          shrinkWrap: true,
+                                          itemCount: shopListChecked.length,
+                                          itemBuilder: (context, index) {
+                                            return ShopListWidget(
+                                              key:ValueKey(shopListChecked[index]),
+                                              label:
+                                              shopListChecked[index]['label'].toString(),
+                                              quantity: shopListChecked[index]['quantity'].toString(),
+                                              recipe: shopListChecked[index]['recipe'].toString(),
+                                              isRecipe: shopListChecked[index]['isRecipe'].toString().toLowerCase() == 'true',
+                                              value: shopListChecked[index]['value'].toString().toLowerCase() == 'true',
+                                              labelColor: Colors.black87,
+                                              visible:false,
+                                              onButtonPress:(){} ,
+                                              onValueChanged: (index){
 
-                                            },
-                                          );
-                                        })
+                                              },
+                                            );
+                                          })
                                   ]
                               ))
 
@@ -789,17 +840,40 @@ class _ShopListState extends State<GroceryList> {
 
     return futureValue.then( (value) {
 
-      Map<String,Object> newObj = {
+      List<String> alt = ["No alternatives available"];
+
+        if(value.name.toLowerCase().compareTo('bread')==0)
+        {
+          alt = ['Wholemeal Bread (-12 calories)', 'Multigrain Bread (-40 calories)'];
+        }
+        else if(value.name.toLowerCase().compareTo('milk')==0)
+        {
+          alt = ['Low Fat Milk (-1.25% fat)', 'Full Cream Milk (+0.75% fat)'];
+        }
+        else if(value.name.toLowerCase().compareTo('mayonnaise')==0)
+        {
+          alt = ['Diet Mayonnaise (-1.4% fat)','Eggless Mayonnaise (+2% fat)'];
+        }
+        else if(value.name.toLowerCase().compareTo('cheese')==0)
+        {
+          alt = ['Low Fat Cheese (-33 calories)','Vegan Cheese (-20 calories)'];
+        }
+
+
+
+      Map<String,dynamic> newObj = {
         'label': value.name,
         'quantity': value.quantity.toString() +" "+value.unit,
         'recipe': '',
         'isRecipe' : false,
         'value': false,
+        'length' : alt.length,
+        'alternatives' : alt,
       };
 
       //add to db
       setState(() {
-          shopList.add(newObj);
+        shopList.add(newObj);
 
       });
 
