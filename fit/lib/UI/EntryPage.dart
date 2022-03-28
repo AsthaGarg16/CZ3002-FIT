@@ -17,6 +17,7 @@ class _EntryPageState extends State<EntryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(widget.title, style: Theme.of(context).textTheme.subtitle1),
         centerTitle: true,
       ),

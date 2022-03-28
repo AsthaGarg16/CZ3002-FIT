@@ -79,6 +79,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: _currentIndex == 1 ? 0 : 56,
         title: Text(titles[_currentIndex],
             style: Theme.of(context).textTheme.subtitle1),
@@ -99,15 +100,15 @@ class _HomePageState extends State<HomePage> {
             },
           )
         ],
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.white,
-            )),
+        // leading: IconButton(
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //     icon: const Icon(
+        //       Icons.arrow_back_ios,
+        //       size: 20,
+        //       color: Colors.white,
+        //     )),
         // actions: _currentIndex == 0 ? <Widget>[
         //   IconButton(
         //       onPressed: (){

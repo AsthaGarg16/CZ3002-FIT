@@ -623,7 +623,7 @@ class InventorySearch extends SearchDelegate<String>{
   @override
   Widget buildSuggestions(BuildContext context) {
     // final suggestionList = items.where((p) => p.toLowerCase().startsWith(query)).toList();
-    final suggestionList = globalFoodList.where((p) => p["title"].toLowerCase().startsWith(query)).toList();
+    final suggestionList = globalFoodList.where((p) => p["title"].toLowerCase().startsWith(query.toLowerCase())).toList();
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(

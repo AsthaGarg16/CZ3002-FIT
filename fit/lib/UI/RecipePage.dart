@@ -333,7 +333,5 @@ class RecipeSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return const SizedBox.shrink();
-    // TODO: implement buildSuggestions
-    throw UnimplementedError();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../Controller/services/UserController.dart';
+import 'EntryPage.dart';
 import 'SignUp.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -88,6 +89,8 @@ class _ProfileState extends State<UserProfilePage> {
                   ),
 
                   RadioListTile<Diet>(
+                      activeColor: Colors.grey,
+                      selectedTileColor: Colors.grey,
                       toggleable: true,
                       title: Text(
                         'Vegetarian',
@@ -105,6 +108,8 @@ class _ProfileState extends State<UserProfilePage> {
                   const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
 
                   RadioListTile<Diet>(
+                      activeColor: Colors.grey,
+                      selectedTileColor: Colors.grey,
                       toggleable: true,
                       title: Text(
                         'Vegan',
@@ -129,8 +134,10 @@ class _ProfileState extends State<UserProfilePage> {
                   Text("Allergens", style: Theme.of(context).textTheme.headline4),
                 ),
                 CheckboxListTile(
-                  title:
-                  Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
+                  activeColor: Colors.grey,
+                  selectedTileColor: Colors.grey,
+                  checkColor: Colors.grey,
+                  title: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
                   value: userDetails["glutenFree"] ? true : false,
                   onChanged: (bool? value) {
                     setState(() {
@@ -160,12 +167,13 @@ class _ProfileState extends State<UserProfilePage> {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 50,
-                  onPressed: (){
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => EntryPage(title: 'FIT',)));
+                  },
                     //need to change to email, for now hardcoded
                     // await UserController.retrieveDetails(email);
                     // await UserController.setData();
-  
-                  },
                   color: Theme
                       .of(context)
                       .colorScheme
@@ -173,7 +181,7 @@ class _ProfileState extends State<UserProfilePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40)),
                   child: Text(
-                    "Update",
+                    "Log Out",
                     style: Theme
                         .of(context)
                         .textTheme
