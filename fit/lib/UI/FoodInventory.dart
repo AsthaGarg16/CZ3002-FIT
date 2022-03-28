@@ -362,8 +362,8 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                             shrinkWrap: true,
                                             physics: ScrollPhysics(),
                                             scrollDirection: Axis.vertical,
-                                            padding:
-                                            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                            padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 150),
+                                            // const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                             itemCount: filteredData.length,
                                             itemBuilder: (ctx, int i) {
                                               return FoodCard(
