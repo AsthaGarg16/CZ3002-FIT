@@ -475,9 +475,17 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                             TextButton(
                                                                 onPressed: () {
                                                                   setState(() {
+                                                                    var deletedItem = filteredData.where((item) => item['value']==true).toList();
                                                                     filteredData.removeWhere((item) {
                                                                       return item['value']==true;
-                                                                    } );
+                                                                    });
+                                                                    print("this is deletedItem");
+                                                                    print(deletedItem);
+                                                                    for (var item in deletedItem) {
+                                                                      var date = item['expiry'].split('-').toList();
+                                                                      InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                    }
+
                                                                   });
                                                                   // Close the dialog
                                                                   Navigator.of(context).pop();
@@ -486,9 +494,17 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                             TextButton(
                                                                 onPressed: () {
                                                                   setState(() {
+                                                                    var deletedItem = filteredData.where((item) => item['value']==true).toList();
                                                                     filteredData.removeWhere((item) {
                                                                       return item['value']==true;
-                                                                    } );
+                                                                    });
+                                                                    print("this is deletedItem");
+                                                                    print(deletedItem);
+                                                                    for (var item in deletedItem) {
+                                                                      var date = item['expiry'].split('-').toList();
+                                                                      InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                    }
+
                                                                   });
                                                                   // Close the dialog
                                                                   Navigator.of(context).pop();

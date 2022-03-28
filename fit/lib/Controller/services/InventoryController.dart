@@ -21,8 +21,9 @@ class InventoryController{
     print("Status code" + response.statusCode.toString());
     if (response.statusCode == 200) {
       var res=json.decode(response.body)['results'];
-      print(res);
-
+      if (res.length == 0) {
+        return "https://spoonacular.com/cdn/ingredients_100x100/grocery.jpg";
+      }
       String imageUrl="https://spoonacular.com/cdn/ingredients_100x100/"+ res[0]["image"].toString();
 
       //add code to add the id and url in firebase

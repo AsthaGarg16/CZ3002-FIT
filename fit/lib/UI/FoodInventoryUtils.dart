@@ -601,6 +601,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
                                                   String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
                                                   ShoppingListController.updateFoodItem("nisha.rmanian@gmail.com", item['title'], int.parse(item['quantity']), item['unit'], true, true, false, int.parse(item['quantity']), "0");
+
                                                   setState(() {
                                                     item['image'] = imgUrl;
                                                   });
