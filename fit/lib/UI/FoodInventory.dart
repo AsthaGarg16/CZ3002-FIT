@@ -201,10 +201,12 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
   late Future<List<Map<String, dynamic>>> FoodList;
   late List<Map<String, dynamic>> foodList;
 
-
+  var _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+    controller = TabController(length: numCompartments + 1, vsync: this);
 
     foodInventoryList = fetchInventory() ;
     foodInventoryList.then((value) {
@@ -240,7 +242,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
       } );
     });
     super.initState();
-    controller = TabController(length: numCompartments + 1, vsync: this);
+
   }
   bool editBtn = false;
   Widget build(BuildContext context) {
@@ -266,234 +268,249 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                       InventoryTabController: controller,
                       numOfCompartments: numCompartments,
                     );
-                    return DefaultTabController(
-                      length: numCompartments + 1,
-                      // initialIndex: widget.showPage,
-                      child: Scaffold(
-                          resizeToAvoidBottomInset: false,
-                          appBar: AppBar(
-                            automaticallyImplyLeading: false,
-                            // actions: <Widget>[
-                            //   IconButton(
-                            //       onPressed: (){
-                            //         showSearch(context: context, delegate: InventorySearch(controller));
-                            //       },
-                            //       icon: const Icon(Icons.search)
-                            //   )
-                            // ],
-                            flexibleSpace: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TabBar(
-                                  controller: controller,
-                                  isScrollable: true,
-                                  tabs: List<Widget>.generate(numCompartments + 1, (int index) {
-                                    return Tab(
-                                        child: Text(
-                                            index > 0
-                                                ? "Compartment " + (index).toString()
-                                                : "All",
-                                            style: Theme.of(context).textTheme.bodyText2));
-                                  }),
-                                )
-                              ],
-                            ),
-                          ),
-                          body: TabBarView(
-                            controller: controller,
-                            children: List<Widget>.generate(numCompartments + 1, (int index) {
+                    return Scaffold(
+                      body:
+                        // initialIndex: widget.showPage,
+                        NestedScrollView(
+                          // scrollDirection: Axis.vertical,
+                          controller: _scrollController,
+                          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled)
+                          {
+                            return <Widget>[
+                                SliverAppBar(
+                                  automaticallyImplyLeading:false,
+                                  pinned: true,
+                                  floating: true,
+                                  snap: false,
+                                  forceElevated: innerBoxIsScrolled,
+                                  flexibleSpace: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TabBar(
+                                        controller: controller,
+                                        isScrollable: true,
+                                        tabs: List<Widget>.generate(numCompartments + 1, (int index) {
+                                          return Tab(
+                                              child: Text(
+                                                  index > 0
+                                                      ? "Compartment " + (index).toString()
+                                                      : "All",
+                                                  style: Theme.of(context).textTheme.bodyText2));
+                                        }),
+                                      )
+                                    ],
+                                  ),
+                              )];
+                            },
+                          body: Container(
 
-                              List<Map<String, dynamic>> filteredData = foodList;
+                            child: TabBarView(
+                              controller: controller,
+                              children: List<Widget>.generate(numCompartments + 1, (int index) {
+                                List<Map<String, dynamic>> filteredData = foodList;
 
-                              if (index > 0) {
-                                filteredData = foodList
-                                    .where((item) => item["compartment"] == index)
-                                    .toList();
-                              }
+                                if (index > 0) {
+                                  filteredData = foodList
+                                      .where((item) => item["compartment"] == index)
+                                      .toList();
+                                }
 
-                              return Stack(
-                                children: [
-                                  if(countSoonExpire>0)Positioned(
-                                    top:0,
-                                    left:0,
-                                    width:MediaQuery.of(context).size.width,
-                                    height:60,
-                                    child: Card(
-                                      margin: const EdgeInsets.all(2.0),
-                                      child: SafeArea(
-                                        child: ListTile(
-                                          leading: const Icon(Icons.warning, color: Colors.red,),
-                                          title: const Text('Some items are expiring soon!', style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black87)),
-                                          trailing: Wrap(
-                                            children: <Widget>[
-                                              IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
-                                                //display thrown dialog
-                                                setState(() {
-                                                  countSoonExpire = 0;
-                                                });
-                                              },), // icon-1
-                                              IconButton(icon: Icon(Icons.close),
-                                                onPressed: () { setState(() {
-                                                  countSoonExpire = 0;
-                                                }); },),// icon-2
-                                            ],
+                                return Stack(
+                                  children: [
+                                    if(countSoonExpire>0)Positioned(
+                                      top:0,
+                                      left:0,
+                                      width:MediaQuery.of(context).size.width,
+                                      height:60,
+                                      child: Card(
+                                        margin: const EdgeInsets.all(2.0),
+                                        child: SafeArea(
+                                          child: ListTile(
+                                            leading: const Icon(Icons.warning, color: Colors.red,),
+                                            title: const Text('Some items are expiring soon!', style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black87)),
+                                            trailing: Wrap(
+                                              children: <Widget>[
+                                                IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
+                                                  //display thrown dialog
+                                                  setState(() {
+                                                    countSoonExpire = 0;
+                                                  });
+                                                },), // icon-1
+                                                IconButton(icon: Icon(Icons.close),
+                                                  onPressed: () { setState(() {
+                                                    countSoonExpire = 0;
+                                                  }); },),// icon-2
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
+
                                     ),
-
-                                  ),
-                                  Positioned(
-                                      top:countSoonExpire>0?55:0,
-                                      left: 0,
-                                      width:MediaQuery.of(context).size.width,
-                                      child:
-                                      Container(
-                                        height: MediaQuery.of(context).size.height,
-                                        width: double.infinity,
-                                        child: GridView.builder(
-                                          shrinkWrap: true,
-                                          physics: ScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          padding:
-                                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                          itemCount: filteredData.length,
-                                          itemBuilder: (ctx, int i) {
-                                            return FoodCard(
-                                              foodName: filteredData[i]['title'].toString(),
-                                              foodExpiry: filteredData[i]['expiry'].toString(),
-                                              foodImage: filteredData[i]['image'].toString(),
-                                              foodQuantity: int.parse(filteredData[i]['quantity']),
-                                              unit: filteredData[i]['unit'].toString(),
-                                              value: filteredData[i]['value'] == true,
-                                              visible: editBtn,
-                                              onQuantityChanged: (int val) {
-                                                setState(() => filteredData[i]['quantity'] =  val.toString());
-                                              },
-                                              labelColor: Colors.black87,
-                                              onValueChanged: (bool val){
-                                                setState((){
-                                                  Map<String, dynamic> foodListItem =  foodList[i];
-                                                  foodListItem["value"] = val;
-                                                });
-                                              },
-                                            );
-                                          },
-                                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 4,
-                                            childAspectRatio: 0.75,
-                                            crossAxisSpacing: 1.0,
-                                            mainAxisSpacing: 10,
-                                            mainAxisExtent: 145,
+                                    Positioned(
+                                        top:countSoonExpire>0?55:0,
+                                        left: 0,
+                                        width:MediaQuery.of(context).size.width,
+                                        child:
+                                        Container(
+                                          height: MediaQuery.of(context).size.height,
+                                          width: double.infinity,
+                                          child: GridView.builder(
+                                            shrinkWrap: true,
+                                            physics: ScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            padding:
+                                            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                            itemCount: filteredData.length,
+                                            itemBuilder: (ctx, int i) {
+                                              return FoodCard(
+                                                foodName: filteredData[i]['title'].toString(),
+                                                foodExpiry: filteredData[i]['expiry'].toString(),
+                                                foodImage: filteredData[i]['image'].toString(),
+                                                foodQuantity: int.parse(filteredData[i]['quantity']),
+                                                unit: filteredData[i]['unit'].toString(),
+                                                value: filteredData[i]['value'] == true,
+                                                visible: editBtn,
+                                                onQuantityChanged: (int val) {
+                                                  setState(() => filteredData[i]['quantity'] =  val.toString());
+                                                },
+                                                labelColor: Colors.black87,
+                                                onValueChanged: (bool val){
+                                                  setState((){
+                                                    Map<String, dynamic> foodListItem =  foodList[i];
+                                                    foodListItem["value"] = val;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4,
+                                              childAspectRatio: 0.75,
+                                              crossAxisSpacing: 1.0,
+                                              mainAxisSpacing: 10,
+                                              mainAxisExtent: 145,
+                                            ),
                                           ),
-                                        ),
-                                      )),
-                                  if (editBtn) Positioned(
-                                      bottom: 30,
-                                      left: 20,
-                                      child:  Column(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            FlatButton(
-                                              child: Icon(Icons.check_circle_outline),
-                                              onPressed: () {
-                                                setState(() {
-                                                  editBtn = !editBtn;
-                                                  for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
+                                        )),
+                                    if (editBtn) Positioned(
+                                        bottom: 30,
+                                        left: 20,
+                                        child:  Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              FlatButton(
+                                                child: Icon(Icons.check_circle_outline),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    editBtn = !editBtn;
+                                                    for (var item in filteredData.where((item) => item['value']=true)) item['value']=false;
 
-                                                });
+                                                  });
 
-                                              },
-                                              shape: CircleBorder(),
-                                              color: Theme.of(context).colorScheme.primary,
-                                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
-                                              height: 45,
+                                                },
+                                                shape: CircleBorder(),
+                                                color: Theme.of(context).colorScheme.primary,
+                                                textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                                                height: 45,
 
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            FlatButton(
-                                              child: Icon(Icons.delete_rounded),
-                                              shape: CircleBorder(),
-                                              color: Theme.of(context).colorScheme.primary,
-                                              textColor: Color.fromRGBO(255, 255, 255, 1.0),
-                                              height: 45,
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext ctx) {
-                                                      return AlertDialog(
-                                                        title: Text('Please Confirm', style: Theme.of(context).textTheme.subtitle2,),
-                                                        content: Text('Are you sure to remove the items?', style:Theme.of(context).textTheme.bodyText1),
-                                                        actions: [
-                                                          // The "Yes" button
-                                                          TextButton(
-                                                              onPressed: () =>
-                                                                  showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext ctx) {
-                                                                        return AlertDialog(
-                                                                          title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
-                                                                          content: Image.asset('assets/images/food_disposal.jpg', ),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                                onPressed: () async {
-                                                                                  // Close the dialog
-                                                                                  setState(() {
-                                                                                    var deletedItem = filteredData.where((item) => item['value']==true).toList();
-                                                                                    filteredData.removeWhere((item) {
-                                                                                      return item['value']==true;
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FlatButton(
+                                                child: Icon(Icons.delete_rounded),
+                                                shape: CircleBorder(),
+                                                color: Theme.of(context).colorScheme.primary,
+                                                textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                                                height: 45,
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext ctx) {
+                                                        return AlertDialog(
+                                                          title: Text('Please Confirm', style: Theme.of(context).textTheme.subtitle2,),
+                                                          content: Text('Are you sure to remove the items?', style:Theme.of(context).textTheme.bodyText1),
+                                                          actions: [
+                                                            // The "Yes" button
+                                                            TextButton(
+                                                                onPressed: () =>
+                                                                    showDialog(
+                                                                        context: context,
+                                                                        builder: (BuildContext ctx) {
+                                                                          return AlertDialog(
+                                                                            title: Text('Instruction to dispose food', style: Theme.of(context).textTheme.subtitle2,),
+                                                                            content: Image.asset('assets/images/food_disposal.jpg', ),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                  onPressed: () async {
+                                                                                    // Close the dialog
+                                                                                    setState(() {
+                                                                                      var deletedItem = filteredData.where((item) => item['value']==true).toList();
+                                                                                      filteredData.removeWhere((item) {
+                                                                                        return item['value']==true;
+                                                                                      });
+                                                                                      print("this is deletedItem");
+                                                                                      print(deletedItem);
+                                                                                      for (var item in deletedItem) {
+                                                                                        var date = item['expiry'].split('-').toList();
+                                                                                        InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                                      }
+
                                                                                     });
-                                                                                    print("this is deletedItem");
-                                                                                    print(deletedItem);
-                                                                                    for (var item in deletedItem) {
-                                                                                      var date = item['expiry'].split('-').toList();
-                                                                                      InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
-                                                                                    }
-
-                                                                                  });
 
 
-                                                                                  // pop up 2 times to come back main page
-                                                                                  Navigator.pop(context);
-                                                                                  Navigator.pop(context);
+                                                                                    // pop up 2 times to come back main page
+                                                                                    Navigator.pop(context);
+                                                                                    Navigator.pop(context);
 
-                                                                                },
-                                                                                child: const Text('OK'))
-                                                                          ],
-                                                                        );
-                                                                      }),
-                                                              child: const Text('Thrown')),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  filteredData.removeWhere((item) {
-                                                                    return item['value']==true;
-                                                                  } );
-                                                                });
-                                                                // Close the dialog
-                                                                Navigator.of(context).pop();
-                                                              },
-                                                              child: const Text('Consume'))
-                                                        ],
-                                                      );});
+                                                                                  },
+                                                                                  child: const Text('OK'))
+                                                                            ],
+                                                                          );
+                                                                        }),
+                                                                child: const Text('Thrown')),
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    filteredData.removeWhere((item) {
+                                                                      return item['value']==true;
+                                                                    } );
+                                                                  });
+                                                                  // Close the dialog
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                                child: const Text('Consume')),
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    filteredData.removeWhere((item) {
+                                                                      return item['value']==true;
+                                                                    } );
+                                                                  });
+                                                                  // Close the dialog
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                                child: const Text('Delete'))
+                                                          ],
+                                                        );});
 
-                                              },
-                                            ),
-                                          ]
-                                      )
-                                  )
-                                ],
-                              );
-                            }),
-                          ),
-                          floatingActionButton:  fabMenu
-                      ),
+                                                },
+                                              ),
+                                            ]
+                                        )
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          )
+                        ),
+                       floatingActionButton:  fabMenu
                     );
+
 
                   } else if(snapshot.hasError)
                   {
