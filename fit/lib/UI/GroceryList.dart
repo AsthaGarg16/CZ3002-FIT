@@ -335,14 +335,35 @@ class _ShopListState extends State<GroceryList> {
     // ];
     for(var object in groceryList.FoodItemList)
     {
-      if(object.status == true && object.inventory_status == false)
-      {
+
+        List<String> alt = ["No alternatives available"];
+        if(object.status == true && object.inventory_status == false)
+        {
+          if(object.name.toLowerCase().compareTo('bread')==0)
+          {
+            alt = ['Wholemeal Bread (-12 calories)', 'Multigrain Bread (-40 calories)'];
+          }
+          else if(object.name.toLowerCase().compareTo('milk')==0)
+          {
+            alt = ['Low Fat Milk (-1.25% fat)', 'Full Cream Milk (+0.75% fat)'];
+          }
+          else if(object.name.toLowerCase().compareTo('mayonnaise')==0)
+          {
+            alt = ['Diet Mayonnaise (-1.4% fat)','Eggless Mayonnaise (+2% fat)'];
+          }
+          else if(object.name.toLowerCase().compareTo('cheese')==0)
+          {
+            alt = ['Low Fat Cheese (-33 calories)','Vegan Cheese (-20 calories)'];
+          }
         Map<String, dynamic> obj = {
           'label': object.name,
           'quantity': (object.from_saved_recipes?object.quantity_from_saved.toString():object.quantity.toString()) +" "+ object.unit,
           'recipe': object.from_saved_recipes?object.recipe_ID:"0",
           'isRecipe' : object.from_saved_recipes,
           'value': true,
+          'alternatives': alt,
+          'length':alt.length,
+          'isVisible' :false,
         };
         ShopListChecked.add(obj);
       }
@@ -543,7 +564,36 @@ class _ShopListState extends State<GroceryList> {
                                               labelColor: Colors.black87,
                                               visible:false,
                                               onButtonPress:(){} ,
-                                              onValueChanged: (index){
+                                              onValueChanged: (){
+                                                setState((){
+                                                  Map<String, dynamic> item = shopListChecked.removeAt(index);
+                                                  Map<String, dynamic> shopListItem={
+                                                    'label': item['label'],
+                                                    'quantity': item['quantity'],
+                                                    'recipe': item['isRecipe'].toString()=='true'?item['recipe']:"0",
+                                                    'isRecipe' : item['isRecipe'],
+                                                    'value': false,
+                                                    'alternatives': item['alternatives'] ?? ["No alternatives available"],
+                                                    'length':item['length'] ?? 1,
+                                                    'isVisible' :false,
+                                                  };
+                                                  String recipe_id = shopListItem['isRecipe']==true?shopListItem['recipe'].toString():"0";
+                                                  //shopListItem["value"] = false;
+                                                  shopList.add(shopListItem);
+                                                  print(shopListItem["label"]);
+                                                  print(shopListItem["quantity"]);
+                                                  print(shopListItem["recipe"]);
+                                                  print(shopListItem["isRecipe"]);
+                                                  print(shopListItem["value"]);
+                                                  print(shopListItem["alternatives"]);
+                                                  print(shopListItem["length"]);
+                                                  print(shopListItem["isVisible"]);
+                                                  print(shopListItem["quantity"].toString().split(" ")[0]);
+                                                  print(shopListItem["quantity"].toString().split(" ")[1]);
+                                                  ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), shopListItem["label"].toString(), int.parse(shopListItem["quantity"].toString().split(" ")[0]), shopListItem["quantity"].toString().split(" ")[1], false, false, shopListItem["isRecipe"].toString()=="true", int.parse(shopListItem["quantity"].toString().split(" ")[0]), recipe_id);
+                                                  // print(widget.shopListChecked);
+                                                  // print(widget.shopList);
+                                                });
 
                                               },
                                             );
