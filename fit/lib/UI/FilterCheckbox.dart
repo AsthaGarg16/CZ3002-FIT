@@ -53,7 +53,11 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     }
 
     return SimpleDialog(
-        title: const Text("Select Preferences"),
+        title: Text("Select Preferences", style: Theme
+            .of(context)
+            .textTheme
+            .subtitle2,
+          textAlign: TextAlign.center,),
         contentPadding: EdgeInsets.all(20),
         children: <Widget>[
           SizedBox(
@@ -64,17 +68,17 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                 children: [
                   Row(
                     children: [
-                      Text("Carbohydrate",
-                          style: Theme.of(context).textTheme.labelMedium),
+                      Text("Carbohydrate: ",
+                          style: Theme.of(context).textTheme.bodyText1),
                       Spacer(),
                       DropdownButton<String>(
                         value: carbsDropdownValue,
                         icon: const Icon(Icons.arrow_downward),
                         elevation: 16,
-                        style: const TextStyle(color: Colors.deepPurple),
+                        style: const TextStyle(color: Colors.teal),
                         underline: Container(
                           height: 2,
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.teal,
                         ),
                         onChanged: (String? newValue) {
                           setState(() {
@@ -93,17 +97,17 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                   ),
                   Row(
                     children: [
-                      Text("Protein",
-                          style: Theme.of(context).textTheme.labelMedium),
+                      Text("Protein: ",
+                          style: Theme.of(context).textTheme.bodyText1),
                       Spacer(),
                       DropdownButton<String>(
                         value: proteinDropdownValue,
                         icon: const Icon(Icons.arrow_downward),
                         elevation: 16,
-                        style: const TextStyle(color: Colors.deepPurple),
+                        style: const TextStyle(color: Colors.teal),
                         underline: Container(
                           height: 2,
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.teal,
                         ),
                         onChanged: (String? newValue) {
                           setState(() {
@@ -122,17 +126,17 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                   ),
                   Row(
                     children: [
-                      Text("Calories",
-                          style: Theme.of(context).textTheme.labelMedium),
+                      Text("Calories: ",
+                          style: Theme.of(context).textTheme.bodyText1),
                       Spacer(),
                       DropdownButton<String>(
                         value: calDropdownValue,
                         icon: const Icon(Icons.arrow_downward),
                         elevation: 16,
-                        style: const TextStyle(color: Colors.deepPurple),
+                        style: const TextStyle(color: Colors.teal),
                         underline: Container(
                           height: 2,
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.teal,
                         ),
                         onChanged: (String? newValue) {
                           setState(() {
@@ -216,7 +220,9 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                           print(preferenceList);
                           Navigator.pop(context, userPref);
                         },
-                        child: const Text("Filter"),
+                        child: const Text("Filter", style: TextStyle(fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
                       ))
                 ],
               ))
