@@ -47,6 +47,7 @@ class _RecipePage extends State<StatefulWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Recipes", style: Theme.of(context).textTheme.subtitle1),
+        automaticallyImplyLeading: false,
         // automaticallyImplyLeading: showBackButton,
         // title: customSearchBar,
         // centerTitle: centerTitle,
@@ -68,15 +69,7 @@ class _RecipePage extends State<StatefulWidget> {
             },
           )
         ],
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.white,
-            )),
+
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
