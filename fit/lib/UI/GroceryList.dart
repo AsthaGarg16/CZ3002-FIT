@@ -553,7 +553,38 @@ class _ShopListState extends State<GroceryList> {
                                           shrinkWrap: true,
                                           itemCount: shopListChecked.length,
                                           itemBuilder: (context, index) {
-                                            return ShopListWidget(
+                                            return
+                                              Dismissible(
+                                                key: ValueKey(shopListChecked[index]),
+                                                onDismissed: (direction) {
+                                                setState(() {
+                                                Map<String,dynamic> deletedItem = shopListChecked[index];
+                                                String deletedLabel = shopListChecked[index]['label'].toString();
+                                                shopListChecked.removeAt(index);
+                                                String recipe_id = deletedItem['isRecipe']==true?deletedItem['recipe'].toString():"0";
+                                                print("here");
+                                                print(deletedLabel +" "+ recipe_id);
+                                                ShoppingListController.deleteFoodItem(UserController.getCurrentUserEmail(),deletedLabel,recipe_id);
+
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        duration: const Duration(seconds: 2, milliseconds: 50),
+                                                        content: Text('$deletedLabel deleted'),
+                                                        action: SnackBarAction(
+                                                        label: "UNDO",
+                                                        onPressed: () => setState(() {
+                                                        shopListChecked
+                                                            .insert(
+                                                        index,
+                                                        deletedItem);
+
+                                                        ShoppingListController.addFoodItem(UserController.getCurrentUserEmail(), deletedItem["label"].toString(), int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["quantity"].toString().split(" ")[1], true, false, deletedItem["isRecipe"].toString()=="true", int.parse(deletedItem["quantity"].toString().split(" ")[0]), deletedItem["isRecipe"]==true?deletedItem["recipe"].toString():"0"
+                                                        );
+                                                        }) // this is what you needed
+                                                )));
+                                                }); },
+                                                background: Container(color: Colors.redAccent),
+                                              child: ShopListWidget(
                                               key:ValueKey(shopListChecked[index]),
                                               label:
                                               shopListChecked[index]['label'].toString(),
@@ -596,7 +627,7 @@ class _ShopListState extends State<GroceryList> {
                                                 });
 
                                               },
-                                            );
+                                            ),);
                                           })
                                   ]
                               ))
