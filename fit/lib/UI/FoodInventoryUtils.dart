@@ -5,6 +5,7 @@ import 'dart:core';
 
 import '../Controller/services/InventoryController.dart';
 import '../Controller/services/ShoppingListController.dart';
+import '../Controller/services/UserController.dart';
 import '../Entity/FoodRecord.dart';
 import '../Entity/Units.dart';
 import 'FoodInventory.dart';
@@ -315,7 +316,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               var date = dateFormatter.format(selectedDate).split('-').toList();
               print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
 
-              String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
+              String imgUrl = await InventoryController.createFoodRecord(UserController.getCurrentUserEmail(),_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
 
               setState(() {
                 _imageUrl = imgUrl;
@@ -352,7 +353,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
               var date = dateFormatter.format(selectedDate).split('-').toList();
               print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
 
-              String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
+              String imgUrl = await InventoryController.createFoodRecord(UserController.getCurrentUserEmail(),_name,_quantity,_unit, DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),_name, _compNum);
 
               setState(() {
                 _imageUrl = imgUrl;
@@ -599,8 +600,8 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                                   var date = item['expiry'].split('-').toList();
                                                   print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
 
-                                                  String imgUrl = await InventoryController.createFoodRecord("nisha.rmanian@gmail.com",item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
-                                                  ShoppingListController.updateFoodItem("nisha.rmanian@gmail.com", item['title'], int.parse(item['quantity']), item['unit'], true, true, false, int.parse(item['quantity']), "0");
+                                                  String imgUrl = await InventoryController.createFoodRecord(UserController.getCurrentUserEmail(),item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
+                                                  ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), item['title'], int.parse(item['quantity']), item['unit'], true, true, false, int.parse(item['quantity']), "0");
 
                                                   setState(() {
                                                     item['image'] = imgUrl;

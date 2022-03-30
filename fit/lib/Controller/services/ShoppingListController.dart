@@ -5,11 +5,6 @@ import '../../Entity/ShoppingList.dart';
 import '../../Entity/FoodItem.dart';
 
 class ShoppingListController{
-  // static instantiateShoppingList(String email) {
-  // FirebaseFirestore.instance.collection('ShoppingList').doc(email).set({});
-  // }
-  // String? email = UserController.getCurrentUserEmail();
-
 
     static Future<void> addFoodItem(
     String email,
