@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit/Controller/services/InventoryController.dart';
 import 'package:fit/Controller/services/ShoppingListController.dart';
+import 'package:fit/Controller/services/FoodWastageController.dart';
 import 'package:fit/Entity/FitUser.dart';
 import 'package:fit/Entity/FoodRecord.dart';
+import 'package:fit/Entity/FoodWasteRecord.dart';
+import 'package:fit/Entity/FoodWasteList.dart';
 import 'package:fit/Entity/Inventory.dart';
 import 'package:fit/Entity/ShoppingList.dart';
 import 'package:fit/Entity/FoodItem.dart';
@@ -102,6 +105,7 @@ class UserController{
   static Future<void> setData() async {
     await setUserInventory();
     await setShoppingList();
+    await setFoodWasteList();
 
   }
 
@@ -121,6 +125,15 @@ class UserController{
         user!.shop = userShoppingList
       else
         user!.shop = ShoppingList(<FoodItem>[])
+    });
+  }
+
+  static Future<void> setFoodWasteList() async {
+    await FoodWastageController.getFoodWasteList(user!.email).then((userWasteList) => {
+      if (userWasteList != null)
+        user!.foodWasteList = userWasteList
+      else
+        user!.foodWasteList = FoodWasteList(<FoodWasteRecord>[])
     });
   }
 
@@ -147,5 +160,9 @@ class UserController{
 
   static void updateInventoryRecord(String name, int quantity, String unit, int compNumber,DateTime expiryDate){
     user!.inv.updateRecord(name, quantity, unit, expiryDate, compNumber);
+  }
+
+  static void addFoodWasteRecord(String name, int quantity, String unit, String thrownDate){
+    user?.foodWasteList?.addRecord(name, quantity, unit, thrownDate);
   }
 }

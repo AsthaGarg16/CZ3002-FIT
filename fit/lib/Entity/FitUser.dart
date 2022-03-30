@@ -1,4 +1,5 @@
 import 'package:fit/Entity/FoodRecord.dart';
+import 'package:fit/Entity/FoodWasteList.dart';
 import 'package:fit/Entity/ShoppingList.dart';
 
 import 'Inventory.dart';
@@ -15,6 +16,13 @@ class FitUser {
   bool _vegan;
   late Inventory _inv;
   ShoppingList? _shop;
+  FoodWasteList? _foodWasteList;
+
+  FoodWasteList? get foodWasteList => _foodWasteList;
+
+  set foodWasteList(FoodWasteList? value) {
+    _foodWasteList = value;
+  }
 
   Inventory get inv => _inv;
 

@@ -1,8 +1,16 @@
 
 class FoodWasteRecord {
   String _name;
+  String _unit;
+
+  String get unit => _unit;
+
+  set unit(String value) {
+    _unit = value;
+  }
+
   int  _quantity;
-  DateTime _thrownDate;
+  String _thrownDate;
 
 
   String get name => _name;
@@ -14,11 +22,13 @@ class FoodWasteRecord {
   FoodWasteRecord(
       String name,
       int quantity,
-      DateTime thrownDate,
+      String unit,
+      String thrownDate,
 
       )
       : _name = name,
         _quantity = quantity,
+        _unit=unit,
         _thrownDate=thrownDate;
 
   int get quantity => _quantity;
@@ -27,9 +37,9 @@ class FoodWasteRecord {
     _quantity = value;
   }
 
-  DateTime get thrownDate => _thrownDate;
+  String get thrownDate => _thrownDate;
 
-  set thrownDate(DateTime value) {
+  set thrownDate(String value) {
     _thrownDate = value;
   }
 }

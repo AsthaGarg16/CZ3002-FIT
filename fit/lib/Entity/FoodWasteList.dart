@@ -4,7 +4,7 @@
 import 'package:fit/Entity/FoodWasteRecord.dart';
 
 class FoodWasteList {
-  String _email;
+  // String _email;
   List<FoodWasteRecord> _foodWasteRecords;
 
   List<FoodWasteRecord> get foodWasteRecords => _foodWasteRecords;
@@ -13,27 +13,26 @@ class FoodWasteList {
     _foodWasteRecords = value;
   }
 
-  String get email => _email;
-
-  set email(String value) {
-    _email = value;
-  }
+  // String get email => _email;
+  //
+  // set email(String value) {
+  //   _email = value;
+  // }
 
   FoodWasteList(
-      String email,
       List<FoodWasteRecord> foodWasteRecords
       )
-      : _email = email,
+      :
         _foodWasteRecords=foodWasteRecords;
 
 
 
   // inventoryMgr class- update to firebase, entity call and image retrieval will be done there
-  void addRecord(String name, int quantity, DateTime thrownDate,) {
+  void addRecord(String name, int quantity, String unit, String thrownDate) {
     if (_foodWasteRecords == null)
       _foodWasteRecords = <FoodWasteRecord>[];
 
-    FoodWasteRecord foodWasteRecord= FoodWasteRecord(name, quantity,thrownDate);
+    FoodWasteRecord foodWasteRecord= FoodWasteRecord(name, quantity, unit, thrownDate);
     foodWasteRecords.add(foodWasteRecord);
   }
 
