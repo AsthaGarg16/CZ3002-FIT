@@ -59,17 +59,6 @@ class _RecipePage extends State<StatefulWidget> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(
-              Icons.portrait_rounded,
-              size: 40,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => UserProfilePage()));
-            },
-          ),
-          IconButton(
             icon: Icon(
               _starIcon,
               size: 40,
@@ -94,7 +83,19 @@ class _RecipePage extends State<StatefulWidget> {
                 recipeList;
               });
             },
-          )
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.portrait_rounded,
+              size: 40,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => UserProfilePage()));
+            },
+          ),
+
         ],
       ),
       resizeToAvoidBottomInset: false,
