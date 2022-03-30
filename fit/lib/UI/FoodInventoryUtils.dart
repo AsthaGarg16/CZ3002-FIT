@@ -496,6 +496,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                     fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
                                 onChanged: (val) {
                                   setState(() => addingList[index]['expiry'] = DateTime.parse(val));
+                                  print(val);
                                 }
                             ),
                           ),
@@ -578,6 +579,8 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                         'quantity': quant[0],
                                         'unit' :  quant[1],
                                         'compartment': 1,
+                                        'recipe': item['recipe'].toString(),
+                                        'isRecipe': item['isRecipe'].toString()=='true',
                                       };
                                       addingList.add(newObj);
                                     }
@@ -598,10 +601,11 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                               onPressed: () async {
                                                 for (var item in addingList) {
                                                   var date = item['expiry'].split('-').toList();
+                                                  print("printing date split");
                                                   print(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
 
                                                   String imgUrl = await InventoryController.createFoodRecord(UserController.getCurrentUserEmail(),item['title'],int.parse(item['quantity']),item['unit'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])),item['title'], item['compartment']);
-                                                  ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), item['title'], int.parse(item['quantity']), item['unit'], true, true, false, int.parse(item['quantity']), "0");
+                                                  ShoppingListController.updateFoodItem(UserController.getCurrentUserEmail(), item['title'], int.parse(item['quantity']), item['unit'], true, true, item['isRecipe'].toString()=='true', int.parse(item['quantity']), item['isRecipe'].toString()=='true'?item['recipe']:"0");
 
                                                   setState(() {
                                                     item['image'] = imgUrl;
