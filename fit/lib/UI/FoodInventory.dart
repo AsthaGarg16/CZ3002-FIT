@@ -329,16 +329,11 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                             leading: const Icon(Icons.warning, color: Colors.red,),
                                             title: const Text('Some items are expiring soon!', style: TextStyle(
                                                 fontSize: 14.0,
-                                                fontWeight: FontWeight.normal,
+                                                fontWeight: FontWeight.bold,
                                                 color: Colors.black87)),
                                             trailing: Wrap(
                                               children: <Widget>[
-                                                IconButton(icon: Icon(Icons.delete_forever), onPressed: () {
-                                                  //display thrown dialog
-                                                  setState(() {
-                                                    countSoonExpire = 0;
-                                                  });
-                                                },), // icon-1
+                                                 // icon-1
                                                 IconButton(icon: Icon(Icons.close),
                                                   onPressed: () { setState(() {
                                                     countSoonExpire = 0;
