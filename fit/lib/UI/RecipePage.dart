@@ -1,5 +1,6 @@
 import 'package:fit/Controller/services/InventoryController.dart';
 import 'package:fit/UI/FilterCheckbox.dart';
+import 'package:fit/UI/UserProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'RecipeCard.dart';
 import 'RecipeInstructionsPage.dart';
@@ -22,6 +23,10 @@ class _RecipePage extends State<StatefulWidget> {
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
   bool savedRecipes = false;
+  List<Map<String, dynamic>> oldRecipeList = [];
+
+  bool _isStarredRecipes = false;
+  IconData _starIcon = Icons.star_border_outlined;
 
   @override
   initState() {
@@ -39,7 +44,7 @@ class _RecipePage extends State<StatefulWidget> {
     print(inventoryList);
     Preferences preferences =
         Preferences(false, false, false, false, "Any", "Any", "Any");
-    return getRecipeList(inventoryList, "2", recipeController, preferences);
+    return getRecipeList(inventoryList, "5", recipeController, preferences);
   }
 
   @override
@@ -55,21 +60,42 @@ class _RecipePage extends State<StatefulWidget> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.star_border_outlined,
+              Icons.portrait_rounded,
+              size: 40,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => UserProfilePage()));
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              _starIcon,
               size: 40,
               color: Colors.white,
             ),
             onPressed: () async {
-              String email = await authService.getUser();
-              recipeList = await getSavedRecipeList(email, recipeController);
-              setState(() {
-                recipeList;
+              if (_isStarredRecipes) {
+                _isStarredRecipes = false;
+                savedRecipes = false;
+                _starIcon = Icons.star_border_outlined;
+                recipeList = oldRecipeList;
+              } else {
+                oldRecipeList = recipeList;
+                String email = await authService.getUser();
+                recipeList = await getSavedRecipeList(email, recipeController);
                 savedRecipes = true;
+                _starIcon = Icons.star;
+                _isStarredRecipes = true;
+              }
+              setState(() {
+                _starIcon;
+                recipeList;
               });
             },
           )
         ],
-
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -170,7 +196,7 @@ class _RecipePage extends State<StatefulWidget> {
             String inventoryList =
                 await inventoryController.getFoodItems(email);
             recipeList = await getRecipeList(
-                inventoryList, "2", recipeController, foodPref);
+                inventoryList, "5", recipeController, foodPref);
             print(recipeList);
             setState(() {
               recipeList;
