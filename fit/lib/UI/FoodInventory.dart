@@ -351,7 +351,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                         width:MediaQuery.of(context).size.width,
                                         child:
                                         Container(
-                                          height: MediaQuery.of(context).size.height,
+                                          height: countSoonExpire>0?MediaQuery.of(context).size.height-55:MediaQuery.of(context).size.height,
                                           width: double.infinity,
                                           child: GridView.builder(
                                             shrinkWrap: true,
