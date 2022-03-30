@@ -97,7 +97,7 @@ class FoodInventory extends StatefulWidget {
 
 class _FoodInventoryState extends State<FoodInventory> with SingleTickerProviderStateMixin {
   final dateFormatter = DateFormat('yyyy-MM-dd');
-  int numCompartments = 5;
+  int numCompartments = UserController.getProfileDetails()["fridgeDetails"];
   late TabController controller;
   var hasSoonExpire;
   late var countSoonExpire = 0;
