@@ -37,22 +37,23 @@ class FoodCardState extends State<FoodCard> {
   @override
   void initState() {
     super.initState();
-    expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0? Colors.white70:
-    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
-    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<6?Colors.orange:
-    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.yellow:Colors.white)));
-    expired = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0?true:false;
+
   }
   // final GlobalKey _closeKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     bool _isSelected = false;
+    expiryColor = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0? Colors.white70:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<3?Colors.red:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<6?Colors.orange:
+    ((DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<8?Colors.yellow:Colors.white)));
+    expired = (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0?true:false;
     return Center(
       child: Container(
         margin:EdgeInsets.all(2.5),
         height: 300,
         foregroundDecoration: BoxDecoration(
-          color: expired ? Colors.grey:Colors.transparent,
+          color: (DateTime.parse(widget.foodExpiry).difference(DateTime.now()).inDays)<0 ? Colors.grey:Colors.transparent,
           backgroundBlendMode: BlendMode.saturation,
         ),
         decoration: BoxDecoration(
