@@ -481,25 +481,33 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
 
                     Expanded(
                         flex: 6,
-                        child: GestureDetector(
-                          onTap: () => _selectDate(context, _textEditingController),
-                          child: AbsorbPointer(
-                            child: TextField(
-                                obscureText: false,
-                                controller: _textEditingController,
-                                keyboardType: TextInputType.datetime,
-                                decoration: InputDecoration(
-                                  hintText: 'Today',
-                                  prefixIcon: const Icon(Icons.calendar_today),
-                                ),
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
-                                onChanged: (val) {
-                                  setState(() => addingList[index]['expiry'] = DateTime.parse(val));
-                                  print(val);
-                                }
+                        child: TextField(
+                            controller: _textEditingController,
+                            keyboardType: TextInputType.datetime,//editing controller of this TextField
+                            decoration: InputDecoration(
+                                hintText: 'Today',
+                                prefixIcon: const Icon(Icons.calendar_today),
                             ),
-                          ),
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black87),
+                            readOnly: true,  //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context, initialDate: DateTime.now(),
+                                  firstDate: DateTime(1901, 1),
+                                  lastDate: DateTime(2100)
+                              );
+
+                              if(pickedDate != null ){
+                                String formattedDate = dateFormatter.format(pickedDate);
+                                setState(() {
+                                  _textEditingController.text = formattedDate; //set output date to TextField value.
+                                  addingList[index]['expiry'] = formattedDate;
+                                });
+                              }else{
+                                print("Date is not selected");
+                              }
+                            }
                         )
                     )
                   ],
@@ -585,6 +593,7 @@ class FoodInventorryUtilsState extends State<FoodInventorryUtils> {
                                       addingList.add(newObj);
                                     }
                                   };
+
 
                                   showDialog(
                                       context: context,
