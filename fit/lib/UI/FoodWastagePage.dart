@@ -83,7 +83,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
   late List<Map<String, dynamic>> listForSections;
   late List<PieChartSectionData> chartSections;
   int total = 0;
-  int _currentSortColumn = 0;
+  int _currentSortColumn = 2;
   bool _isSortAsc = true;
 
   @override
@@ -429,6 +429,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
 
     }
     tableData = forTable;
+    tableData.sort((a, b) => b['frequency'].toString().compareTo(a['frequency'].toString()));
 
     return DataTable(
       columns: _createColumns(),
@@ -454,17 +455,19 @@ class _FoodWasteState extends State<FoodWastagePage> {
       const DataColumn(label: Text('Item'), ),
             const DataColumn(label: Text('Quantity'),),
               DataColumn(label: const Text('Frequency'),
-        onSort: (columnIndex, _) {
-          setState(() {
-            _currentSortColumn = columnIndex;
-            if (_isSortAsc) {
-              tableData.sort((a, b) => b['frequency'].toString().compareTo(a['frequency'].toString()));
-            } else {
-              tableData.sort((a, b) => a['frequency'].toString().compareTo(b['frequency'].toString()));
-            }
-            _isSortAsc = !_isSortAsc;
-          });
-        },)
+        // onSort: (columnIndex, _) {
+        //   setState(() {
+        //     _currentSortColumn = columnIndex;
+        //     if (_isSortAsc) {
+        //       tableData.sort((a, b) => b['frequency'].toString().compareTo(a['frequency'].toString()));
+        //     } else {
+        //       tableData.sort((a, b) => a['frequency'].toString().compareTo(b['frequency'].toString()));
+        //     }
+        //     _isSortAsc = !_isSortAsc;
+        //     print(tableData);
+        //   });
+        // },
+              )
     ];
   }
   List<DataRow> _createRows() {
