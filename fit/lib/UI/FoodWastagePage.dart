@@ -54,7 +54,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
         flag = false;
         for (int i = 0; i < itemThrown.length; i++) {
           if (itemThrown[i]['name'].toString().compareTo(obj.name) == 0) {
-            flag == true;
+            flag = true;
             itemThrown[i]['freq'] = itemThrown[i]['freq'] + 1;
           }
         }
@@ -72,7 +72,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
   }
 
 
-  
+
   final RandomColor _randomColor = RandomColor();
   int touchedIndex = -1;
 
@@ -408,12 +408,14 @@ class _FoodWasteState extends State<FoodWastagePage> {
         count2++;
         for (int i = 0; i < forTable.length; i++) {
           if (forTable[i]['name'].toString().compareTo(obj.name) == 0) {
-            flag2 == true;
+            flag2 = true;
+            print("here");
             forTable[i]['frequency'] = forTable[i]['frequency'] + 1;
             forTable[i]['quantity'] = forTable[i]['quantity'] + obj.quantity;
+            break;
           }
         }
-        if (flag2 == false) {
+        if (!flag2) {
           Map<String, dynamic> newAdd = {
             "name": obj.name,
             "quantity" : obj.quantity,
@@ -436,7 +438,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
       dividerThickness: 2.5,
       dataRowHeight: 50,
       showBottomBorder: true,
-      headingTextStyle: TextStyle(
+      headingTextStyle: const TextStyle(
         fontFamily: "mw",
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
