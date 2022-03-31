@@ -35,7 +35,9 @@ class _FoodWasteState extends State<FoodWastagePage> {
     int count = 0;
     bool flag = false;
     DateTime currentNow = DateTime.now();
+
     for (FoodWasteRecord obj in wasteRecords) {
+
       if (currentNow
           .difference(DateTime.parse(obj.thrownDate))
           .inDays <= 30) {
@@ -66,28 +68,29 @@ class _FoodWasteState extends State<FoodWastagePage> {
         count++;
       }
     }
-
     return itemThrown;
   }
 
 
-
+  
   final RandomColor _randomColor = RandomColor();
   int touchedIndex = -1;
 
   late Future<FoodWasteList> foodWasteList;
   late FoodWasteList wasteList;
   late List<FoodWasteRecord> wasteRecords;
+  late List<Map> tableData;
   late List<Map<String, dynamic>> listForSections;
   late List<PieChartSectionData> chartSections;
   int total = 0;
+  int _currentSortColumn = 0;
+  bool _isSortAsc = true;
 
   @override
   void initState() {
     foodWasteList = fetchFoodWasteList();
     foodWasteList.then((value) {
       wasteList = value;
-      print(wasteList.foodWasteRecords);
       wasteRecords = wasteList.foodWasteRecords;
       createListForSections().then((value) {
         listForSections = value;
@@ -218,77 +221,79 @@ class _FoodWasteState extends State<FoodWastagePage> {
                         ),
                       ],
                     ),
-                    child: Table(
-                        border: TableBorder.all(),
-                        children: const [
-                          TableRow(children: [Text(" Item", style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87),),
-                            Text(" Quantity", style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87),),
-                            Text(" Frequency", style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87),),
-                          ]),
-                          TableRow(children: [Text(" Bread", style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87),),
-                            Text(" 15 count", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                            Text(" 5", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                          ]),
-                          TableRow(children: [Text(" Eggs", style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87)),
-                            Text(" 12 count", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                            Text(" 2", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                          ]),
-                          TableRow(children: [Text(" Milk", style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87)),
-                            Text(" 12 l", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                            Text(" 10", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                          ]),
-                          TableRow(children: [Text(" Avocado", style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87)),
-                            Text(" 100 g", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                            Text(" 3", style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),),
-                          ]),
-
-                        ]
-                    ),),
+                    child: _createDataTable(),
+                    // child: Table(
+                    //     border: TableBorder.all(),
+                    //     children: const [
+                    //       TableRow(children: [Text(" Item", style: TextStyle(
+                    //           fontSize: 18.0,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.black87),),
+                    //         Text(" Quantity", style: TextStyle(
+                    //             fontSize: 18.0,
+                    //             fontWeight: FontWeight.bold,
+                    //             color: Colors.black87),),
+                    //         Text(" Frequency", style: TextStyle(
+                    //             fontSize: 18.0,
+                    //             fontWeight: FontWeight.bold,
+                    //             color: Colors.black87),),
+                    //       ]),
+                    //       TableRow(children: [Text(" Bread", style: TextStyle(
+                    //           fontSize: 15.0,
+                    //           fontWeight: FontWeight.normal,
+                    //           color: Colors.black87),),
+                    //         Text(" 15 count", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //         Text(" 5", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //       ]),
+                    //       TableRow(children: [Text(" Eggs", style: TextStyle(
+                    //           fontSize: 15.0,
+                    //           fontWeight: FontWeight.normal,
+                    //           color: Colors.black87)),
+                    //         Text(" 12 count", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //         Text(" 2", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //       ]),
+                    //       TableRow(children: [Text(" Milk", style: TextStyle(
+                    //           fontSize: 15.0,
+                    //           fontWeight: FontWeight.normal,
+                    //           color: Colors.black87)),
+                    //         Text(" 12 l", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //         Text(" 10", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //       ]),
+                    //       TableRow(children: [Text(" Avocado", style: TextStyle(
+                    //           fontSize: 15.0,
+                    //           fontWeight: FontWeight.normal,
+                    //           color: Colors.black87)),
+                    //         Text(" 100 g", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //         Text(" 3", style: TextStyle(
+                    //             fontSize: 15.0,
+                    //             fontWeight: FontWeight.normal,
+                    //             color: Colors.black87),),
+                    //       ]),
+                    //
+                    //     ]
+                    // ),
+                      ),
                 ],),
             );
           }
@@ -377,6 +382,97 @@ class _FoodWasteState extends State<FoodWastagePage> {
     }
     theWidgets.add(SizedBox(height:18,));
     return theWidgets;
+  }
+
+  DataTable _createDataTable() {
+
+    List<Map> forTable =[];
+    int count2 = 0;
+    bool flag2 = false;
+
+    for (FoodWasteRecord obj in wasteRecords) {
+      flag2 = false;
+      if(count2==0)
+      {
+        Map<String,dynamic> newEntry = {
+          "name" : obj.name,
+          "quantity" : obj.quantity,
+          "frequency" : 1,
+          "unit" : obj.unit,
+        };
+        forTable.add(newEntry);
+        count2++;
+      }
+      else
+      {
+        count2++;
+        for (int i = 0; i < forTable.length; i++) {
+          if (forTable[i]['name'].toString().compareTo(obj.name) == 0) {
+            flag2 == true;
+            forTable[i]['frequency'] = forTable[i]['frequency'] + 1;
+            forTable[i]['quantity'] = forTable[i]['quantity'] + obj.quantity;
+          }
+        }
+        if (flag2 == false) {
+          Map<String, dynamic> newAdd = {
+            "name": obj.name,
+            "quantity" : obj.quantity,
+            "frequency": 1,
+            "unit" : obj.unit,
+          };
+          forTable.add(newAdd);
+        }
+
+      }
+
+    }
+    tableData = forTable;
+
+    return DataTable(
+      columns: _createColumns(),
+      rows: _createRows(),
+      sortColumnIndex: _currentSortColumn,
+      sortAscending: _isSortAsc,
+      dividerThickness: 2.5,
+      dataRowHeight: 50,
+      showBottomBorder: true,
+      headingTextStyle: TextStyle(
+        fontFamily: "mw",
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.white),
+      headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => Colors.teal
+      ),
+    );
+  }
+
+  List<DataColumn> _createColumns() {
+    return [
+      const DataColumn(label: Text('Item'), ),
+            const DataColumn(label: Text('Quantity'),),
+              DataColumn(label: const Text('Frequency'),
+        onSort: (columnIndex, _) {
+          setState(() {
+            _currentSortColumn = columnIndex;
+            if (_isSortAsc) {
+              tableData.sort((a, b) => b['frequency'].toString().compareTo(a['frequency'].toString()));
+            } else {
+              tableData.sort((a, b) => a['frequency'].toString().compareTo(b['frequency'].toString()));
+            }
+            _isSortAsc = !_isSortAsc;
+          });
+        },)
+    ];
+  }
+  List<DataRow> _createRows() {
+    return tableData
+        .map((entry) => DataRow(cells: [
+      DataCell(Text(entry['name'], style: const TextStyle( fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black))),
+      DataCell(Text(entry['quantity'].toString()+" "+entry['unit'], style: const TextStyle( fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black))),
+      DataCell(Text(entry['frequency'].toString(), style: const TextStyle( fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black))),
+    ]))
+        .toList();
   }
 
 
