@@ -6,85 +6,11 @@ import '../Entity/ShoppingList.dart';
 import '../Controller/services/UserController.dart';
 import '../Controller/services/ShoppingListController.dart';
 import '../Controller/services/InventoryController.dart';
+import '../Controller/services/FoodWastageController.dart';
 
 
 import 'package:intl/intl.dart';
 import 'dart:core';
-
-// List<Map<String, dynamic>> foodList = [
-//   {
-//     'title': 'Apple',
-//     'expiry': '2022-05-10',
-//     'image': 'assets/images/apple.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 1,
-//     'value': false,
-//   },
-//   {
-//     'title': 'Grape',
-//     'expiry': '2022-05-10',
-//     'image': 'assets/images/grape.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 2,
-//     'value': false,
-//   },
-//   {
-//     'title': 'Pear',
-//     'expiry': '2022-05-10',
-//     'image': 'assets/images/pear.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 3,
-//     'value': false,
-//   },
-//   {
-//     'title': 'apple',
-//     'expiry': '2022-05-10',
-//     'image': 'assets/images/apple.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 4,
-//     'value': false,
-//   },
-//   {
-//     'title': 'banana',
-//     'expiry': '2022-03-13',
-//     'image': 'assets/images/banana.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 5,
-//     'value': false,
-//   },
-//   {
-//     'title': 'apple',
-//     'expiry': '2022-03-20',
-//     'image': 'assets/images/apple.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 1,
-//     'value': false,
-//   },
-//   {
-//     'title': 'apple',
-//     'expiry': '2022-03-18',
-//     'image': 'assets/images/apple.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 2,
-//     'value': false,
-//   },
-//   {
-//     'title': 'apple',
-//     'expiry': '2022-03-15',
-//     'image': 'assets/images/apple.jpg',
-//     'quantity': "1",
-//     'unit': '',
-//     'compartment': 3,
-//     'value': false,
-//   }
-// ];
 
 List<Map<String, dynamic>> globalFoodList = [];
 
@@ -441,6 +367,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                                             actions: [
                                                                               TextButton(
                                                                                   onPressed: () async {
+
                                                                                     // Close the dialog
                                                                                     setState(() {
                                                                                       var deletedItem = filteredData.where((item) => item['value']==true).toList();
@@ -452,6 +379,7 @@ class _FoodInventoryState extends State<FoodInventory> with SingleTickerProvider
                                                                                       for (var item in deletedItem) {
                                                                                         var date = item['expiry'].split('-').toList();
                                                                                         InventoryController.deleteFoodRecord(UserController.getCurrentUserEmail(),item['title'], DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2])));
+                                                                                        FoodWastageController.addFoodWasteRecord(UserController.getCurrentUserEmail(), item['title'], int.parse(item['quantity']), item['unit'], DateFormat('yyyyMMdd').format(DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2]))));
                                                                                       }
 
                                                                                     });
