@@ -207,10 +207,12 @@ class _AddRecipeIngredientDialog extends State<AddRecipeIngredientDialog> {
       actions: <Widget>[
         MaterialButton(
           onPressed: () async {
+            print(_unit);
+            print(chosenValue);
             FoodItem newItem = FoodItem(
                 widget.name,
                 int.parse(widget.quantity),
-                _unit,
+                chosenValue!,
                 false,
                 false,
                 true,
