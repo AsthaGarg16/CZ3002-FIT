@@ -2,41 +2,47 @@ import 'package:flutter/material.dart';
 import '../../Entity/Preferences.dart';
 
 class FilterCheckbox extends StatefulWidget {
-  const FilterCheckbox({Key? key}) : super(key: key);
+  Preferences preference;
+
+  FilterCheckbox({
+    Key? key,
+    required this.preference,
+  }) : super(key: key);
 
   @override
   State<FilterCheckbox> createState() => _FilterCheckboxState();
 }
 
 class _FilterCheckboxState extends State<FilterCheckbox> {
-  List<Map> dietaryPrefList = [
-    {"pref": "Vegetarian", "isChecked": false, "text": "Vegetarian"},
-    {"pref": "Vegan", "isChecked": false, "text": "Vegan"},
-    {"pref": "Dairy Free", "isChecked": false, "text": "Dairy Free"},
-    {"pref": "Gluten Free", "isChecked": false, "text": "Gluten Free"},
-  ];
-  String carbsDropdownValue = 'Any';
-  String calDropdownValue = 'Any';
-  String proteinDropdownValue = 'Any';
-
-  // List<FoodPreference> preferenceList = [
-  //   FoodPreference("Saved Recipes", false, "Saved Recipes"),
-  //   FoodPreference("Vegetarian", false, "Vegetarian"),
-  //   FoodPreference("Vegan", false, "Vegan"),
-  //   FoodPreference("Dairy Free", false, "Dairy Free"),
-  //   FoodPreference("Gluten Free", false, "Gluten Free"),
-  //   FoodPreference("Low Carb", false, "Low"),
-  //   FoodPreference("Medium Carb", false, "Medium"),
-  //   FoodPreference("High Carb", false, "High"),
-  //   FoodPreference("Low Protein", false, "Low"),
-  //   FoodPreference("Medium Protein", false, "Medium"),
-  //   FoodPreference("High Protein", false, "High"),
-  //   FoodPreference("Low Calorie", false, "Low"),
-  //   FoodPreference("Medium Calorie", false, "Medium"),
-  //   FoodPreference("High Calorie", false, "High"),
-  // ];
-
-  List<FoodPreference> finalPref = [];
+  late List<Map> dietaryPrefList;
+  late String carbsDropdownValue;
+  late String proteinDropdownValue;
+  late String calDropdownValue;
+  @override
+  void initState() {
+    dietaryPrefList = [
+      {
+        "pref": "Vegetarian",
+        "isChecked": widget.preference.vegetarian,
+        "text": "Vegetarian"
+      },
+      {"pref": "Vegan", "isChecked": widget.preference.vegan, "text": "Vegan"},
+      {
+        "pref": "Dairy Free",
+        "isChecked": widget.preference.dairyFree,
+        "text": "Dairy Free"
+      },
+      {
+        "pref": "Gluten Free",
+        "isChecked": widget.preference.glutenFree,
+        "text": "Gluten Free"
+      },
+    ];
+    carbsDropdownValue = widget.preference.carbs;
+    calDropdownValue = widget.preference.calories;
+    proteinDropdownValue = widget.preference.protein;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +59,11 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
     }
 
     return SimpleDialog(
-        title: Text("Select Preferences", style: Theme
-            .of(context)
-            .textTheme
-            .subtitle2,
-          textAlign: TextAlign.center,),
+        title: Text(
+          "Select Preferences",
+          style: Theme.of(context).textTheme.subtitle2,
+          textAlign: TextAlign.center,
+        ),
         contentPadding: EdgeInsets.all(20),
         children: <Widget>[
           SizedBox(
@@ -220,38 +226,14 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                           print(preferenceList);
                           Navigator.pop(context, userPref);
                         },
-                        child: const Text("Filter", style: TextStyle(fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
+                        child: const Text("Filter",
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                       ))
                 ],
               ))
         ]);
-  }
-}
-
-// CheckboxListTile(
-//                       value: preferenceList[index]["isChecked"],
-//                       contentPadding: EdgeInsets.all(0),
-//                       controlAffinity: ListTileControlAffinity.leading,
-//                       title: Text(
-//                         preferenceList[index]["text"],
-//                         style: Theme.of(context).textTheme.bodyText1,
-//                       ),
-//                       onChanged: (newValue) {
-//                   8      setState(() {
-//                           preferenceList[index]["isChecked"] = newValue;
-//                         });
-//                       },
-//                     )
-
-class FoodPreference {
-  late String pref;
-  late bool isChecked;
-  late String text;
-  FoodPreference(String pref, bool isChecked, String text) {
-    this.pref = pref;
-    this.isChecked = isChecked;
-    this.text = text;
   }
 }

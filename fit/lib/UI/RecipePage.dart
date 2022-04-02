@@ -27,6 +27,8 @@ class _RecipePage extends State<StatefulWidget> {
 
   bool _isStarredRecipes = false;
   IconData _starIcon = Icons.star_border_outlined;
+  Preferences oldPref =
+      Preferences(false, false, false, false, "Any", "Any", "Any");
 
   @override
   initState() {
@@ -95,7 +97,6 @@ class _RecipePage extends State<StatefulWidget> {
                   builder: (BuildContext context) => UserProfilePage()));
             },
           ),
-
         ],
       ),
       resizeToAvoidBottomInset: false,
@@ -191,7 +192,9 @@ class _RecipePage extends State<StatefulWidget> {
             var foodPref = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return FilterCheckbox();
+                  return FilterCheckbox(
+                    preference: oldPref,
+                  );
                 });
             String email = await authService.getUser();
             String inventoryList =
@@ -202,6 +205,7 @@ class _RecipePage extends State<StatefulWidget> {
             setState(() {
               recipeList;
             });
+            oldPref = foodPref;
           },
           child: const Icon(Icons.filter_alt, size: 30.0),
         ),
