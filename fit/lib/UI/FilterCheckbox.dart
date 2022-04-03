@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../Entity/Preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Controller/services/auth.dart';
 
 class FilterCheckbox extends StatefulWidget {
   Preferences preference;
@@ -14,6 +16,8 @@ class FilterCheckbox extends StatefulWidget {
 }
 
 class _FilterCheckboxState extends State<FilterCheckbox> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  AuthService authService = AuthService();
   late List<Map> dietaryPrefList;
   late String carbsDropdownValue;
   late String proteinDropdownValue;
@@ -235,5 +239,27 @@ class _FilterCheckboxState extends State<FilterCheckbox> {
                 ],
               ))
         ]);
+  }
+
+  Future<Map<String, dynamic>> getUserPreferences() async {
+    String email = await authService.getUser();
+    print(email);
+    Map<String, dynamic> details = {};
+    await FirebaseFirestore.instance
+        .collection("fit")
+        .doc(email)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        details['vegan'] = documentSnapshot['vegan'];
+        details['vegetarian'] = documentSnapshot['vegetarian'];
+        details['glutenFree'] = documentSnapshot['glutenFree'];
+        details['dairyFree'] = documentSnapshot['dairyFree'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    print(details);
+    return details;
   }
 }
