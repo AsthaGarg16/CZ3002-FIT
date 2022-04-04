@@ -136,7 +136,7 @@ class _ProfileState extends State<UserProfilePage> {
                 CheckboxListTile(
                   activeColor: Colors.grey,
                   selectedTileColor: Colors.grey,
-                  checkColor: Colors.grey,
+                  // checkColor: Colors.grey,
                   title: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
                   value: userDetails["glutenFree"] ? true : false,
                   onChanged: (bool? value) {
