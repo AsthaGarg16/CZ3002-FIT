@@ -7,6 +7,7 @@ import 'RecipeInstructionsPage.dart';
 import '../Controller/services/RecipeController.dart';
 import '../Controller/services/auth.dart';
 import '../../Entity/Preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({Key? key}) : super(key: key);
@@ -22,13 +23,14 @@ class _RecipePage extends State<StatefulWidget> {
   AuthService authService = AuthService();
   late Future<List<Map<String, dynamic>>> RecipeList;
   List<Map<String, dynamic>> recipeList = [];
+  late Future<Map<String, dynamic>> UserPreference;
+  Map<String, dynamic> userPreference = {};
   bool savedRecipes = false;
   List<Map<String, dynamic>> oldRecipeList = [];
 
   bool _isStarredRecipes = false;
   IconData _starIcon = Icons.star_border_outlined;
-  Preferences oldPref =
-      Preferences(false, false, false, false, "Any", "Any", "Any");
+  late Preferences oldPref;
 
   @override
   initState() {
@@ -36,6 +38,12 @@ class _RecipePage extends State<StatefulWidget> {
     RecipeList.then((value) {
       recipeList = value;
     });
+    UserPreference = getUserPreferences();
+    UserPreference.then((value) {
+      oldPref = Preferences(value['vegetarian'], value['vegan'],
+          value['glutenFree'], value['dairyFree'], "Any", "Any", "Any");
+    });
+
     super.initState();
   }
 
@@ -47,6 +55,28 @@ class _RecipePage extends State<StatefulWidget> {
     Preferences preferences =
         Preferences(false, false, false, false, "Any", "Any", "Any");
     return getRecipeList(inventoryList, "5", recipeController, preferences);
+  }
+
+  Future<Map<String, dynamic>> getUserPreferences() async {
+    String email = await authService.getUser();
+    print(email);
+    Map<String, dynamic> details = {};
+    await FirebaseFirestore.instance
+        .collection("fit")
+        .doc(email)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        details['vegan'] = documentSnapshot['vegan'];
+        details['vegetarian'] = documentSnapshot['vegetarian'];
+        details['glutenFree'] = documentSnapshot['glutenFree'];
+        details['dairyFree'] = documentSnapshot['dairyFree'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    print(details);
+    return details;
   }
 
   @override
