@@ -53,7 +53,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
         }
         flag = false;
         for (int i = 0; i < itemThrown.length; i++) {
-          if (itemThrown[i]['name'].toString().compareTo(obj.name) == 0) {
+          if (itemThrown[i]['name'].toString().toLowerCase().compareTo(obj.name.toLowerCase()) == 0) {
             flag = true;
             itemThrown[i]['freq'] = itemThrown[i]['freq'] + 1;
           }
@@ -407,7 +407,7 @@ class _FoodWasteState extends State<FoodWastagePage> {
       {
         count2++;
         for (int i = 0; i < forTable.length; i++) {
-          if (forTable[i]['name'].toString().compareTo(obj.name) == 0) {
+          if (forTable[i]['name'].toString().toLowerCase().compareTo(obj.name.toLowerCase()) == 0) {
             flag2 = true;
             print("here");
             forTable[i]['frequency'] = forTable[i]['frequency'] + 1;
