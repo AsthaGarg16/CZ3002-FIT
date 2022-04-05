@@ -53,7 +53,8 @@ class _RecipePage extends State<StatefulWidget> {
     String inventoryList = await inventoryController.getFoodItems(email);
     print(inventoryList);
     Preferences preferences =
-        Preferences(false, false, false, false, "Any", "Any", "Any");
+        //TODO change back to false after demo
+        Preferences(true, false, false, false, "Any", "Any", "Any");
     return getRecipeList(inventoryList, "5", recipeController, preferences);
   }
 
