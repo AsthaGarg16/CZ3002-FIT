@@ -18,6 +18,18 @@ class _ProfileState extends State<UserProfilePage> {
   Map<String, dynamic> userDetails = UserController.getProfileDetails();
   Diet? _diet = Diet.vegan;
 
+
+  @override
+  void initState() {
+    if(userDetails["vegetarian"]){
+      _diet = Diet.vegetarian;
+    }else if(userDetails["vegan"]){
+      _diet = Diet.vegan;
+    }else{
+      _diet = null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +150,7 @@ class _ProfileState extends State<UserProfilePage> {
                   selectedTileColor: Colors.grey,
                   // checkColor: Colors.grey,
                   title: Text('Gluten Free', style: Theme.of(context).textTheme.bodyText1),
-                  value: userDetails["glutenFree"] ? true : false,
+                  value: userDetails["glutenFree"],
                   onChanged: (bool? value) {
                     setState(() {
                       // developer.log(_glutenFree.toString());
@@ -147,9 +159,10 @@ class _ProfileState extends State<UserProfilePage> {
                 ),
                 const Divider(indent: 15.0, endIndent: 15.0, height: 1.0),
                 CheckboxListTile(
-                  title:
-                  Text('Dairy Free', style: Theme.of(context).textTheme.bodyText1),
-                  value: userDetails["dairyFree"] ? true : false,
+                  activeColor: Colors.grey,
+                  selectedTileColor: Colors.grey,
+                  title: Text('Dairy Free', style: Theme.of(context).textTheme.bodyText1),
+                  value: userDetails["dairyFree"],
                   onChanged: (bool? value) {
                     setState(() {
                       // developer.log(_glutenFree.toString());
