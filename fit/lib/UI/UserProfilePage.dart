@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../Controller/services/UserController.dart';
 import 'EntryPage.dart';
+import 'Help.dart';
 import 'SignUp.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -47,6 +48,19 @@ class _ProfileState extends State<UserProfilePage> {
               size: 20,
               color: Colors.white,
             )),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => Help()));
+              },
+              icon: const Icon(
+                Icons.info,
+                size: 35,
+                color: Colors.white,
+              )),
+
+        ]
       ),
 
       body: SafeArea(

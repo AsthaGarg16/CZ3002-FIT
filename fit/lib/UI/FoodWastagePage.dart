@@ -112,7 +112,12 @@ class _FoodWasteState extends State<FoodWastagePage> {
 
               child: Column(
                 children: [
-
+                  const SizedBox(height: 20.0),
+                  const Text(" Food wastage ratio in the past month (based on frequency)", style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal),),
+                  const SizedBox(height: 10.0),
                   Card(
                     margin: EdgeInsets.all(10.0),
                     color: Colors.white,
@@ -201,6 +206,14 @@ class _FoodWasteState extends State<FoodWastagePage> {
                         ],
                       ),),
                   ),
+
+                  const SizedBox(height: 20.0),
+                  const Text("Food wastage till date", style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal),),
+                  const SizedBox(height: 10.0),
+
                   Container(
                     margin: EdgeInsets.all(10.0),
                     padding: EdgeInsets.all(10.0),

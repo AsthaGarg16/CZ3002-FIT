@@ -43,6 +43,7 @@ dependencies:
   html: ^0.15.0
   fl_chart: ^0.46.0
   random_color: ^1.0.6-nullsafety
+  youtube_player_flutter: ^8.0.0
 
 dev_dependencies:
   flutter_test:
